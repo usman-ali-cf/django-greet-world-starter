@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,14 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				django: {
+					'green': '#092e20',
+					'light-green': '#44b78b',
+					'dark-green': '#0C4B33',
+					'accent': '#f5f5f5',
+					'light-text': '#fafafa',
+					'dark-text': '#333333'
 				}
 			},
 			borderRadius: {
