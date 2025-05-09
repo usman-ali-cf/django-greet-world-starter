@@ -1,0 +1,300 @@
+{% extends "base.html" %}
+
+{% block title %}{{ ingredient.display_name|default:ingredient.name|default:"Ingredient Detail" }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="mb-4">
+        <a href="{% url 'ingredient_list' %}" class="btn btn-secondary">← Back to Ingredients List</a>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">{{ ingredient.display_name|default:ingredient.name|default:"Ingredient Detail" }}</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Basic Information</h4>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Name</th>
+                            <td>{{ ingredient.name|default:"N/A" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Display Name</th>
+                            <td>{{ ingredient.display_name|default:"N/A" }}</td>
+                        </tr>
+                        <tr>
+                            <th>EC Number</th>
+                            <td>{{ ingredient.ec_number|default:"N/A" }}</td>
+                        </tr>
+                        <tr>
+                            <th>CAS Number</th>
+                            <td>{{ ingredient.cas_number|default:"N/A" }}</td>
+                        
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    {% if ingredient.general_information %}
+                    <h4>General Information</h4>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>EC Name</th>
+                            <td>{{ ingredient.general_information.ec_name|default:"N/A" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Molecular Formula</th>
+                            <td>{{ ingredient.general_information.molecular_formula|default:"N/A" }}</td>
+                        </tr>
+                        <tr>
+                            <th>IUPAC Name</th>
+                            <td>{{ ingredient.general_information.iupac_name|default:"N/A" }}</td>
+                        </tr>
+                        {% if ingredient.general_information.image %}
+                        <tr>
+                            <th>Image</th>
+                            <td><img src="{{ ingredient.general_information.image.url }}" alt="Ingredient Image" class="img-fluid" style="max-height: 200px;"></td>
+                        </tr>
+                        {% endif %}
+                    </table>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <ul class="nav nav-tabs mb-4" id="ingredientTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="physical-tab" data-bs-toggle="tab" data-bs-target="#physical" type="button" role="tab" aria-controls="physical" aria-selected="true">Physical Properties</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="chemical-tab" data-bs-toggle="tab" data-bs-target="#chemical" type="button" role="tab" aria-controls="chemical" aria-selected="false">Chemical Properties</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="toxicology-tab" data-bs-toggle="tab" data-bs-target="#toxicology" type="button" role="tab" aria-controls="toxicology" aria-selected="false">Toxicology</button>
+        </li>
+    </ul>
+    
+    <div class="tab-content" id="ingredientTabsContent">
+        <div class="tab-pane fade show active" id="physical" role="tabpanel" aria-labelledby="physical-tab">
+            <div class="accordion" id="physicalAccordion">
+                {% if ingredient.appearance %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingAppearance">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAppearance" aria-expanded="false" aria-controls="collapseAppearance">
+                            Appearance / Physical State / Colour
+                        </button>
+                    </h2>
+                    <div id="collapseAppearance" class="accordion-collapse collapse" aria-labelledby="headingAppearance" data-bs-parent="#physicalAccordion">
+                        <div class="accordion-body">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Physical State at 20°C</th>
+                                    <td>{{ ingredient.appearance.physical_state_at_20c|default:"N/A" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Form</th>
+                                    <td>{{ ingredient.appearance.form|default:"N/A" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Colour</th>
+                                    <td>{{ ingredient.appearance.colour|default:"N/A" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Odour</th>
+                                    <td>{{ ingredient.appearance.odour|default:"N/A" }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if ingredient.melting_point %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingMeltingPoint">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMeltingPoint" aria-expanded="false" aria-controls="collapseMeltingPoint">
+                            Melting Point / Freezing Point
+                        </button>
+                    </h2>
+                    <div id="collapseMeltingPoint" class="accordion-collapse collapse" aria-labelledby="headingMeltingPoint" data-bs-parent="#physicalAccordion">
+                        <div class="accordion-body">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Melting/Freezing Point</th>
+                                    <td>{{ ingredient.melting_point.melting_freezing_point|default:"N/A" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Melting/Freezing Pt.</th>
+                                    <td>{{ ingredient.melting_point.melting_freezing_pt|default:"N/A" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Atm. Press.</th>
+                                    <td>{{ ingredient.melting_point.atm_press|default:"N/A" }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if ingredient.boiling_point %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingBoilingPoint">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBoilingPoint" aria-expanded="false" aria-controls="collapseBoilingPoint">
+                            Boiling Point
+                        </button>
+                    </h2>
+                    <div id="collapseBoilingPoint" class="accordion-collapse collapse" aria-labelledby="headingBoilingPoint" data-bs-parent="#physicalAccordion">
+                        <div class="accordion-body">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Boiling Point</th>
+                                    <td>{{ ingredient.boiling_point.boiling_point|default:"N/A" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Boiling Pt.</th>
+                                    <td>{{ ingredient.boiling_point.boiling_pt|default:"N/A" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Atm. Press.</th>
+                                    <td>{{ ingredient.boiling_point.atm_press|default:"N/A" }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Add more physical properties as needed -->
+            </div>
+        </div>
+        
+        <div class="tab-pane fade" id="chemical" role="tabpanel" aria-labelledby="chemical-tab">
+            <div class="accordion" id="chemicalAccordion">
+                {% if ingredient.water_solubility %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingWaterSolubility">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWaterSolubility" aria-expanded="false" aria-controls="collapseWaterSolubility">
+                            Water Solubility
+                        </button>
+                    </h2>
+                    <div id="collapseWaterSolubility" class="accordion-collapse collapse" aria-labelledby="headingWaterSolubility" data-bs-parent="#chemicalAccordion">
+                        <div class="accordion-body">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Water Solubility</th>
+                                    <td>{{ ingredient.water_solubility.water_solubility|default:"N/A" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>At Temperature</th>
+                                    <td>{{ ingredient.water_solubility.at_temperature|default:"N/A" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Temp.</th>
+                                    <td>{{ ingredient.water_solubility.temp|default:"N/A" }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if ingredient.partition_coefficient %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingPartitionCoefficient">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePartitionCoefficient" aria-expanded="false" aria-controls="collapsePartitionCoefficient">
+                            Partition Coefficient
+                        </button>
+                    </h2>
+                    <div id="collapsePartitionCoefficient" class="accordion-collapse collapse" aria-labelledby="headingPartitionCoefficient" data-bs-parent="#chemicalAccordion">
+                        <div class="accordion-body">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Log Kow (Log Pow)</th>
+                                    <td>{{ ingredient.partition_coefficient.log_kow|default:"N/A" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>At Temperature</th>
+                                    <td>{{ ingredient.partition_coefficient.at_temperature|default:"N/A" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Type</th>
+                                    <td>{{ ingredient.partition_coefficient.type|default:"N/A" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Partition Coefficient</th>
+                                    <td>{{ ingredient.partition_coefficient.partition_coefficient|default:"N/A" }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Add more chemical properties as needed -->
+            </div>
+        </div>
+        
+        <div class="tab-pane fade" id="toxicology" role="tabpanel" aria-labelledby="toxicology-tab">
+            <div class="accordion" id="toxicologyAccordion">
+                {% if ingredient.acute_toxicity_endpoint %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingAcuteToxicity">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAcuteToxicity" aria-expanded="false" aria-controls="collapseAcuteToxicity">
+                            Acute Toxicity - Endpoint Summary
+                        </button>
+                    </h2>
+                    <div id="collapseAcuteToxicity" class="accordion-collapse collapse" aria-labelledby="headingAcuteToxicity" data-bs-parent="#toxicologyAccordion">
+                        <div class="accordion-body">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Endpoint Conclusion</th>
+                                    <td>{{ ingredient.acute_toxicity_endpoint.endpoint_conclusion|default:"N/A" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Dose Descriptor</th>
+                                    <td>{{ ingredient.acute_toxicity_endpoint.dose_descriptor|default:"N/A" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Value</th>
+                                    <td>{{ ingredient.acute_toxicity_endpoint.value|default:"N/A" }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if ingredient.skin_irritation_corrosion %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingSkinIrritation">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSkinIrritation" aria-expanded="false" aria-controls="collapseSkinIrritation">
+                            Skin Irritation / Corrosion
+                        </button>
+                    </h2>
+                    <div id="collapseSkinIrritation" class="accordion-collapse collapse" aria-labelledby="headingSkinIrritation" data-bs-parent="#toxicologyAccordion">
+                        <div class="accordion-body">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Description of Key Information</th>
+                                    <td>{{ ingredient.skin_irritation_corrosion.description_of_key_information|default:"N/A" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Conclusions</th>
+                                    <td>{{ ingredient.skin_irritation_corrosion.conclusions|default:"N/A" }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Add more toxicology properties as needed -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

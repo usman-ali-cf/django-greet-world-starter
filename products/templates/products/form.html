@@ -1,0 +1,513 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCCS Product Selection</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 2rem;
+        }
+        .form-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .form-title {
+            color: #343a40;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0.5rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+            padding: 0.5rem 2rem;
+        }
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+            border-color: #0a58ca;
+        }
+        .loading {
+            display: none;
+            margin-left: 10px;
+        }
+        .results-area {
+            margin-top: 2rem;
+            display: none;
+        }
+        .formulation-card {
+            margin-bottom: 1.5rem;
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+        }
+        .formulation-header {
+            background-color: #e9ecef;
+            padding: 0.75rem 1.25rem;
+            font-weight: 600;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .formulation-body {
+            padding: 1.25rem;
+        }
+        .ingredient-table {
+            width: 100%;
+            margin-bottom: 1rem;
+            border-collapse: collapse;
+        }
+        .ingredient-table th,
+        .ingredient-table td {
+            padding: 0.5rem;
+            border: 1px solid #dee2e6;
+        }
+        .ingredient-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        .ingredient-row:nth-child(odd) {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        .product-info {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .age-info {
+            background-color: #e2f3f5;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .age-allowed {
+            color: #28a745;
+            font-weight: 600;
+        }
+        .age-not-allowed {
+            color: #dc3545;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="form-container">
+                    <h2 class="form-title">SCCS Product Selection</h2>
+                    <p class="lead mb-4">Select product categories to find relevant formulations and ingredients</p>
+
+                    <form method="post" id="product-selection-form">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <label for="id_product_category">{{ form.product_category.label }}</label>
+                            {{ form.product_category }}
+                            <div class="loading" id="loading-category">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Loading...
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_product_subcategory">{{ form.product_subcategory.label }}</label>
+                            {{ form.product_subcategory }}
+                            <div class="loading" id="loading-subcategory">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Loading...
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_product_type">{{ form.product_type.label }}</label>
+                            {{ form.product_type }}
+                            <div class="loading" id="loading-product-type">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Loading...
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_product">{{ form.product.label }}</label>
+                            {{ form.product }}
+                            <div class="loading" id="loading-product">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Loading...
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_age_category">{{ form.age_category.label }}</label>
+                            {{ form.age_category }}
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-primary">Submit Form</button>
+                        </div>
+                    </form>
+
+                    <!-- Results Area - Will be populated dynamically -->
+                    <div id="results-area" class="results-area">
+                        <h3 class="mb-4">Formulations and Ingredients</h3>
+
+                        <div id="product-info" class="product-info">
+                            <h4>Product Information</h4>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Product ID:</strong> <span id="product-id"></span></p>
+                                    <p><strong>Product Name:</strong> <span id="product-name"></span></p>
+                                    <p><strong>Category:</strong> <span id="product-category-name"></span></p>
+                                    <p><strong>Product Type:</strong> <span id="product-type-name"></span></p>
+                                    <p><strong>Primary Exposure Route:</strong> <span id="primary-exposure"></span></p>
+                                    <p><strong>Foreseeable Exposure Route:</strong> <span id="foreseeable-exposure"></span></p>
+                                    <p><strong>Status:</strong> <span id="status"></span></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Estimated Daily Amount:</strong> <span id="estimated-daily-amount"></span></p>
+                                    <p><strong>Relative Daily Amount:</strong> <span id="relative-daily-amount"></span></p>
+                                    <p><strong>Retention Factor:</strong> <span id="retention-factor"></span></p>
+                                    <p><strong>Calculated Daily Exposure:</strong> <span id="calculated-daily-exposure"></span></p>
+                                    <p><strong>Calculated Relative Daily Exposure:</strong> <span id="calculated-relative-daily-exposure"></span></p>
+                                    <p><strong>Frequency of Application:</strong> <span id="frequency-of-application"></span></p>
+                                    <p><strong>Surface Area for Application:</strong> <span id="surface-area-application"></span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="age-info" class="age-info" style="display: none;">
+                            <h4>Age Category Information</h4>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Age Category:</strong> <span id="age-category"></span></p>
+                                    <p><strong>Body Weight:</strong> <span id="body-weight"></span> kg</p>
+                                    <p><strong>Surface Area:</strong> <span id="surface-area"></span> cm²</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Product Allowed for this Age:</strong>
+                                        <span id="age-allowed"></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="formulations-container">
+                            <!-- Formulations will be added here dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Initialize all dropdowns as disabled except the first one
+            $('#id_product_subcategory').prop('disabled', true);
+            $('#id_product_type').prop('disabled', true);
+            $('#id_product').prop('disabled', true);
+
+            // When product category changes
+            $('#id_product_category').change(function() {
+                const categoryId = $(this).val();
+                if (categoryId) {
+                    // Show loading indicator
+                    $('#loading-category').show();
+
+                    // Clear and disable dependent dropdowns
+                    $('#id_product_subcategory').empty().prop('disabled', true);
+                    $('#id_product_type').empty().prop('disabled', true);
+                    $('#id_product').empty().prop('disabled', true);
+
+                    // Hide results area
+                    $('#results-area').hide();
+
+                    // Fetch subcategories
+                    $.ajax({
+                        url: '{% url "get_subcategories" %}',
+                        data: {
+                            'category_id': categoryId
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            // Hide loading indicator
+                            $('#loading-category').hide();
+
+                            // Add default option
+                            $('#id_product_subcategory').append('<option value="">---------</option>');
+
+                            // Add subcategory options
+                            $.each(data, function(index, subcategory) {
+                                $('#id_product_subcategory').append(
+                                    $('<option></option>').val(subcategory.id).text(subcategory.name)
+                                );
+                            });
+
+                            // Enable subcategory dropdown
+                            $('#id_product_subcategory').prop('disabled', false);
+
+                            // Also fetch product types for this category
+                            $('#loading-subcategory').show();
+                            $.ajax({
+                                url: '{% url "get_product_types" %}',
+                                data: {
+                                    'category_id': categoryId
+                                },
+                                dataType: 'json',
+                                success: function(data) {
+                                    $('#loading-subcategory').hide();
+
+                                    // Add default option
+                                    $('#id_product_type').append('<option value="">---------</option>');
+
+                                    // Add product type options
+                                    $.each(data, function(index, productType) {
+                                        $('#id_product_type').append(
+                                            $('<option></option>').val(productType.id).text(productType.name)
+                                        );
+                                    });
+
+                                    // Enable product type dropdown
+                                    $('#id_product_type').prop('disabled', false);
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    // If no category selected, clear and disable dependent dropdowns
+                    $('#id_product_subcategory').empty().prop('disabled', true);
+                    $('#id_product_type').empty().prop('disabled', true);
+                    $('#id_product').empty().prop('disabled', true);
+
+                    // Hide results area
+                    $('#results-area').hide();
+                }
+            });
+
+            // When product type changes
+            $('#id_product_type').change(function() {
+                const productTypeId = $(this).val();
+                if (productTypeId) {
+                    // Show loading indicator
+                    $('#loading-product-type').show();
+
+                    // Clear and disable product dropdown
+                    $('#id_product').empty().prop('disabled', true);
+
+                    // Hide results area
+                    $('#results-area').hide();
+
+                    // Fetch products
+                    $.ajax({
+                        url: '{% url "get_products" %}',
+                        data: {
+                            'product_type_id': productTypeId
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            // Hide loading indicator
+                            $('#loading-product-type').hide();
+
+                            // Add default option
+                            $('#id_product').append('<option value="">---------</option>');
+
+                            // Add product options
+                            $.each(data, function(index, product) {
+                                $('#id_product').append(
+                                    $('<option></option>').val(product.id).text(product.display_text)
+                                );
+                            });
+
+                            // Enable product dropdown
+                            $('#id_product').prop('disabled', false);
+                        }
+                    });
+                } else {
+                    // If no product type selected, clear and disable product dropdown
+                    $('#id_product').empty().prop('disabled', true);
+
+                    // Hide results area
+                    $('#results-area').hide();
+                }
+            });
+
+            // When product changes - fetch and display formulations
+            $('#id_product').change(function() {
+                const productId = $(this).val();
+                if (productId) {
+                    // Show loading indicator
+                    $('#loading-product').show();
+
+                    // Get age category if selected
+                    const ageCategoryId = $('#id_age_category').val();
+
+                    // Fetch formulations and ingredients
+                    $.ajax({
+                        url: '{% url "get_formulations" %}',
+                        data: {
+                            'product_id': productId,
+                            'age_category_id': ageCategoryId
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            // Hide loading indicator
+                            $('#loading-product').hide();
+
+                            // Update product info
+                            $('#product-id').text(data.product.unique_id);
+                            $('#product-name').text(data.product.product_name);
+                            $('#product-category-name').text(data.category.name);
+                            $('#product-type-name').text(data.product_type.name);
+                            $('#primary-exposure').text(data.product.primary_exposure_route);
+                            $('#foreseeable-exposure').text(data.product.foreseeable_exposure_route);
+                            $('#status').text(data.product.leave_on_or_rinse_off_status);
+
+                            // Update product type info with new fields
+                            $('#estimated-daily-amount').text(data.product_type.estimated_daily_amount_applied_qx);
+                            $('#relative-daily-amount').text(data.product_type.relative_daily_amount_applied_qx);
+                            $('#retention-factor').text(data.product_type.retention_factor_fret);
+                            $('#calculated-daily-exposure').text(data.product_type.calculated_daily_exposure_product);
+                            $('#calculated-relative-daily-exposure').text(data.product_type.calculated_relative_daily_exposure_product);
+                            $('#frequency-of-application').text(data.product_type.frequency_of_application);
+                            $('#surface-area-application').text(data.product_type.surface_area_for_application);
+
+                            // Update age info if available
+                            if (data.age_category) {
+                                $('#age-category').text(data.age_category.category);
+                                $('#body-weight').text(data.age_category.body_weight);
+                                $('#surface-area').text(data.age_category.surface_area);
+
+                                if (data.age_category.allowed) {
+                                    $('#age-allowed').text('Yes').removeClass('age-not-allowed').addClass('age-allowed');
+                                } else {
+                                    $('#age-allowed').text('No').removeClass('age-allowed').addClass('age-not-allowed');
+                                }
+
+                                $('#age-info').show();
+                            } else {
+                                $('#age-info').hide();
+                            }
+
+                            // Clear and update formulations
+                            $('#formulations-container').empty();
+
+                            if (data.formulations.length > 0) {
+                                $.each(data.formulations, function(index, formulation) {
+                                    let formulationHtml = `
+                                        <div class="formulation-card">
+                                            <div class="formulation-header">
+                                                ${formulation.name} (${formulation.formulation_num})
+                                            </div>
+                                            <div class="formulation-body">
+                                                <p><strong>Sub-Category:</strong> ${formulation.subcategory}</p>
+                                    `;
+
+                                    if (formulation.link) {
+                                        formulationHtml += `<p><strong>Reference Link:</strong> <a href="${formulation.link}" target="_blank">${formulation.link}</a></p>`;
+                                    }
+
+                                    formulationHtml += `<h5 class="mt-3 mb-2">Ingredients</h5>`;
+
+                                    if (formulation.ingredients.length > 0) {
+                                        formulationHtml += `
+                                            <div class="table-responsive">
+                                                <table class="ingredient-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Type</th>
+                                                            <th>Example</th>
+                                                            <th>Concentration</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                        `;
+
+                                        $.each(formulation.ingredients, function(i, ingredient) {
+                                            formulationHtml += `
+                                                <tr class="ingredient-row">
+                                                    <td>${ingredient.type}</td>
+                                                    <td>${ingredient.example}</td>
+                                                    <td>${ingredient.concentration}</td>
+                                                </tr>
+                                            `;
+                                        });
+
+                                        formulationHtml += `
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        `;
+                                    } else {
+                                        formulationHtml += `<p>No ingredients found for this formulation.</p>`;
+                                    }
+
+                                    formulationHtml += `
+                                            </div>
+                                        </div>
+                                    `;
+
+                                    $('#formulations-container').append(formulationHtml);
+                                });
+                            } else {
+                                $('#formulations-container').html(`
+                                    <div class="alert alert-info">
+                                        No formulations found for the selected product.
+                                    </div>
+                                `);
+                            }
+
+                            // Show results area
+                            $('#results-area').show();
+                        },
+                        error: function() {
+                            // Hide loading indicator
+                            $('#loading-product').hide();
+
+                            // Show error message
+                            $('#formulations-container').html(`
+                                <div class="alert alert-danger">
+                                    Error loading formulations. Please try again.
+                                </div>
+                            `);
+
+                            // Show results area with error
+                            $('#results-area').show();
+                        }
+                    });
+                } else {
+                    // Hide results area if no product selected
+                    $('#results-area').hide();
+                }
+            });
+
+            // When age category changes and product is selected, update formulations
+            $('#id_age_category').change(function() {
+                const productId = $('#id_product').val();
+                if (productId) {
+                    // Trigger product change to refresh formulations with age category
+                    $('#id_product').trigger('change');
+                }
+            });
+
+            // Prevent form submission - we're handling everything via AJAX
+            $('#product-selection-form').submit(function(e) {
+                e.preventDefault();
+                // Form submission is now optional since we're showing results dynamically
+                // You can remove this if you want to keep the form submission functionality
+            });
+        });
+    </script>
+</body>
+</html>
