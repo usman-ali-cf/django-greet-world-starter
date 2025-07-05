@@ -1,0 +1,14 @@
+<header class="header">
+    <!-- Pulsante di toggle sempre visibile -->
+    <button id="sidebar-toggle" class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+    <div class="header-left">
+        <h1>{{ titolo_pagina }}</h1>
+    </div>
+    <nav class="header-nav">
+        <a href="{{ url_for('index') }}">🏠 Home</a>
+        {% if id_prg %}
+          <a href="{{ url_for('route_seleziona_progetto', progetto_id=id_prg) }}">🔙 Torna al Progetto</a>
+        {% endif %}
+    </nav>
+    <img class="logo-app" src="{{ url_for('static', filename='img/Logo.png') }}" alt="Logo">
+</header>

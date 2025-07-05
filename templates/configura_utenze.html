@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block titolo_pagina %}Configura Utenze di Potenza{% endblock %}
+
+{% block contenuto %}
+
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configura Utenze</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Sostituito il vecchio file JS con il nuovo modulo -->
+    <script type="module" src="{{ url_for('static', filename='js/utenze/main.js') }}"></script>
+</head>
+<style>
+    main {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+</style>
+<body>
+    <div id="scale-container">
+        <!-- Input nascosto per l'id_prg -->
+        <input type="hidden" id="id_prg" name="id_prg" value="{{ id_prg }}">
+        <header>
+            
+            <nav>
+                
+                <button id="btnPreElabora" class="btn btn-warning ml-3">
+                    <i class="fas fa-cogs"></i> Pre-elabora Tutte
+                </button>
+            </nav>
+            <div id="elabStatus" class="alert alert-info mt-2" style="display: none;"></div>
+            
+        </header>
+        <main class="contenitore-principale">
+            <!-- Tabella superiore con elenco utenze -->
+            <div class="elenco-utenze">
+                <h3>Elenco Utenze</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Elaborata</th>
+                            <th>Nome Utenza</th>
+                            <th>Descrizione</th>
+                            <th>Categoria</th>
+                            <th>Tipo Comando</th>
+                            <th>Tensione</th>
+                            <th>Zona</th>
+                            <th>DI</th>
+                            <th>DO</th>
+                            <th>AI</th>
+                            <th>AO</th>
+                            <th>FDI</th>
+                            <th>FDO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabella-utenze">
+                        <!-- Le righe saranno generate dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Tabella categorie -->
+            <div class="tabella-categorie">
+                <h4>Categorie</h4>
+                <ul id="lista-categorie">
+                    {% for categoria in categorie %}
+                    <li data-id="{{ categoria.id_categoria }}">
+                        {{ categoria.categoria }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Tabella sottocategorie -->
+            <div class="tabella-sottocategorie">
+                <h4>Sottocategorie</h4>
+                <ul id="lista-sottocategorie">
+                    <!-- Le sottocategorie saranno caricate via JavaScript -->
+                </ul>
+            </div>
+
+            <!-- Tabella opzioni -->
+            <div class="tabella-opzioni">
+                <h4>Opzioni</h4>
+                <ul id="lista-opzioni">
+                    <!-- Le opzioni saranno caricate via JavaScript -->
+                </ul>
+            </div>
+
+            <!-- Tabella dettagli -->
+            <div class="tabella-dettagli">
+                <h4>Dettagli</h4>
+                <div id="dettagli-container"></div>
+                <div class="pulsante-conferma">
+                    <button id="btn-conferma">Conferma</button>
+                </div>
+            </div>
+        </main>
+
+    </div><!-- fine scale-container -->
+</body>
+
+</html>
+{% endblock %}

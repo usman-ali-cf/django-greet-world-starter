@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block titolo_pagina %}Crea/Modifica Nodo PLC{% endblock %}
+
+{% block contenuto %}
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crea Nodi e PLC</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script type="module" src="{{ url_for('static', filename='js/crea_nodo/crea_nodo.js') }}" defer></script>
+</head>
+<style>
+  main {
+      max-width: 100%;
+      margin: 0 auto;
+  }
+</style>
+<body>
+
+  <div id="creaNodoContainer">
+    <main class="contenitore-principale" style="display: grid; grid-template-columns: 1fr 40px 1fr; grid-template-rows: auto 1fr; gap: 20px;">
+      
+      <!-- RIGA 1: Seleziona Nodo Esistente / Bottone “Crea Nuovo Nodo” -->
+      <div class="seleziona-nodo" style="grid-column: 1 / 4; grid-row: 1;">
+        <h3>
+          Gestione Nodi
+          <button id="btnApriPopup" class="btn btn-primary" style="float: right; margin-left:10px;">+ Crea Nuovo Nodo</button>
+          <button id="btnCreazioneAutomaticaPLC" class="btn btn-info" style="float: right;">Creazione Automatica PLC</button>
+        </h3>
+        <div style="margin-top: 10px;">
+          <label for="selectNodo">Seleziona Nodo Esistente:</label>
+          <select id="selectNodo" class="form-select"></select>
+          <button id="btnAggiornaNodi" class="btn btn-outline-secondary btn-sm">Aggiorna</button>
+        </div>
+      </div>
+      
+  
+      <!-- RIGA 2, COLONNA 1: Tabella Catalogo Hardware -->
+      <div class="catalogo-hardware" style="grid-column: 1; grid-row: 2; overflow: auto;">
+        <h3>Catalogo Hardware
+          <button id="aggiorna-lista-hw" class="btn btn-sm btn-outline-secondary">Aggiorna</button>
+        </h3>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Nome HW</th>
+              <th>Descrizione</th>
+            </tr>
+          </thead>
+          <tbody id="tabella-hw"></tbody>
+        </table>
+      </div>
+  
+      <!-- RIGA 2, COLONNA 2: Pulsante Freccia / Assegna -->
+      <div class="assegna-hw" style="grid-column: 2; grid-row: 2; display: flex; align-items: center; justify-content: center;">
+        <button id="btnAssegnaHW" class="btn btn-success"> &gt; </button>
+      </div>
+  
+      <!-- RIGA 2, COLONNA 3: Tabella HW Assegnato -->
+      <div class="tabella-hw-assegnato" style="grid-column: 3; grid-row: 2; overflow: auto;">
+        <h3>Hardware Assegnato al Nodo</h3>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Nome HW</th>
+              <th>Slot</th>
+              <th>DI</th>
+              <th>DO</th>
+              <th>Azioni</th>
+            </tr>
+          </thead>
+          <tbody id="tabella-hw-nodo"></tbody>
+        </table>
+      </div>
+      
+    </main>
+  </div>
+  
+  <!-- Popup per "Crea Nuovo Nodo" -->
+  <div class="popup-overlay" id="popupOverlay" style="display: none;">
+    <div class="popup-content">
+      <h4>Crea Nuovo Nodo</h4>
+      <form id="form-nuovo-nodo">
+        <div class="mb-3">
+          <label for="nomeNodoPopup" class="form-label">Nome Nodo</label>
+          <input type="text" class="form-control" id="nomeNodoPopup" placeholder="Esempio: CPU_Main">
+        </div>
+        <div class="mb-3">
+          <label for="descrNodoPopup" class="form-label">Descrizione</label>
+          <input type="text" class="form-control" id="descrNodoPopup" placeholder="Descrizione...">
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button type="button" id="btnChiudiPopup" class="btn btn-secondary">Chiudi</button>
+        <button type="button" id="btnCreaNodo" class="btn btn-primary">Crea Nodo</button>
+      </div>
+    </div>
+  </div>
+  
+  </body>
+  </html>
+  {% endblock %}

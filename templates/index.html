@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block titolo_pagina %}Gestione Progetto{% endblock %}
+
+{% block contenuto %}
+<header>
+  <h1>Gestione Progetto</h1>
+
+  <nav>
+    <ul class="nav-buttons">
+      <li><button id="btnNuovoProgetto"    class="btn">+ Nuovo Progetto</button></li>
+      <li><button id="btnAggiornaProgetti" class="btn">Aggiorna Lista</button></li>
+    </ul>
+  </nav>
+
+  <img class="logo-app"
+       src="{{ url_for('static', filename='img/Logo.png') }}"
+       alt="Logo">
+</header>
+
+<main>
+  <h2>Seleziona un progetto o creane uno nuovo</h2>
+
+  <!-- tabella DATATABLE a 3 colonne -->
+  <section>
+    <h3>Progetti disponibili</h3>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nome progetto</th>
+          <th>Descrizione</th>
+          <th style="text-align:center">Azioni</th>
+        </tr>
+      </thead>
+      <tbody id="listaProgetti"><!-- popolato via JS --></tbody>
+    </table>
+  </section>
+</main>
+
+<!-- POP-UP “Nuovo progetto” -->
+<div class="popup-overlay" id="popupNuovoProj" style="display:none;">
+  <div class="popup-content">
+    <h4>Crea Nuovo Progetto</h4>
+    <form id="formNuovoProgetto">
+      <label for="inpNomeProj">Nome progetto</label>
+      <input  id="inpNomeProj" type="text" required>
+
+      <label for="txtDescProj">Descrizione</label>
+      <textarea id="txtDescProj" rows="3" required></textarea>
+
+      <div style="margin-top:15px; text-align:right">
+        <button type="button" class="btn-cancel" id="btnChiudiPopup">Annulla</button>
+        <button type="submit" class="btn">Salva</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- JS -->
+<script type="module"
+        src="{{ url_for('static', filename='js/progetti/progetti.js') }}">
+</script>
+{% endblock %}

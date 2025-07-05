@@ -1,0 +1,45 @@
+<!-- File: templates/_sidebar.html -->
+<div id="sidebar" class="sidebar">
+  <nav class="sidebar-nav">
+    <a href="{{ url_for('index') }}">🏠 Home</a>
+    {% if id_prg %}
+      <a href="{{ url_for('route_seleziona_progetto', progetto_id=id_prg) }}">🔙 Torna al Progetto</a>
+      <a href="{{ url_for('route_carica_file_utenze', id_prg=id_prg) }}">📁 Carica File Utenze</a>
+
+      <!-- CONFIGURA UTENZE -->
+      <a href="{{ url_for('route_configura_utenze', id_prg=id_prg) }}">
+        🛠️ Configura Utenze
+      </a>
+
+      <!-- CONFIGURA POTENZA -->
+      <a href="{{ url_for('route_configura_potenza', id_prg=id_prg) }}">
+        ⚡ Configura Utenze di Potenza
+      </a>
+
+      <!-- CREA NODI E PLC -->
+      <a href="{{ url_for('route_htmlpage_crea_nodo', id_prg=id_prg) }}">
+        🖧 Crea Nodi e PLC
+      </a>
+
+      <!-- ASSEGNA I/O -->
+      <a href="{{ url_for('route_assegna_io_nodi', id_prg=id_prg) }}">
+        🔗 Assegna I/O ai Nodi
+      </a>
+
+      <!-- ASSEGNA POTENZA 
+      <a href="{{ url_for('route_assegna_potenza_nodi', id_prg=id_prg) }}">
+        🔋 Assegna Potenza ai Nodi
+      </a> -->
+
+      <!-- CONFIGURA SIMBOLOGIA I/O 
+      <a href="{{ url_for('route_configura_io', id_prg=id_prg) }}">
+        📐 Configura Simbologia I/O
+      </a> -->
+
+      <!-- CREA QUADRO ELETTRICO -->
+      <a href="{{ url_for('route_crea_quadro', id_prg=id_prg) }}">
+        🗄️ Configura Quadro Elettrico
+      </a>
+    {% endif %}
+  </nav>
+</div>

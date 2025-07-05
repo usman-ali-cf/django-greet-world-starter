@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block titolo_pagina %}Assegna I/O ai Moduli{% endblock %}
+
+{% block contenuto %}
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assegna I/O ai Moduli</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script type="module" src="{{ url_for('static', filename='js/assegna_io/assegna_io.js') }}" defer></script>
+
+  <style>
+        main {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+    /* Imposta l'area principale a piena altezza (meno header/footer) */
+    .contenitore-principale {
+      display: grid;
+      /* 70% in alto (I/O) + 30% in basso (moduli) */
+      grid-template-rows: 50% 50%;
+      grid-template-columns: 1fr 40px 1fr;
+      gap: 20px;
+      height: calc(100vh - 120px); /* Adatta l'offset in base alla tua header/footer */
+      margin: 0;  /* niente margin */
+    }
+
+    /* Le tabelle di I/O occupano la prima riga della griglia */
+    .tabella-io-non-assegnati {
+      grid-column: 1;
+      grid-row: 1;
+      overflow-y: auto;  /* scroll interno */
+    }
+    .pulsanti-assegna {
+      grid-column: 2;
+      grid-row: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .tabella-io-assegnati {
+      grid-column: 3;
+      grid-row: 1;
+      overflow-y: auto;  /* scroll interno */
+    }
+
+    /* La sezione dei moduli occupa la seconda riga su tutte le colonne */
+    .seleziona-nodo {
+      grid-column: 1 / 4;
+      grid-row: 2;
+      overflow-y: auto;  /* scroll anche qui se necessario */
+      font-size: 0.85rem;
+    }
+    .seleziona-nodo button,
+    .seleziona-nodo label,
+    .seleziona-nodo select {
+      font-size: 0.8rem;
+      padding: 4px 8px;
+    }
+  </style>
+</head>
+<body>
+  <main class="contenitore-principale">
+    <!-- RIGA 1, COLONNA 1: Tabella IO Non Assegnati -->
+    <div class="tabella-io-non-assegnati">
+      <h3>
+        IO Non Assegnati
+        <button id="btnAggiornaIO" class="btn btn-sm btn-outline-secondary" style="margin-left:10px;">
+          Aggiorna IO
+        </button>
+      </h3>
+      <!-- Controlli: Seleziona Tutto + Filtro -->
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+        <label>
+          <input type="checkbox" id="selectAllUnassigned" style="margin-right:4px;">
+          Seleziona Tutto
+        </label>
+        <input type="text" id="filterUnassigned"
+               placeholder="Filtra per Commento IO"
+               style="flex:1; max-width:200px;">
+      </div>
+      <table class="table table-bordered" style="width:100%;">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Commento IO</th>
+          </tr>
+        </thead>
+        <tbody id="tabella-io-unassigned"></tbody>
+      </table>
+    </div>
+
+    <!-- RIGA 1, COLONNA 2: Pulsanti Assegna / Rimuovi -->
+    <div class="pulsanti-assegna">
+      <button id="btnAssegnaIO" class="btn btn-success" style="margin-bottom: 10px; font-size:0.9rem;">
+        &gt;
+      </button>
+      <button id="btnRimuoviIO" class="btn btn-danger" style="font-size:0.9rem;">
+        &lt;
+      </button>
+    </div>
+
+    <!-- RIGA 1, COLONNA 3: Tabella IO Assegnati -->
+    <div class="tabella-io-assegnati">
+      <h3>IO Assegnati al Modulo</h3>
+      <!-- Controlli: Seleziona Tutto + Filtro -->
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+        <label>
+          <input type="checkbox" id="selectAllAssigned" style="margin-right:4px;">
+          Seleziona Tutto
+        </label>
+        <input type="text" id="filterAssigned"
+               placeholder="Filtra per Commento IO"
+               style="flex:1; max-width:200px;">
+      </div>
+      <table class="table table-bordered" style="width:100%;">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Commento IO</th>
+          </tr>
+        </thead>
+        <tbody id="tabella-io-assigned"></tbody>
+      </table>
+    </div>
+
+    <!-- RIGA 2: Selezione Nodi e Moduli -->
+    <div class="seleziona-nodo">
+      <h3>Moduli (Hardware) del Nodo – Assegna I/O ai Moduli</h3>
+      <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
+        <label for="selectNodo">Seleziona Nodo:</label>
+        <select id="selectNodo" class="form-select"></select>
+        <button id="btnAggiornaNodi" class="btn btn-outline-secondary btn-sm">Aggiorna Nodi</button>
+        <button id="btnAssegnazioneAutomatica" class="btn btn-info btn-sm">
+          Assegnazione automatica
+        </button>
+        <button id="btnExportIO" class="btn btn-warning btn-sm" style="margin-left: 10px;">
+          📤 Esporta Excel
+        </button>
+        <button id="btnGeneraSchema" class="btn btn-primary btn-sm" style="margin-left: 10px;">
+          Genera File Schema Elettrico
+        </button>
+      </div>
+      <hr>
+      <table class="table table-striped" style="width:100%;">
+        <thead>
+          <tr>
+            <th>Slot</th>
+            <th>Nome HW</th>
+            <th>Tipo</th>
+          </tr>
+        </thead>
+        <tbody id="tabella-moduli"></tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>
+{% endblock %}

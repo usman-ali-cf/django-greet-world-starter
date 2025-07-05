@@ -1,0 +1,342 @@
+<?xml version='1.0' encoding='utf-8'?>
+<SchematicsGenerator>
+  <StoredSheets>
+    <StoredSheet name="1" layerName="1" position="0.00,0.00" />
+    <StoredSheet name="2A" layerName="2" position="0.00,0.00" />
+    <StoredSheet name="3" layerName="3" position="0.00,0.00" />
+    <StoredSheet name="300" layerName="4" position="0.00,0.00" />
+    <StoredSheet name="310" layerName="5" position="0.00,0.00" />
+    <StoredSheet name="10C" layerName="10" position="0.00,0.00" />
+    <StoredSheet name="11" layerName="11" position="0.00,0.00" />
+    <StoredSheet name="DOL_0" layerName="50" position="50.00,240.00">
+      <Blocks>
+        <Block>
+          <Key Tag="QUADRO" Value="+QG" />
+          <Key Tag="NOME" Value="50QF1" />
+          <Attribute Tag="QUADRO" Value="+QG" />
+          <Attribute Tag="NOME" Value="QF7379_1" />
+          <Attribute Tag="FUNZIONE1" Value="Partenza Diretta" />
+          <Attribute Tag="FUNZIONE2" Value="None" />
+          <Attribute Tag="TAGLIA" Value="1,8-2,5A" />
+          <Attribute Tag="COSTRUTTORE" Value="SIEMENS" />
+          <Attribute Tag="TIPO" Value="3RV20111CA10;3RV29011E;3RA19211DA00;W32431" />
+        </Block>
+        <Block>
+          <Key Tag="NOME" Value="50KM1" />
+          <Attribute Tag="NOME" Value="KM7379_1" />
+        </Block>
+        <Block>
+          <Key Tag="QUADRO" Value="+BM" />
+          <Key Tag="NOME" Value="50M1" />
+          <Attribute Tag="QUADRO" Value="+QG" />
+          <Attribute Tag="NOME" Value="M7379" />
+          <Attribute Tag="FUNZIONE1" Value="Partenza Diretta" />
+          <Attribute Tag="FUNZIONE2" Value="" />
+          <Attribute Tag="POTENZA" Value="0.75 kW" />
+        </Block>
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="DOL_0" layerName="50" position="130.00,240.00">
+      <Blocks>
+        <Block>
+          <Key Tag="QUADRO" Value="+QG" />
+          <Key Tag="NOME" Value="50QF1" />
+          <Attribute Tag="QUADRO" Value="+QG" />
+          <Attribute Tag="NOME" Value="QF7384_1" />
+          <Attribute Tag="FUNZIONE1" Value="Partenza Diretta" />
+          <Attribute Tag="FUNZIONE2" Value="None" />
+          <Attribute Tag="TAGLIA" Value="0,9-1,25A" />
+          <Attribute Tag="COSTRUTTORE" Value="SIEMENS" />
+          <Attribute Tag="TIPO" Value="3RV20110KA10;3RV29011E;3RA19211DA00;W32431" />
+        </Block>
+        <Block>
+          <Key Tag="NOME" Value="50KM1" />
+          <Attribute Tag="NOME" Value="KM7384_1" />
+        </Block>
+        <Block>
+          <Key Tag="QUADRO" Value="+BM" />
+          <Key Tag="NOME" Value="50M1" />
+          <Attribute Tag="QUADRO" Value="+QG" />
+          <Attribute Tag="NOME" Value="M7384" />
+          <Attribute Tag="FUNZIONE1" Value="Partenza Diretta" />
+          <Attribute Tag="FUNZIONE2" Value="" />
+          <Attribute Tag="POTENZA" Value="0.37 kW" />
+        </Block>
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="UD_0" layerName="50" position="0.00,0.00">
+      <Blocks>
+        <Block>
+          <Key Tag="QUADRO" Value="+QG" />
+          <Key Tag="NOME" Value="50QF1" />
+          <Attribute Tag="QUADRO" Value="" />
+          <Attribute Tag="NOME" Value="" />
+          <Attribute Tag="FUNZIONE1" Value="" />
+        </Block>
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="UD_10" layerName="50" position="0.00,0.00">
+      <Blocks>
+        <Block />
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="UF_1A" layerName="50" position="0.00,0.00">
+      <Blocks>
+        <Block />
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="UD_2" layerName="50" position="0.00,0.00">
+      <Blocks>
+        <Block>
+          <Key Tag="_TITOLO" Value="TITOLO FOGLIO" />
+          <Attribute Tag="_TITOLO" Value="Potenza" />
+        </Block>
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="DOL_3" layerName="51" position="50.00,240.00">
+      <Blocks>
+        <Block>
+          <Key Tag="QUADRO" Value="+QG" />
+          <Key Tag="NOME" Value="50QF1" />
+          <Attribute Tag="QUADRO" Value="+QG" />
+          <Attribute Tag="NOME" Value="QF7385_1" />
+          <Attribute Tag="FUNZIONE1" Value="SET 16,70A" />
+          <Attribute Tag="FUNZIONE2" Value="None" />
+          <Attribute Tag="TAGLIA" Value="14-20A" />
+          <Attribute Tag="COSTRUTTORE" Value="SIEMENS" />
+          <Attribute Tag="TIPO" Value="3RV20214BA10;3RV29011E;3RA19211DA00;W32461" />
+        </Block>
+        <Block>
+          <Key Tag="NOME" Value="50KM1" />
+          <Attribute Tag="NOME" Value="KM7385_1" />
+        </Block>
+        <Block>
+          <Key Tag="NOME" Value="50KM2" />
+          <Attribute Tag="NOME" Value="KM7385_2" />
+        </Block>
+        <Block>
+          <Key Tag="QUADRO" Value="+BM" />
+          <Key Tag="NOME" Value="50M1" />
+          <Attribute Tag="QUADRO" Value="+QG" />
+          <Attribute Tag="NOME" Value="M7385" />
+          <Attribute Tag="FUNZIONE1" Value="Partenza Diretta con Inversione" />
+          <Attribute Tag="FUNZIONE2" Value="" />
+          <Attribute Tag="POTENZA" Value="7.5 kW" />
+        </Block>
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="UD_0" layerName="51" position="0.00,0.00">
+      <Blocks>
+        <Block>
+          <Key Tag="QUADRO" Value="+QG" />
+          <Key Tag="NOME" Value="50QF1" />
+          <Attribute Tag="QUADRO" Value="" />
+          <Attribute Tag="NOME" Value="" />
+          <Attribute Tag="FUNZIONE1" Value="" />
+        </Block>
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="UD_10" layerName="51" position="0.00,0.00">
+      <Blocks>
+        <Block />
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="UF_1A" layerName="51" position="0.00,0.00">
+      <Blocks>
+        <Block />
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="UD_2" layerName="51" position="0.00,0.00">
+      <Blocks>
+        <Block>
+          <Key Tag="_TITOLO" Value="TITOLO FOGLIO" />
+          <Attribute Tag="_TITOLO" Value="Potenza" />
+        </Block>
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="DOL_0" layerName="52" position="50.00,240.00">
+      <Blocks>
+        <Block>
+          <Key Tag="QUADRO" Value="+QG" />
+          <Key Tag="NOME" Value="50QF1" />
+          <Attribute Tag="QUADRO" Value="+QG" />
+          <Attribute Tag="NOME" Value="QF7386_1" />
+          <Attribute Tag="FUNZIONE1" Value="Partenza Diretta" />
+          <Attribute Tag="FUNZIONE2" Value="None" />
+          <Attribute Tag="TAGLIA" Value="3,5-5A" />
+          <Attribute Tag="COSTRUTTORE" Value="SIEMENS" />
+          <Attribute Tag="TIPO" Value="3RV20111FA10;3RV29011E;3RA19211DA00;W32431" />
+        </Block>
+        <Block>
+          <Key Tag="NOME" Value="50KM1" />
+          <Attribute Tag="NOME" Value="KM7386_1" />
+        </Block>
+        <Block>
+          <Key Tag="QUADRO" Value="+BM" />
+          <Key Tag="NOME" Value="50M1" />
+          <Attribute Tag="QUADRO" Value="+QG" />
+          <Attribute Tag="NOME" Value="M7386" />
+          <Attribute Tag="FUNZIONE1" Value="Partenza Diretta" />
+          <Attribute Tag="FUNZIONE2" Value="" />
+          <Attribute Tag="POTENZA" Value="1.5 kW" />
+        </Block>
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="UD_0" layerName="52" position="0.00,0.00">
+      <Blocks>
+        <Block>
+          <Key Tag="QUADRO" Value="+QG" />
+          <Key Tag="NOME" Value="50QF1" />
+          <Attribute Tag="QUADRO" Value="" />
+          <Attribute Tag="NOME" Value="" />
+          <Attribute Tag="FUNZIONE1" Value="" />
+        </Block>
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="UD_10" layerName="52" position="0.00,0.00">
+      <Blocks>
+        <Block />
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="UF_1A" layerName="52" position="0.00,0.00">
+      <Blocks>
+        <Block />
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="UD_2" layerName="52" position="0.00,0.00">
+      <Blocks>
+        <Block>
+          <Key Tag="_TITOLO" Value="TITOLO FOGLIO" />
+          <Attribute Tag="_TITOLO" Value="Potenza" />
+        </Block>
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="DOL_3" layerName="53" position="50.00,240.00">
+      <Blocks>
+        <Block>
+          <Key Tag="QUADRO" Value="+QG" />
+          <Key Tag="NOME" Value="50QF1" />
+          <Attribute Tag="QUADRO" Value="+QG" />
+          <Attribute Tag="NOME" Value="QF7387_1" />
+          <Attribute Tag="FUNZIONE1" Value="SET 11,00A" />
+          <Attribute Tag="FUNZIONE2" Value="None" />
+          <Attribute Tag="TAGLIA" Value="9-12,5A" />
+          <Attribute Tag="COSTRUTTORE" Value="SIEMENS" />
+          <Attribute Tag="TIPO" Value="3RV20111KA10;3RV29011E;3RA19211DA00;W32431" />
+        </Block>
+        <Block>
+          <Key Tag="NOME" Value="50KM1" />
+          <Attribute Tag="NOME" Value="KM7387_1" />
+        </Block>
+        <Block>
+          <Key Tag="NOME" Value="50KM2" />
+          <Attribute Tag="NOME" Value="KM7387_2" />
+        </Block>
+        <Block>
+          <Key Tag="QUADRO" Value="+BM" />
+          <Key Tag="NOME" Value="50M1" />
+          <Attribute Tag="QUADRO" Value="+QG" />
+          <Attribute Tag="NOME" Value="M7387" />
+          <Attribute Tag="FUNZIONE1" Value="Partenza Diretta con Inversione" />
+          <Attribute Tag="FUNZIONE2" Value="" />
+          <Attribute Tag="POTENZA" Value="5.5 kW" />
+        </Block>
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="UD_0" layerName="53" position="0.00,0.00">
+      <Blocks>
+        <Block>
+          <Key Tag="QUADRO" Value="+QG" />
+          <Key Tag="NOME" Value="50QF1" />
+          <Attribute Tag="QUADRO" Value="" />
+          <Attribute Tag="NOME" Value="" />
+          <Attribute Tag="FUNZIONE1" Value="" />
+        </Block>
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="UD_10" layerName="53" position="0.00,0.00">
+      <Blocks>
+        <Block />
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="UF_1A" layerName="53" position="0.00,0.00">
+      <Blocks>
+        <Block />
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="UD_2" layerName="53" position="0.00,0.00">
+      <Blocks>
+        <Block>
+          <Key Tag="_TITOLO" Value="TITOLO FOGLIO" />
+          <Attribute Tag="_TITOLO" Value="Potenza" />
+        </Block>
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="75S" layerName="75" position="0.00,0.00" />
+    <StoredSheet name="80" layerName="80" position="0.00,0.00" />
+    <StoredSheet name="81" layerName="81" position="0.00,0.00" />
+    <StoredSheet name="83A" layerName="83" position="0.00,0.00" />
+    <StoredSheet name="100D" layerName="100" position="0.00,0.00" />
+    <StoredSheet name="101A" layerName="101" position="0.00,0.00" />
+    <StoredSheet name="105" layerName="105" position="0.00,0.00" />
+    <StoredSheet name="110A" layerName="110" position="0.00,0.00" />
+    <StoredSheet name="150" layerName="150" position="0.00,0.00" />
+    <StoredSheet name="160" layerName="160" position="0.00,0.00" />
+    <StoredSheet name="170" layerName="170" position="0.00,0.00" />
+    <StoredSheet name="175" layerName="175" position="0.00,0.00" />
+    <StoredSheet name="CPU" layerName="200" position="95.00,130.00">
+      <Blocks>
+        <Block>
+          <Key Tag="QUADRO" Value="+QG" />
+          <Key Tag="NOME" Value="200A1" />
+          <Attribute Tag="NOME" Value="CPU" />
+        </Block>
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="16FDI" layerName="200" position="165.00,130.00">
+      <Blocks>
+        <Block>
+          <Key Tag="QUADRO" Value="+QG" />
+          <Key Tag="NOME" Value="200FDI16" />
+          <Attribute Tag="NOME" Value="554FDI16" />
+        </Block>
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="16FDO" layerName="200" position="165.00,130.00">
+      <Blocks>
+        <Block>
+          <Key Tag="QUADRO" Value="+QG" />
+          <Key Tag="NOME" Value="200FDO16" />
+          <Attribute Tag="NOME" Value="555FDO16" />
+        </Block>
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="16DI" layerName="200" position="165.00,130.00">
+      <Blocks>
+        <Block>
+          <Key Tag="QUADRO" Value="+QG" />
+          <Key Tag="NOME" Value="200DI16" />
+          <Attribute Tag="NOME" Value="556DI16" />
+        </Block>
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="16DO" layerName="200" position="195.00,130.00">
+      <Blocks>
+        <Block>
+          <Key Tag="QUADRO" Value="+QG" />
+          <Key Tag="NOME" Value="200DO16" />
+          <Attribute Tag="NOME" Value="557DO16" />
+        </Block>
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="UD_2" layerName="200" position="0.00,0.00">
+      <Blocks>
+        <Block>
+          <Key Tag="_TITOLO" Value="TITOLO FOGLIO" />
+          <Attribute Tag="_TITOLO" Value="Layout PLC" />
+        </Block>
+      </Blocks>
+    </StoredSheet>
+    <StoredSheet name="UF_12" layerName="200" position="0.00,0.00" />
+  </StoredSheets>
+</SchematicsGenerator>

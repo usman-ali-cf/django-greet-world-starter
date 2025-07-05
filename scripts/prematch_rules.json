@@ -1,0 +1,362 @@
+[
+    {
+      "or": [
+        ["pressione","minima"],
+        ["pressione", "min"],
+        ["pressostato", "min"],
+        ["pressostato"]
+      ],
+      "result": {
+        "categoria": "Sensore",
+        "sottocategoria": "Sensore di pressione",
+        "opzione": "Pressostato di minima (NO)"
+      }
+    },
+    {
+        "or": [
+          ["pressione","massima"],
+          ["pressostato","max"]
+        ],
+        "result": {
+          "categoria": "Sensore",
+          "sottocategoria": "Sensore di pressione",
+          "opzione": "Pressostato di massima (NC)"
+        }
+      },
+    {
+      "or": [
+        ["livello", "minimo"],
+        ["livello", "min"]
+      ],
+      "result": {
+        "categoria": "Sensore",
+        "sottocategoria": "Sensore di livello",
+        "opzione": "Livello minimo (NO)"
+      }
+    },
+    {
+        "or": [
+          ["livello", "massimo"],
+          ["livello", "max"]
+        ],
+        "result": {
+          "categoria": "Sensore",
+          "sottocategoria": "Sensore di livello",
+          "opzione": "Livello massimo (NC)"
+        }
+      },
+    {
+      "or": [
+        ["posizione"]
+      ],
+      "result": {
+        "categoria": "Sensore",
+        "sottocategoria": "Sensore di posizione",
+        "opzione": "FC NO"
+      }
+    },
+    {
+      "or": [
+        ["prossimità"],
+        ["px"]
+      ],
+      "result": {
+        "categoria": "Sensore",
+        "sottocategoria": "Sensore di prossimità",
+        "opzione": "PX NO"
+      }
+    },
+    {
+      "or": [
+        ["presenza"]
+      ],
+      "result": {
+        "categoria": "Sensore",
+        "sottocategoria": "Sensore di presenza",
+        "opzione": "FTC NO"
+      }
+    },
+    {
+      "or": [
+        ["consenso", "esterno"]
+      ],
+      "result": {
+        "categoria": "Sensore",
+        "sottocategoria": "Consenso da esterno",
+        "opzione": "Contatto NO da esterno"
+      }
+    },
+    {
+      "or": [
+        ["valvola"],
+        ["elettrovalvola"],
+        ["ev"]
+      ],
+      "result": {
+        "categoria": "Attuatore",
+        "sottocategoria": "Valvola",
+        "opzione": "EV NC"
+      }
+    },
+    {
+      "or": [
+        ["cilindro","pneumatico"],
+        ["cilindro", "pn"]
+      ],
+      "result": {
+        "categoria": "Attuatore",
+        "sottocategoria": "Attuatore pneumatico",
+        "opzione": "Cilindro Generico Lavoro - Riposo"
+      }
+    },
+    {
+      "or": [
+        ["Stopper"]
+      ],
+      "result": {
+        "categoria": "Attuatore",
+        "sottocategoria": "Attuatore pneumatico",
+        "opzione": "Stopper"
+      }
+    },
+    {
+      "or": [
+        ["pulsante", "start"],
+        ["start"]
+      ],
+      "result": {
+        "categoria": "Comando operatore",
+        "sottocategoria": "Pulsante luminoso",
+        "opzione": "Pulsante luminoso verde"
+      }
+    },
+    {
+        "or": [
+          ["pulsante", "ripristino"],
+          ["reset","sicurezze"],
+          ["reset","emergenz"]
+        ],
+        "result": {
+          "categoria": "Comando operatore",
+          "sottocategoria": "Pulsante luminoso",
+          "opzione": "Pulsante luminoso blu"
+        }
+      },
+    {
+      "or": [
+        ["pulsante","stop"],
+        ["ps","stop"]
+      ],
+      "result": {
+        "categoria": "Comando operatore",
+        "sottocategoria": "Pulsante",
+        "opzione": "Pulsante rosso"
+      }
+    },
+    {
+        "or": [
+          ["reset","allarmi"],
+          ["reset","anomalie"]
+        ],
+        "result": {
+          "categoria": "Comando operatore",
+          "sottocategoria": "Pulsante",
+          "opzione": "Pulsante giallo"
+        }
+      },
+    {
+        "or": [
+          ["pulsante","emergenza"],
+          ["emergenza","stop"],
+          ["ps","emergenza"]
+        ],
+        "result": {
+          "categoria": "Comando operatore",
+          "sottocategoria": "Pulsante di emergenza",
+          "opzione": "Fungo di emergenza"
+        }
+      },
+    {
+      "or": [
+        ["selettore", "chiave", "3"]
+      ],
+      "result": {
+        "categoria": "Comando operatore",
+        "sottocategoria": "Selettore a chiave",
+        "opzione": "Selettore a chiave a 3 pos."
+      }
+    },
+    {
+     
+        "or": [
+          ["temperatura", "termocoppia"],
+          ["termo", "tc"]
+        ],
+        "result": {
+          "categoria": "Sensore",
+          "sottocategoria": "Sensore di temperatura",
+          "opzione": "Termocoppia"
+        }
+      },
+      {
+    
+        "or": [
+          ["pt100"],
+          ["temperatura", "pt100"],
+          ["termostato", "pt100"]
+        ],
+        "result": {
+          "categoria": "Sensore",
+          "sottocategoria": "Sensore di temperatura",
+          "opzione": "PT100"
+        }
+      },
+      {
+     
+        "or": [
+          ["temperatura", "4-20"],
+          ["sensore", "temp", "4-20"]
+        ],
+        "result": {
+          "categoria": "Sensore",
+          "sottocategoria": "Sensore di temperatura",
+          "opzione": "AI 4-20mA"
+        }
+      },
+      {
+   
+        "or": [
+          ["temperatura", "0-10"],
+          ["sensore", "temp", "0-10"]
+        ],
+        "result": {
+          "categoria": "Sensore",
+          "sottocategoria": "Sensore di temperatura",
+          "opzione": "AI 0-10V"
+        }
+      },
+      {
+    
+        "or": [
+          ["termostato"],
+          ["temperatura", "ok"]
+        ],
+        "result": {
+          "categoria": "Sensore",
+          "sottocategoria": "Sensore di temperatura",
+          "opzione": "Contatto NO"
+        }
+      },
+      {
+
+        "or": [
+          ["motore"],
+          ["coclea"],
+          ["nastro", "trasportatore"],
+          ["pompa", "motrice"]
+        ],
+        "result": {
+          "categoria": "Attuatore",
+          "sottocategoria": "Motore",
+          "opzione": null 
+        }
+      },
+      {
+  
+        "or": [
+          ["vibratore", "pneumatico"],
+          ["vibro", "pn"]
+        ],
+        "result": {
+          "categoria": "Attuatore",
+          "sottocategoria": "Attuatore pneumatico",
+          "opzione": "Vibratore pneumatico"
+        }
+      },
+      {
+      
+        "or": [
+          ["pompa", "pneumatica"],
+          ["pompa", "aria"]
+        ],
+        "result": {
+          "categoria": "Attuatore",
+          "sottocategoria": "Attuatore pneumatico",
+          "opzione": "Pompa pneumatica"
+        }
+      },
+      {
+       
+        "or": [
+          ["spia", "rossa"],
+          ["indicatore", "rosso"]
+        ],
+        "result": {
+          "categoria": "Segnalazione",
+          "sottocategoria": "Spia luminosa",
+          "opzione": "Spia rossa"
+        }
+      },
+      {
+      
+        "or": [
+          ["spia", "gialla"],
+          ["indicatore", "giallo"]
+        ],
+        "result": {
+          "categoria": "Segnalazione",
+          "sottocategoria": "Spia luminosa",
+          "opzione": "Spia gialla"
+        }
+      },
+      {
+    
+        "or": [
+          ["spia", "verde"],
+          ["indicatore", "verde"]
+        ],
+        "result": {
+          "categoria": "Segnalazione",
+          "sottocategoria": "Spia luminosa",
+          "opzione": "Spia verde"
+        }
+      },
+      {
+      
+        "or": [
+          ["spia", "blu"],
+          ["indicatore", "blu"]
+        ],
+        "result": {
+          "categoria": "Segnalazione",
+          "sottocategoria": "Spia luminosa",
+          "opzione": "Spia blu"
+        }
+      },
+      {
+  
+        "or": [
+          ["spia", "bianca"],
+          ["indicatore", "bianco"]
+        ],
+        "result": {
+          "categoria": "Segnalazione",
+          "sottocategoria": "Spia luminosa",
+          "opzione": "Spia bianca"
+        }
+      },
+      {
+       
+        "or": [
+          ["sirena"],
+          ["buzzer"],
+          ["segnalatore", "acustico"]
+        ],
+        "result": {
+          "categoria": "Segnalazione",
+          "sottocategoria": "Segnalatore acustico",
+          "opzione": "Sirena / Buzzer di avviso"
+        }
+      }
+  ]
+  

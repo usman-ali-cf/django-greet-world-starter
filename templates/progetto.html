@@ -1,0 +1,78 @@
+<!-- progetto.html -->
+
+{% extends "base.html" %}
+
+{% block titolo_pagina %}Configura Utenze di Potenza{% endblock %}
+
+{% block contenuto %}
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dettagli Progetto</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <main>
+        <h2>{{ progetto.nome_progetto }}</h2>
+        <p><strong>Descrizione:</strong> {{ progetto.descrizione }}</p>
+        <p><strong>Data di Creazione:</strong> {{ progetto.data_creazione }}</p>
+        
+        <section>
+            <h3>Opzioni di Configurazione</h3>
+            <ul>
+                <li>
+                    <a href="{{ url_for('route_carica_file_utenze', id_prg=progetto.id_prg) }}">
+                        Carica File Utenze
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('route_configura_utenze', id_prg=progetto.id_prg) }}">
+                        Configura Utenze
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('route_configura_potenza', id_prg=progetto.id_prg) }}">
+                        Configura Utenze di Potenza
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ url_for('route_htmlpage_crea_nodo', id_prg=progetto.id_prg) }}">
+                        Crea Nodi e PLC
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('route_assegna_io_nodi', id_prg=progetto.id_prg) }}">
+                        Assegna I/O ai Nodi
+                    </a>
+                </li>
+                <!--
+                
+                <li>
+                    <a href="{{ url_for('route_assegna_potenza_nodi', id_prg=progetto.id_prg) }}">
+                        Assegna Potenza ai Nodi
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('route_configura_io', id_prg=progetto.id_prg) }}">
+                        Configura Simbologia I/O
+                    </a>
+                </li>
+
+                -->
+                <li>
+                    <a href="{{ url_for('route_crea_quadro', id_prg=progetto.id_prg) }}">
+                        Crea Quadro Elettrico
+                    </a>
+                </li>
+            </ul>
+        </section>
+    </main>
+
+</body>
+</html>
+{% endblock %}

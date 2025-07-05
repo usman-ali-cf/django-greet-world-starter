@@ -1,0 +1,38 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurazione Preliminare - Progetto Elettrico</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Configurazione Preliminare</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('route_crea_progetto') }}">Crea Nuovo Progetto</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Benvenuto nella Configurazione Preliminare</h2>
+        <p>Seleziona un progetto per iniziare la configurazione.</p>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('route_carica_file_utenze') }}">Carica File Utenze</a></li>
+                <li><a href="{{ url_for('route_configura_potenza') }}">Configura Utenze di Potenza</a></li>
+                <li><a href="{{ url_for('route_configura_io') }}">Configura I/O</a></li>
+                <li><a href="{{ url_for('route_crea_quadro') }}">Crea Quadro Elettrico</a></li>
+                <li><a href="{{ url_for('route_crea_nodo') }}">Crea Nodi e PLC</a></li>
+                <li><a href="{{ url_for('route_assegna_io_nodi') }}">Assegna I/O ai Nodi</a></li>
+                <li><a href="{{ url_for('route_assegna_potenza_nodi') }}">Assegna Potenza ai Nodi</a></li>
+            </ul>
+        </nav>
+    </main>
+    <footer>
+        <p>&copy; 2024 Progetto Elettrico</p>
+    </footer>
+</body>
+</html>

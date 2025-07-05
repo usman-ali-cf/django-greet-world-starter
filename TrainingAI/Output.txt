@@ -1,0 +1,302 @@
+1;Sensore;Sensore di posizione;Finecorsa meccanico NO
+2;Attuatore;Consenso da esterno;Segnale di abilitazione
+3;Sensore;Sensore di livello;Livello minimo (NO)
+4;Sensore;Sensore di livello;Livello massimo (NC)
+5;Attuatore;Valvola;Normalmente chiusa
+6;Attuatore;Valvola;Normalmente chiusa
+9;Attuatore;Consenso da esterno;Segnale di abilitazione
+10;Sensore;Sensore di livello;Livello massimo (NC)
+11;Attuatore;Valvola;Normalmente chiusa
+12;Attuatore;Valvola;Normalmente chiusa
+13;Attuatore;Valvola;Normalmente chiusa
+16;Sensore;Sensore di prossimità;Proximity NO
+17;Sensore;Sensore di prossimità;Proximity NC
+18;Attuatore;Valvola;Normalmente chiusa
+19;Attuatore;Valvola;Normalmente chiusa
+21;Attuatore;Valvola;Normalmente chiusa
+22;Attuatore;Valvola;Normalmente chiusa
+23;Attuatore;Valvola;Normalmente chiusa
+24;Attuatore;Valvola;Normalmente chiusa
+25;Attuatore;Valvola;Normalmente chiusa
+26;Attuatore;Valvola;Normalmente chiusa
+27;Attuatore;Valvola;Normalmente chiusa
+28;Dispositivo di sicurezza;Riparo;Microinterruttore senza interblocco
+30;Comando operatore;Pulsante luminoso;Pulsante luminoso verde
+31;Comando operatore;Pulsante;Pulsante rosso
+32;Comando operatore;Pulsante luminoso;Pulsante luminoso bianco
+33;Comando operatore;Pulsante di emergenza;Fungo di emergenza
+34;Comando operatore;Selettore;Selettore a due posizioni
+35;Attuatore;Attuatore pneumatico;Vibratore pneumatico
+37;Comando operatore;Pulsante luminoso;Pulsante luminoso verde
+38;Comando operatore;Pulsante;Pulsante rosso
+39;Comando operatore;Pulsante luminoso;Pulsante luminoso bianco
+40;Comando operatore;Pulsante;Pulsante bianco
+41;Comando operatore;Pulsante di emergenza;Fungo di emergenza
+43;Sensore;Sensore di prossimità;Proximity NO
+44;Attuatore;Valvola;Normalmente chiusa
+45;Attuatore;Valvola;Normalmente chiusa
+46;Attuatore;Valvola;Normalmente chiusa
+48;Sensore;Sensore di prossimità;Proximity NO
+49;Attuatore;Valvola;Normalmente chiusa
+50;Attuatore;Valvola;Normalmente chiusa
+51;Attuatore;Valvola;Normalmente chiusa
+52;Attuatore;Valvola;Normalmente chiusa
+53;Attuatore;Valvola;Normalmente chiusa
+54;Attuatore;Valvola;Normalmente chiusa
+55;Attuatore;Valvola;Normalmente chiusa
+56;Attuatore;Valvola;Normalmente chiusa
+57;Attuatore;Valvola;Normalmente chiusa
+58;Attuatore;Valvola;Normalmente chiusa
+59;Sensore;Sensore di posizione;Finecorsa meccanico NO
+60;Attuatore;Valvola;Normalmente chiusa
+61;Attuatore;Valvola;Normalmente chiusa
+62;Attuatore;Valvola;Normalmente chiusa
+63;Attuatore;Valvola;Normalmente chiusa
+64;Attuatore;Valvola;Normalmente chiusa
+65;Attuatore;Valvola;Normalmente chiusa
+66;Attuatore;Valvola;Normalmente chiusa
+67;Attuatore;Valvola;Normalmente chiusa
+68;Attuatore;Valvola;Normalmente chiusa
+69;Attuatore;Valvola;Normalmente chiusa
+70;Attuatore;Valvola;Normalmente chiusa
+71;Attuatore;Valvola;Normalmente chiusa
+72;Attuatore;Valvola;Normalmente chiusa
+74;Sensore;Sensore di prossimità;Proximity NO
+75;Attuatore;Valvola;Normalmente chiusa
+76;Attuatore;Valvola;Normalmente chiusa
+77;Attuatore;Valvola;Normalmente chiusa
+78;Attuatore;Valvola;Normalmente chiusa
+79;Attuatore;Valvola;Normalmente chiusa
+80;Attuatore;Valvola;Normalmente chiusa
+81;Attuatore;Valvola;Normalmente chiusa
+82;Attuatore;Valvola;Normalmente chiusa
+83;Attuatore;Valvola;Normalmente chiusa
+84;Attuatore;Valvola;Normalmente chiusa
+85;Attuatore;Valvola;Normalmente chiusa
+86;Attuatore;Valvola;Normalmente chiusa
+87;Attuatore;Valvola;Normalmente chiusa
+88;Attuatore;Valvola;Normalmente chiusa
+89;Attuatore;Valvola;Normalmente chiusa
+90;Attuatore;Valvola;Normalmente chiusa
+91;Attuatore;Valvola;Normalmente chiusa
+92;Attuatore;Valvola;Normalmente chiusa
+93;Attuatore;Valvola;Normalmente chiusa
+94;Attuatore;Valvola;Normalmente chiusa
+95;Attuatore;Valvola;Normalmente chiusa
+96;Attuatore;Valvola;Normalmente chiusa
+97;Attuatore;Attuatore pneumatico;Pompa pneumatica
+98;Attuatore;Valvola;Normalmente chiusa
+99;Attuatore;Valvola;Normalmente chiusa
+100;Attuatore;Valvola;Normalmente chiusa
+101;Attuatore;Valvola;Normalmente chiusa
+102;Attuatore;Valvola;Normalmente chiusa
+103;Attuatore;Valvola;Normalmente chiusa
+104;Attuatore;Valvola;Normalmente chiusa
+105;Attuatore;Valvola;Normalmente chiusa
+106;Attuatore;Attuatore pneumatico;Pompa pneumatica
+107;Attuatore;Attuatore pneumatico;Pompa pneumatica
+108;Attuatore;Attuatore pneumatico;Pompa pneumatica
+109;Attuatore;Attuatore pneumatico;Pompa pneumatica
+110;Attuatore;Attuatore pneumatico;Pompa pneumatica
+111;Attuatore;Valvola;Normalmente chiusa
+112;Attuatore;Valvola;Normalmente chiusa
+113;Attuatore;Valvola;Normalmente chiusa
+114;Attuatore;Valvola;Normalmente chiusa
+115;Attuatore;Valvola;Normalmente chiusa
+116;Attuatore;Valvola;Normalmente chiusa
+117;Attuatore;Valvola;Normalmente chiusa
+118;Attuatore;Valvola;Normalmente chiusa
+119;Attuatore;Valvola;Normalmente chiusa
+120;Attuatore;Valvola;Normalmente chiusa
+121;Attuatore;Valvola;Normalmente chiusa
+122;Attuatore;Valvola;Normalmente chiusa
+125;Attuatore;Valvola;Normalmente chiusa
+126;Attuatore;Valvola;Normalmente chiusa
+127;Attuatore;Valvola;Normalmente chiusa
+128;Attuatore;Valvola;Normalmente chiusa
+129;Attuatore;Valvola;Normalmente chiusa
+130;Attuatore;Valvola;Normalmente chiusa
+131;Attuatore;Valvola;Normalmente chiusa
+132;Attuatore;Valvola;Normalmente chiusa
+133;Attuatore;Valvola;Normalmente chiusa
+134;Attuatore;Valvola;Normalmente chiusa
+135;Attuatore;Valvola;Normalmente chiusa
+136;Attuatore;Valvola;Normalmente chiusa
+137;Attuatore;Valvola;Normalmente chiusa
+138;Attuatore;Valvola;Normalmente chiusa
+139;Attuatore;Valvola;Normalmente chiusa
+140;Attuatore;Valvola;Normalmente chiusa
+143;Attuatore;Valvola;Normalmente chiusa
+144;Attuatore;Valvola;Normalmente chiusa
+145;Attuatore;Valvola;Normalmente chiusa
+146;Dispositivo di sicurezza;Riparo;Microinterruttore senza interblocco
+147;Dispositivo di sicurezza;Riparo;Microinterruttore senza interblocco
+148;Attuatore;Valvola;Normalmente chiusa
+149;Segnalazione;Spia luminosa;Spia bianca
+150;Segnalazione;Spia luminosa;Spia gialla
+151;Sensore;Sensore di pressione;Pressostato di minima (NO)
+152;Comando operatore;Pulsante luminoso;Pulsante luminoso verde
+153;Comando operatore;Pulsante;Pulsante rosso
+154;Comando operatore;Pulsante luminoso;Pulsante luminoso verde
+155;Comando operatore;Pulsante;Pulsante rosso
+156;Comando operatore;Pulsante luminoso;Pulsante luminoso verde
+157;Comando operatore;Pulsante;Pulsante nero
+158;Comando operatore;Pulsante;Pulsante nero
+159;Comando operatore;Pulsante;Pulsante nero
+160;Segnalazione;Spia luminosa;Spia bianca
+161;Comando operatore;Selettore;Selettore a tre posizioni
+162;Attuatore;Consenso verso esterno;Segnale di abilitazione
+163;Comando operatore;Pulsante;Pulsante giallo
+164;Segnalazione;Spia luminosa;Spia bianca
+165;Sensore;Consenso da esterno;Contatto NC
+166;Sensore;Sensore di posizione;Finecorsa meccanico NO
+167;Attuatore;Consenso verso esterno;Segnale di abilitazione
+168;Sensore;Sensore di livello;Livello minimo (NO)
+169;Sensore;Sensore di livello;Livello massimo (NC)
+170;Attuatore;Valvola;Normalmente chiusa
+171;Attuatore;Valvola;Normalmente chiusa
+174;Attuatore;Consenso verso esterno;Segnale di abilitazione
+175;Sensore;Sensore di livello;Livello massimo (NC)
+176;Attuatore;Valvola;Normalmente chiusa
+177;Attuatore;Valvola;Normalmente chiusa
+178;Attuatore;Valvola;Normalmente chiusa
+181;Sensore;Sensore di prossimità;Proximity NO
+182;Sensore;Sensore di prossimità;Proximity NC
+183;Attuatore;Valvola;Normalmente chiusa
+184;Attuatore;Valvola;Normalmente chiusa
+186;Attuatore;Valvola;Normalmente chiusa
+187;Attuatore;Valvola;Sconosciuto
+188;Attuatore;Valvola;Sconosciuto
+189;Attuatore;Valvola;Sconosciuto
+190;Attuatore;Valvola;Sconosciuto
+191;Attuatore;Valvola;Normalmente chiusa
+192;Sconosciuto;Sconosciuto;Sconosciuto
+193;Sensore;Sensore di posizione;Finecorsa meccanico NO
+195;Comando operatore;Pulsante luminoso;Pulsante luminoso verde
+196;Comando operatore;Pulsante;Pulsante rosso
+197;Comando operatore;Pulsante luminoso;Pulsante luminoso blu
+198;Comando operatore;Pulsante di emergenza;Fungo di emergenza
+199;Comando operatore;Selettore;Selettore a due posizioni
+200;Attuatore;Attuatore pneumatico;Vibratore pneumatico
+202;Comando operatore;Pulsante luminoso;Pulsante luminoso verde
+203;Sconosciuto;Sconosciuto;Sconosciuto
+204;Sconosciuto;Sconosciuto;Sconosciuto
+205;Sconosciuto;Sconosciuto;Sconosciuto
+206;Sconosciuto;Sconosciuto;Sconosciuto
+208;Sconosciuto;Sconosciuto;Sconosciuto
+209;Sconosciuto;Sconosciuto;Sconosciuto
+210;Sconosciuto;Sconosciuto;Sconosciuto
+211;Sconosciuto;Sconosciuto;Sconosciuto
+213;Sensore;Sconosciuto;Sconosciuto
+214;Attuatore;Valvola;Sconosciuto
+215;Attuatore;Valvola;Sconosciuto
+216;Attuatore;Valvola;Sconosciuto
+217;Attuatore;Valvola;Sconosciuto
+218;Attuatore;Valvola;Sconosciuto
+219;Sensore;Sensore di posizione;Finecorsa meccanico NO
+220;Attuatore;Valvola;Normalmente chiusa
+221;Sensore;Sensore di posizione;Sconosciuto
+222;Attuatore;Valvola;Sconosciuto
+223;Sconosciuto;Sconosciuto;Sconosciuto
+224;Sconosciuto;Sconosciuto;Sconosciuto
+225;Sconosciuto;Sconosciuto;Sconosciuto
+226;Sconosciuto;Sconosciuto;Sconosciuto
+227;Sconosciuto;Sconosciuto;Sconosciuto
+228;Sconosciuto;Sconosciuto;Sconosciuto
+229;Sconosciuto;Sconosciuto;Sconosciuto
+230;Sconosciuto;Sconosciuto;Sconosciuto
+231;Sconosciuto;Sconosciuto;Sconosciuto
+232;Sconosciuto;Sconosciuto;Sconosciuto
+233;Attuatore;Valvola;Sconosciuto
+234;Dispositivo di sicurezza;Riparo;Sconosciuto
+235;Attuatore;Valvola;Sconosciuto
+236;Dispositivo di sicurezza;Riparo;Sconosciuto
+237;Attuatore;Valvola;Sconosciuto
+239;Sensore;Sconosciuto;Sconosciuto
+240;Attuatore;Valvola;Sconosciuto
+241;Attuatore;Valvola;Sconosciuto
+242;Attuatore;Valvola;Sconosciuto
+243;Attuatore;Valvola;Sconosciuto
+244;Sconosciuto;Sconosciuto;Sconosciuto
+245;Sconosciuto;Sconosciuto;Sconosciuto
+246;Sconosciuto;Sconosciuto;Sconosciuto
+247;Sconosciuto;Sconosciuto;Sconosciuto
+248;Sconosciuto;Sconosciuto;Sconosciuto
+249;Sconosciuto;Sconosciuto;Sconosciuto
+250;Sconosciuto;Sconosciuto;Sconosciuto
+251;Sconosciuto;Sconosciuto;Sconosciuto
+252;Sconosciuto;Sconosciuto;Sconosciuto
+253;Sconosciuto;Sconosciuto;Sconosciuto
+254;Attuatore;Valvola;Normalmente chiusa
+255;Attuatore;Valvola;Normalmente chiusa
+256;Attuatore;Valvola;Normalmente chiusa
+257;Attuatore;Valvola;Normalmente chiusa
+258;Attuatore;Valvola;Normalmente chiusa
+259;Attuatore;Valvola;Normalmente chiusa
+260;Attuatore;Valvola;Normalmente chiusa
+261;Sensore;Sensore di posizione;Finecorsa meccanico NO
+262;Attuatore;Valvola;Normalmente chiusa
+263;Attuatore;Valvola;Normalmente chiusa
+264;Sconosciuto;Sconosciuto;Sconosciuto
+265;Sconosciuto;Sconosciuto;Sconosciuto
+266;Sconosciuto;Sconosciuto;Sconosciuto
+267;Sconosciuto;Sconosciuto;Sconosciuto
+268;Sconosciuto;Sconosciuto;Sconosciuto
+269;Sconosciuto;Sconosciuto;Sconosciuto
+270;Sconosciuto;Sconosciuto;Sconosciuto
+271;Sconosciuto;Sconosciuto;Sconosciuto
+272;Sconosciuto;Sconosciuto;Sconosciuto
+273;Sconosciuto;Sconosciuto;Sconosciuto
+274;Attuatore;Valvola;Normalmente chiusa
+275;Attuatore;Valvola;Normalmente chiusa
+276;Attuatore;Valvola;Normalmente chiusa
+277;Dispositivo di sicurezza;Riparo;Microinterruttore senza interblocco
+278;Attuatore;Valvola;Normalmente chiusa
+279;Dispositivo di sicurezza;Riparo;Microinterruttore senza interblocco
+280;Attuatore;Valvola;Normalmente chiusa
+281;Dispositivo di sicurezza;Riparo;Microinterruttore senza interblocco
+282;Attuatore;Valvola;Normalmente chiusa
+283;Dispositivo di sicurezza;Riparo;Microinterruttore senza interblocco
+284;Sconosciuto;Sconosciuto;Sconosciuto
+285;Sconosciuto;Sconosciuto;Sconosciuto
+286;Sconosciuto;Sconosciuto;Sconosciuto
+287;Sconosciuto;Sconosciuto;Sconosciuto
+290;Sconosciuto;Sconosciuto;Sconosciuto
+291;Sconosciuto;Sconosciuto;Sconosciuto
+292;Sconosciuto;Sconosciuto;Sconosciuto
+293;Sconosciuto;Sconosciuto;Sconosciuto
+294;Sconosciuto;Sconosciuto;Sconosciuto
+295;Sconosciuto;Sconosciuto;Sconosciuto
+296;Attuatore;Valvola;Normalmente chiusa
+297;Dispositivo di sicurezza;Riparo;Microinterruttore senza interblocco
+298;Attuatore;Valvola;Normalmente chiusa
+299;Dispositivo di sicurezza;Riparo;Microinterruttore senza interblocco
+300;Attuatore;Valvola;Normalmente chiusa
+301;Dispositivo di sicurezza;Riparo;Microinterruttore senza interblocco
+302;Attuatore;Valvola;Normalmente chiusa
+303;Dispositivo di sicurezza;Riparo;Microinterruttore senza interblocco
+304;Attuatore;Valvola;Normalmente chiusa
+305;Dispositivo di sicurezza;Riparo;Microinterruttore senza interblocco
+308;Sconosciuto;Sconosciuto;Sconosciuto
+309;Sconosciuto;Sconosciuto;Sconosciuto
+310;Sconosciuto;Sconosciuto;Sconosciuto
+311;Sconosciuto;Sconosciuto;Sconosciuto
+312;Sconosciuto;Sconosciuto;Sconosciuto
+313;Sconosciuto;Sconosciuto;Sconosciuto
+314;Sconosciuto;Sconosciuto;Sconosciuto
+315;Sconosciuto;Sconosciuto;Sconosciuto
+316;Sconosciuto;Sconosciuto;Sconosciuto
+317;Sconosciuto;Sconosciuto;Sconosciuto
+318;Sconosciuto;Sconosciuto;Sconosciuto
+319;Sconosciuto;Sconosciuto;Sconosciuto
+320;Sconosciuto;Sconosciuto;Sconosciuto
+321;Sconosciuto;Sconosciuto;Sconosciuto
+322;Sconosciuto;Sconosciuto;Sconosciuto
+323;Sconosciuto;Sconosciuto;Sconosciuto
+324;Sconosciuto;Sconosciuto;Sconosciuto
+325;Sconosciuto;Sconosciuto;Sconosciuto
+326;Sconosciuto;Sconosciuto;Sconosciuto
+327;Sconosciuto;Sconosciuto;Sconosciuto
+328;Sconosciuto;Sconosciuto;Sconosciuto
+329;Sconosciuto;Sconosciuto;Sconosciuto
+330;Sconosciuto;Sconosciuto;Sconosciuto

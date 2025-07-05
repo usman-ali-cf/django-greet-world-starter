@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block titolo_pagina %}Carica File Utenze{% endblock %}
+
+{% block contenuto %}
+
+<main class="container">
+  <h1 class="page-title">Carica File Utenze</h1>
+
+  <p class="page-description">
+    Seleziona un file Excel (.xlsx) per caricare le utenze relative al progetto
+    ID: <strong>{{ id_prg }}</strong>
+  </p>
+
+  <!-- ▲▲ abbiamo dato un id al form per intercettarlo via JS -->
+  <form id="formUploadUtenze"
+        action="/progetto/{{ id_prg }}/carica_file_utenze"
+        method="POST" enctype="multipart/form-data"
+        class="upload-form">
+    <label for="file_utenze" class="form-label">
+      📂 Seleziona File Utenze (.xlsx):
+    </label>
+    <input type="file" id="file_utenze" name="file_utenze"
+           accept=".xlsx,.xls" required class="form-input">
+
+    <button type="submit" class="btn-submit">📤 Carica File</button>
+  </form>
+
+  <!-- Download template -->
+  <button type="button" id="download-template-btn"
+          class="btn-submit" style="margin-top:20px;">
+    📥 Scarica Template
+  </button>
+
+  <!-- messaggio esito -->
+  <p id="feedback" style="margin-top:15px;font-weight:bold;"></p>
+</main>
+
+<!-- ░░░ overlay di caricamento ░░░ -->
+<div id="loadingOverlay" class="popup-overlay" style="display:none">
+  <div class="popup-content" style="text-align:center">
+    <h4>Elaborazione file…</h4>
+    <div class="progress-bar" style="
+          width:100%;height:8px;background:#ddd;border-radius:4px;overflow:hidden;margin-top:12px">
+      <div id="barInterna" style="
+          width:0;height:100%;background:#032952;animation:barra 2s linear infinite"></div>
+    </div>
+  </div>
+</div>
+
+<!-- semplice animazione keyframe -->
+<style>
+@keyframes barra { 0%{width:0} 50%{width:100%} 100%{width:0} }
+</style>
+
+<!-- JS -->
+<script type="module"
+        src="{{ url_for('static',filename='js/carica_file/carica_file.js') }}">
+</script>
+{% endblock %}

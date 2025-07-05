@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block titolo_pagina %}Conferma Eliminazione Utenze{% endblock %}
+
+{% block contenuto %}
+<main class="container">
+    <h1 class="page-title">⚠️ Conferma Eliminazione Utenze</h1>
+    <p class="page-description">
+        Esistono già utenze associate al progetto <strong>ID: {{ id_prg }}</strong>.
+    </p>
+    <p>
+        Se continui, le utenze esistenti verranno eliminate prima di caricare il nuovo file:  
+        <strong>{{ file_name }}</strong>.
+    </p>
+
+    <!-- Form senza action: gestito da JavaScript -->
+    <form id="form-conferma">
+        <input type="hidden" id="file_path" value="{{ file_path }}">
+        <input type="hidden" id="id_prg" value="{{ id_prg }}">
+
+        <button type="button" id="btn-conferma" class="btn-submit">✅ Conferma e Carica</button>
+        <button type="button" id="btn-annulla" class="btn-cancel">❌ Annulla</button>
+    </form>
+
+    <div id="feedback" class="feedback-message"></div>
+</main>
+<!-- ░░░ overlay di caricamento ░░░ -->
+<div id="loadingOverlay" class="popup-overlay" style="display:none">
+    <div class="popup-content" style="text-align:center">
+      <h4>Elaborazione file…</h4>
+      <div class="progress-bar" style="
+            width:100%;height:8px;background:#ddd;border-radius:4px;overflow:hidden;margin-top:12px">
+        <div id="barInterna" style="
+            width:0;height:100%;background:#032952;animation:barra 2s linear infinite"></div>
+      </div>
+    </div>
+  </div>
+<!-- Caricamento dello script dedicato -->
+<script type="module" src="{{ url_for('static', filename='js/carica_file/carica_file.js') }}"></script>
+
+{% endblock %}

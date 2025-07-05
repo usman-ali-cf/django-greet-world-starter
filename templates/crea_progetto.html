@@ -1,0 +1,33 @@
+<!-- crea_progetto.html -->
+
+{% extends "base.html" %}
+
+{% block titolo_pagina %}Crea/Modifica Nodo PLC{% endblock %}
+
+{% block contenuto %}
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crea Nuovo Progetto</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <main>
+        <h2>Crea Nuovo Progetto</h2>
+        <form action="/crea_progetto" method="POST">
+            <label for="nome_progetto">Nome Progetto:</label>
+            <input type="text" id="nome_progetto" name="nome_progetto" required>
+            
+            <label for="descrizione_progetto">Descrizione Progetto:</label>
+            <textarea id="descrizione_progetto" name="descrizione_progetto" required></textarea>
+            
+            <button type="submit">Crea Progetto</button>
+        </form>
+        <div id="feedback"></div>
+    </main>
+</body>
+</html>
+{% endblock %}

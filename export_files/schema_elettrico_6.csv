@@ -1,0 +1,56 @@
+1;1;0.00,0.00;
+11;11;0.00,0.00;
+DOL_0;50;50.00,240.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block><Key Tag="QUADRO" Value="+QG" /><Key Tag="NOME" Value="50QF1" /><Attribute Tag="QUADRO" Value="+QG" /><Attribute Tag="NOME" Value="QF4867" /><Attribute Tag="FUNZIONE1" Value="Nastro trasportatore ingresso" /><Attribute Tag="FUNZIONE2" Value="None" /><Attribute Tag="TAGLIA" Value="1,8-2,5A" /><Attribute Tag="COSTRUTTORE" Value="SIEMENS" /><Attribute Tag="TIPO" Value="3RV20111CA10\;3RV29011E\;3RA19211DA00\;W32431" /></Block><Block><Key Tag="NOME" Value="50KM1" /><Attribute Tag="NOME" Value="KM4867_1" /></Block><Block><Key Tag="QUADRO" Value="+BM" /><Key Tag="NOME" Value="50M1" /><Attribute Tag="QUADRO" Value="+QG" /><Attribute Tag="NOME" Value="M4867" /><Attribute Tag="FUNZIONE1" Value="Nastro trasportatore ingresso" /><Attribute Tag="FUNZIONE2" Value="" /><Attribute Tag="POTENZA" Value="0.75 kW" /></Block></Blocks>
+DOL_0;50;130.00,240.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block><Key Tag="QUADRO" Value="+QG" /><Key Tag="NOME" Value="50QF1" /><Attribute Tag="QUADRO" Value="+QG" /><Attribute Tag="NOME" Value="QF4868" /><Attribute Tag="FUNZIONE1" Value="Nastro trasportatore stazione 1" /><Attribute Tag="FUNZIONE2" Value="None" /><Attribute Tag="TAGLIA" Value="1,8-2,5A" /><Attribute Tag="COSTRUTTORE" Value="SIEMENS" /><Attribute Tag="TIPO" Value="3RV20111CA10\;3RV29011E\;3RA19211DA00\;W32431" /></Block><Block><Key Tag="NOME" Value="50KM1" /><Attribute Tag="NOME" Value="KM4868_1" /></Block><Block><Key Tag="QUADRO" Value="+BM" /><Key Tag="NOME" Value="50M1" /><Attribute Tag="QUADRO" Value="+QG" /><Attribute Tag="NOME" Value="M4868" /><Attribute Tag="FUNZIONE1" Value="Nastro trasportatore stazione 1" /><Attribute Tag="FUNZIONE2" Value="" /><Attribute Tag="POTENZA" Value="0.75 kW" /></Block></Blocks>
+UD_0;50;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block><Key Tag="QUADRO" Value="+QG" /><Key Tag="NOME" Value="50QF1" /><Attribute Tag="QUADRO" Value="" /><Attribute Tag="NOME" Value="" /><Attribute Tag="FUNZIONE1" Value="" /></Block></Blocks>
+UD_10;50;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_1A;50;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UD_2;50;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block><Key Tag="_TITOLO" Value="TITOLO FOGLIO" /><Attribute Tag="_TITOLO" Value="Partenze Motore" /></Block></Blocks>
+DOL_3;51;50.00,240.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block><Key Tag="QUADRO" Value="+QG" /><Key Tag="NOME" Value="50QF1" /><Attribute Tag="QUADRO" Value="+QG" /><Attribute Tag="NOME" Value="QF4869" /><Attribute Tag="FUNZIONE1" Value="SET 1,90A" /><Attribute Tag="FUNZIONE2" Value="None" /><Attribute Tag="TAGLIA" Value="1,8-2,5A" /><Attribute Tag="COSTRUTTORE" Value="SIEMENS" /><Attribute Tag="TIPO" Value="3RV20111CA10\;3RV29011E\;3RA19211DA00\;W32431" /></Block><Block><Key Tag="NOME" Value="50KM1" /><Attribute Tag="NOME" Value="KM4869_1" /></Block><Block><Key Tag="NOME" Value="50KM2" /><Attribute Tag="NOME" Value="KM4869_2" /></Block><Block><Key Tag="QUADRO" Value="+BM" /><Key Tag="NOME" Value="50M1" /><Attribute Tag="QUADRO" Value="+QG" /><Attribute Tag="NOME" Value="M4869" /><Attribute Tag="FUNZIONE1" Value="Nastro trasportatore stazione 2" /><Attribute Tag="FUNZIONE2" Value="" /><Attribute Tag="POTENZA" Value="0.75 kW" /></Block></Blocks>
+DOL_3;51;210.00,240.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block><Key Tag="QUADRO" Value="+QG" /><Key Tag="NOME" Value="50QF1" /><Attribute Tag="QUADRO" Value="+QG" /><Attribute Tag="NOME" Value="QF4870" /><Attribute Tag="FUNZIONE1" Value="SET 1,90A" /><Attribute Tag="FUNZIONE2" Value="None" /><Attribute Tag="TAGLIA" Value="1,8-2,5A" /><Attribute Tag="COSTRUTTORE" Value="SIEMENS" /><Attribute Tag="TIPO" Value="3RV20111CA10\;3RV29011E\;3RA19211DA00\;W32431" /></Block><Block><Key Tag="NOME" Value="50KM1" /><Attribute Tag="NOME" Value="KM4870_1" /></Block><Block><Key Tag="NOME" Value="50KM2" /><Attribute Tag="NOME" Value="KM4870_2" /></Block><Block><Key Tag="QUADRO" Value="+BM" /><Key Tag="NOME" Value="50M1" /><Attribute Tag="QUADRO" Value="+QG" /><Attribute Tag="NOME" Value="M4870" /><Attribute Tag="FUNZIONE1" Value="Nastro trasportatore uscita" /><Attribute Tag="FUNZIONE2" Value="" /><Attribute Tag="POTENZA" Value="0.75 kW" /></Block></Blocks>
+UD_0;51;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block><Key Tag="QUADRO" Value="+QG" /><Key Tag="NOME" Value="50QF1" /><Attribute Tag="QUADRO" Value="" /><Attribute Tag="NOME" Value="" /><Attribute Tag="FUNZIONE1" Value="" /></Block></Blocks>
+UD_10;51;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_1A;51;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UD_2;51;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block><Key Tag="_TITOLO" Value="TITOLO FOGLIO" /><Attribute Tag="_TITOLO" Value="Partenze Motore" /></Block></Blocks>
+80;80;0.00,0.00;
+81;81;0.00,0.00;
+105;105;0.00,0.00;
+150;150;0.00,0.00;
+160;160;0.00,0.00;
+170;170;0.00,0.00;
+175;175;0.00,0.00;
+UF_10;210;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_10;210;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_10;211;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_10;211;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_10;212;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_10;212;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_10;213;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_10;213;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_10;214;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_10;214;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_10;215;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_10;215;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_10;216;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_10;216;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_10;217;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_10;217;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_11;310;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_11;310;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_11;311;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_11;311;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_11;312;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_11;312;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_11;313;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_11;313;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_11;314;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_11;314;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_11;315;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+UF_11;315;0.00,0.00;<?xml version="1.0" encoding="UTF-8"?><Blocks><Block></Block></Blocks>
+100D;100D;0.00,0.00;
+101A;101A;0.00,0.00;
+10C;10C;0.00,0.00;
+110A;110A;0.00,0.00;
+2A;2A;0.00,0.00;
+75S;75S;0.00,0.00;
+83A;83A;0.00,0.00;

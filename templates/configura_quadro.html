@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block titolo_pagina %}Configurazione Quadro Elettrico{% endblock %}
+
+{% block contenuto %}
+<main class="container" style="text-align: center; padding: 40px;">
+  <!-- Banner “In costruzione” -->
+  <div style="font-size: 48px; margin-bottom: 20px;">
+    🚧
+  </div>
+  <h2 style="margin-bottom: 10px;">Pagina in fase di sviluppo</h2>
+  <p style="font-size: 18px; color: #666;">
+    Stiamo lavorando per offrirti presto un’interfaccia completa di configurazione del quadro elettrico.
+  </p>
+  <!-- Facoltativo: un’immagine “under construction” -->
+  <img src="{{ url_for('static', filename='img/under_construction.png') }}"
+       alt="In costruzione"
+       style="max-width: 300px; margin-top: 30px; opacity: 0.8;">
+</main>
+{% endblock %}

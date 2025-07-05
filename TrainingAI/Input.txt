@@ -1,0 +1,302 @@
+1;ZS3X01A;FC bocchettone inserito;default;None;X01;1;0;0;0;0;0;None
+2;M1XFX01;Alimentazione scheda filtro;default;None;X01;1;1;0;0;0;0;None
+3;LSL4X01;Livello minimo;default;None;X01;1;0;0;0;0;0;None
+4;LSH4X01;livello massimo;default;None;X01;1;0;0;0;0;0;None
+5;PS1XUX01;Fluidificazione allo scarico (funghi);default;None;X01;1;1;0;0;0;0;None
+6;PS2XUX01;Fluidificazione allo scarico (martelli);default;None;X01;1;1;0;0;0;0;None
+9;M1XFXW1;Alimentazione scheda filtro;default;None;XW1;0;1;0;0;0;0;None
+10;LSH1XW1;livello massimo;default;None;XW1;1;0;0;0;0;0;None
+11;PS1XUXW1;EV fluidificazione tramoggia (funghi);default;None;XW1;1;1;0;0;0;0;None
+12;PS2XUXW1;EV fluidificazione tramoggia (martelli);default;None;XW1;1;1;0;0;0;0;None
+13;PS3XW1;EV scarico tramoggia;default;None;XW1;2;1;0;0;0;0;None
+16;SS1TXW1;Sensore di movimento ;default;None;TXW1;1;0;0;0;0;0;None
+17;SS2TXW1;Sensori  antisbandamento;default;None;TXW1;1;0;0;0;0;0;None
+18;PS1XUTXW1;Fluidificazione 1 al carico dell'elevatore;default;None;TXW1;0;1;0;0;0;0;None
+19;PS2XUTXW1;Fluidificazione 2  allo scarico dell'elevatore;default;None;TXW1;0;1;0;0;0;0;None
+21;FV1L01;Valvola a farfalla su macchina L01  ;default;None;TXW1;1;1;0;0;0;0;None
+22;FV1L02;Valvola a farfalla su macchina L02;default;None;TXW11;1;1;0;0;0;0;None
+23;FV1SBB01A;Elettrovalvola movimentazione petali 1-2;default;None;SBB01;0;1;0;0;0;0;None
+24;FV1SBB01B;Elettrovalvola movimentazione petali 1-2;default;None;SBB01;0;1;0;0;0;0;None
+25;FV2SBB01A;Elettrovalvola movimentazione petali 3-4;default;None;SBB01;0;1;0;0;0;0;None
+26;FV2SBB01B;Elettrovalvola movimentazione petali 3-4;default;None;SBB01;0;1;0;0;0;0;None
+27;FV3SBB01;Elettrovalvola vibratore pneumatico ;default;None;SBB01;0;1;0;0;0;0;None
+28;FC1SBB01;Finecorsa di sicurezza sportello ;default;None;SBB01;1;0;0;0;0;0;None
+30;P1 SBB01;Start carico ;default;None;PC1 SBB01;1;1;0;0;0;0;None
+31;P2 SBB01;Stop carico;default;None;PC1 SBB01;1;0;0;0;0;0;None
+32;P3 SBB01;Conferma carico;default;None;PC1 SBB01;1;1;0;0;0;0;None
+33;P4 SBB01;Pulsante di Emergenza;default;None;PC1 SBB01;1;0;0;0;0;0;None
+34;S1 SBB01;Selettore cambio big bag;default;None;PC1 SBB01;2;0;0;0;0;0;None
+35;M1 RSM1;Vibratore Pneumatico;default;None;RSM1;1;1;0;0;0;0;None
+37;P1 RSM1;Start rompisacchi;default;None;PC-RSM1;1;1;0;0;0;0;None
+38;P2 RSM1;Stop rompisacchi;default;None;PC-RSM1;1;0;0;0;0;0;None
+39;P3 RSM1;Conferma carico;default;None;PC-RSM1;1;1;0;0;0;0;None
+40;P4 RSM1;Start/Stop vibratore;default;None;PC-RSM1;1;0;0;0;0;0;None
+41;P5 RSM1;Pulsante di Emergenza;default;None;PC-RSM1;1;0;0;0;0;0;None
+43;SS1 TXL1;Sensore movimento trasportatore aeromeccanico estrattore orizzontale-verticale;default;None;TXL1;1;0;0;0;0;0;None
+44;PS1 XU 1TXL1;Elettrovalvola fluidificazione trasportatore aeromeccanico estrattore orizzontale;default;None;TXL1;0;1;0;0;0;0;None
+45;FV15 TXL1A-C;deviatore su 2TXL1 e 3TXL1;default;None;TXL1;2;1;0;0;0;0;None
+46;PS2 TXL1;Elettrovalvola fluidificazione su deviatrice;default;None;TXL1;0;1;0;0;0;0;None
+48;SS2 TXL1;Sensore movimento trasportatore aeromeccanico distributore su macchine a soppalco;default;None;TXL1;1;0;0;0;0;0;None
+49;PS4 TXL1;Elettrovalvola fluidificazione interfaccia trasportatori 1TXL1 e 2TXL1;default;None;TXL1;0;1;0;0;0;0;None
+50;PS5 TXL1;Valvola con bocca di scarico rotativa su L01;default;None;TXL1;1;1;0;0;0;0;None
+51;PS3L01;EV scarico L01;default;None;TXL1;1;1;0;0;0;0;None
+52;PS6 TXL1;Elettrovalvola fluidificazione scarico L01;default;None;TXL1;0;1;0;0;0;0;None
+53;PS7 TXL1;Valvola con bocca di scarico rotativa su L02;default;None;TXL1;0;1;0;0;0;0;None
+54;ZS7 TXL1 A-C;FC Valvola bocca di scarico rotativa su L02;default;None;TXL1;1;0;0;0;0;0;None
+55;PS3L02;EV scarico L02;default;None;TXL1;0;1;0;0;0;0;None
+56;ZS 3L02 A-C;FC EV scarico L02;default;None;TXL1;1;0;0;0;0;0;None
+57;PS8 TXL1;Elettrovalvola fluidificazione scarico L02;default;None;TXL1;0;1;0;0;0;0;None
+58;PS9 TXL1;Valvola con bocca di scarico rotativa su L03;default;None;TXL1;0;1;0;0;0;0;None
+59;ZS9 TXL1 A-C;FC Valvola bocca di scarico rotativa su L03;default;None;TXL1;1;0;0;0;0;0;None
+60;PS3L03;EV scarico L03;default;None;TXL1;0;1;0;0;0;0;None
+61;ZS 3L03 A-C;FC EV scarico L03;default;None;TXL1;1;0;0;0;0;0;None
+62;PS10 TXL1;Elettrovalvola fluidificazione scarico L03;default;None;TXL1;0;1;0;0;0;0;None
+63;PS11 TXL1;Valvola con bocca di scarico rotativa su L04;default;None;TXL1;0;1;0;0;0;0;None
+64;ZS11 TXL1 A-C;FC Valvola bocca di scarico rotativa su L04;default;None;TXL1;1;0;0;0;0;0;None
+65;PS3L04;EV scarico L04;default;None;TXL1;0;1;0;0;0;0;None
+66;ZS 3L04 A-C;FC EV scarico L04;default;None;TXL1;1;0;0;0;0;0;None
+67;PS12 TXL1;Elettrovalvola fluidificazione scarico L04;default;None;TXL1;0;1;0;0;0;0;None
+68;PS13 TXL1;Valvola con bocca di scarico rotativa su L05;default;None;TXL1;0;1;0;0;0;0;None
+69;ZS13 TXL1 A-C;FC Valvola bocca di scarico rotativa su L05;default;None;TXL1;1;0;0;0;0;0;None
+70;PS3L05;EV scarico L05;default;None;TXL1;0;1;0;0;0;0;None
+71;ZS 3L05 A-C;FC EV scarico L05;default;None;TXL1;1;0;0;0;0;0;None
+72;PS14 TXL1;Elettrovalvola fluidificazione scarico L05;default;None;TXL1;0;1;0;0;0;0;None
+74;SS3 TXL1;Sensore movimento trasportatore aeromeccanico distributore su tramoggia XW3;default;None;TXL1;1;0;0;0;0;0;None
+75;PS16 TXL1;Elettrovalvola fluidificazione interfaccia trasportatori 1TXL1 e 3TXL1;default;None;TXL1;0;1;0;0;0;0;None
+76;PS1 XW5;EV dosaggio  1;default;None;XW5;0;1;0;0;0;0;None
+77;PS2 XW5;EV dosaggio  2;default;None;XW5;0;1;0;0;0;0;None
+78;PS3 XW5;EV dosaggio  3;default;None;XW5;0;1;0;0;0;0;None
+79;PS4 XW5;EV dosaggio  4;default;None;XW5;0;1;0;0;0;0;None
+80;PS5 XW5;EV dosaggio  5;default;None;XW5;0;1;0;0;0;0;None
+81;PS6 XW5;EV dosaggio  6;default;None;XW5;0;1;0;0;0;0;None
+82;PS7 XW5;EV dosaggio  7;default;None;XW5;0;1;0;0;0;0;None
+83;PS8 XW5;EV dosaggio  8;default;None;XW5;0;1;0;0;0;0;None
+84;PS9 XW5;EV dosaggio  9;default;None;XW5;0;1;0;0;0;0;None
+85;PS10 XW5;EV dosaggio  10;default;None;XW5;0;1;0;0;0;0;None
+86;PS11 XW5;EV dosaggio  11;default;None;XW5;0;1;0;0;0;0;None
+87;PS12 XW5;EV dosaggio  12;default;None;XW5;0;1;0;0;0;0;None
+88;PS13 XW5;EV dosaggio  13;default;None;XW5;0;1;0;0;0;0;None
+89;PS14 XW5;EV dosaggio  14;default;None;XW5;0;1;0;0;0;0;None
+90;PS15 XW5;EV dosaggio  15;default;None;XW5;0;1;0;0;0;0;None
+91;PS16 XW5;EV dosaggio  16;default;None;XW5;0;1;0;0;0;0;None
+92;PS17 XW5;EV dosaggio  17;default;None;XW5;0;1;0;0;0;0;None
+93;PS18 XW5;EV dosaggio  18;default;None;XW5;0;1;0;0;0;0;None
+94;PS19 XW5;EV H2O su XW5;default;None;XW5;0;1;0;0;0;0;None
+95;PS20 XW5;EV scarico;default;None;XW5;0;1;0;0;0;0;None
+96;ZS20 XW5C;Finecorsa EV fondo tramoggia;default;None;XW5;1;0;0;0;0;0;None
+97;PS21 XW5;Pompa scarico   ;default;None;XW5;0;1;0;0;0;0;None
+98;PS22 XW5;EV destinazione L01;default;None;XW5;0;1;0;0;0;0;None
+99;ZS22 XW5C;Finecorsa EV destinazione L01;default;None;XW5;1;0;0;0;0;0;None
+100;PS14 L01;EV scarico additivo su L01;default;None;XW5;0;1;0;0;0;0;None
+101;ZS14 L01C;Finecorsa EV scarico additivo su L01;default;None;XW5;1;0;0;0;0;0;None
+102;PS23 XW5;EV destinazione L02;default;None;XW5;0;1;0;0;0;0;None
+103;ZS23 XW5C;Finecorsa EV destinazione L02;default;None;XW5;1;0;0;0;0;0;None
+104;PS14 L02;EV scarico additivo su L02;default;None;XW5;0;1;0;0;0;0;None
+105;ZS14 L02C;Finecorsa EV scarico additivo su L02;default;None;XW5;1;0;0;0;0;0;None
+106;M P1;Pompa dosaggio resina acrilica XL1 - XL2 - XL3;default;None;XL;1;1;0;0;0;0;None
+107;M P2;Pompa dosaggio resina vinilica XL5 - XL6;default;None;XL;1;1;0;0;0;0;None
+108;M P3;Pompa dosaggio resina stirolo XL4;default;None;XL;1;1;0;0;0;0;None
+109;PS5 XL1;Pompa dosaggio resina jolly XL7;default;None;XL;0;1;0;0;0;0;None
+110;PS5 XL2;Pompa dosaggio riserva d'acqua XL8;default;None;XL;0;1;0;0;0;0;None
+111;PS6 L01;EV emulsione XR1 su L01;default;None;XL;0;1;0;0;0;0;None
+112;ZS6 L01C;FC EV emulsione XR1 su L01;default;None;XL;1;0;0;0;0;0;None
+113;PS7 L01;EV emulsione XR2 su L01;default;None;XL;0;1;0;0;0;0;None
+114;ZS7 L01C;FC EV emulsione XR2 su L01;default;None;XL;1;0;0;0;0;0;None
+115;PS8 L01;EV emulsione XR3 su L01;default;None;XL;0;1;0;0;0;0;None
+116;ZS8 L01C;FC EV emulsione XR3 su L01;default;None;XL;1;0;0;0;0;0;None
+117;PS9 L01;EV emulsione XR4 su L01;default;None;XL;0;1;0;0;0;0;None
+118;ZS9 L01C;FC EV emulsione XR4 su L01;default;None;XL;1;0;0;0;0;0;None
+119;PS11 L01;EV H2O su L01 COLLETTORE RESINE TRAMITE XL8;default;None;XL;0;1;0;0;0;0;None
+120;ZS11 L01C;FC EV H2O su L01 COLLETTORE RESINE TRAMITE XL8;default;None;XL;1;0;0;0;0;0;None
+121;PS12 L01;EV H2O su L01 TRAMITE TESTINE DI LAVAGGIO;default;None;XL;0;1;0;0;0;0;None
+122;ZS12 L01C;FC EV H2O su L01 TRAMITE TESTINE DI LAVAGGIO;default;None;XL;1;0;0;0;0;0;None
+125;PS4 L01;EV aspirazione su L01;default;None;XF;0;1;0;0;0;0;None
+126;ZS4 L01C;FC EV aspirazione su L01;default;None;XF;1;0;0;0;0;0;None
+127;PS4 L02;EV aspirazione su L02;default;None;XF;0;1;0;0;0;0;None
+128;ZS4 L02C;FC EV aspirazione su L02;default;None;XF;1;0;0;0;0;0;None
+129;PS4 L03;EV aspirazione su L03;default;None;XF;0;1;0;0;0;0;None
+130;ZS4 L03C;FC EV aspirazione su L03;default;None;XF;1;0;0;0;0;0;None
+131;PS4 L04;EV aspirazione su L04;default;None;XF;0;1;0;0;0;0;None
+132;ZS4 L04C;FC EV aspirazione su L04;default;None;XF;1;0;0;0;0;0;None
+133;PS4 L05;EV aspirazione su L05;default;None;XF;0;1;0;0;0;0;None
+134;ZS4 L05C;FC EV aspirazione su L05;default;None;XF;1;0;0;0;0;0;None
+135;PS4 L06;EV aspirazione su L06;default;None;XF;0;1;0;0;0;0;None
+136;ZS4 L06C;FC EV aspirazione su L06;default;None;XF;1;0;0;0;0;0;None
+137;PS4 L07;EV aspirazione su L07;default;None;XF;0;1;0;0;0;0;None
+138;ZS4 L07C;FC EV aspirazione su L07;default;None;XF;1;0;0;0;0;0;None
+139;PS4 L08;EV aspirazione su L08;default;None;XF;0;1;0;0;0;0;None
+140;ZS4 L08C;FC EV aspirazione su L08;default;None;XF;1;0;0;0;0;0;None
+143;M 19L01;Motore sollevamento disp;default;None;L01;1;1;0;0;0;0;None
+144;FV 19L01S;EV comando salita testata;default;None;L01;0;1;0;0;0;0;None
+145;FV 19L01G;EV comando discesa testata;default;None;L01;0;1;0;0;0;0;None
+146;ZS 21L01;FC di sicurezza griglia tramoggia;default;None;L01;1;0;0;0;0;0;None
+147;ZS 22L01;FC di sicurezza coperchio tramoggia;default;None;L01;1;0;0;0;0;0;None
+148;ZS 15L01C;FC di valvola di fondo chiusa;default;None;L01;1;0;0;0;0;0;None
+149;M 28L01;Lampada illuminazione vasca;default;None;L01;0;1;0;0;0;0;None
+150;M 29L01;Lampada gialla bordo macchina ciclo in corso;default;None;L01;0;1;0;0;0;0;None
+151;PT 1L01;Pressostato aria macchina;default;None;L01;1;0;0;0;0;0;None
+152;P1 L01;Marcia albero;default;None;PC1-L01;1;1;0;0;0;0;None
+153;P2 L01;Arresto albero;default;None;PC1-L01;1;0;0;0;0;0;None
+154;P3 L01;Marcia raschiatore;default;None;PC1-L01;1;1;0;0;0;0;None
+155;P4 L01;Arresto raschiatore;default;None;PC1-L01;1;0;0;0;0;0;None
+156;P5 L01;Marcia centralina idraulica;default;None;PC1-L01;1;1;0;0;0;0;None
+157;P6 L01;Salita testata;default;None;PC1-L01;1;0;0;0;0;0;None
+158;P7 L01;Discesa testata;default;None;PC1-L01;1;0;0;0;0;0;None
+159;P8 L01;Discesa testata;default;None;PC1-L01;1;0;0;0;0;0;None
+160;P11 L01;Illuminazione vasca;default;None;PC1-L01;0;1;0;0;0;0;None
+161;P12 L01;AumDim Velocita albero;default;None;PC1-L01;2;0;0;0;0;0;None
+162;P12 L01;Reset Sicurezze;default;None;PC1-L01;0;1;0;0;0;0;None
+163;P13 L01;Reset allarmi P.L.C;default;None;PC1-L01;1;0;0;0;0;0;None
+164;P14 L01;Presenza tensione;default;None;PC1-L01;0;1;0;0;0;0;None
+165;P15 L01;Arresto di emergenza;default;None;PC1-L01;1;0;0;0;0;0;None
+166;ZS3X01A;FC bocchettone inserito;default;None;X01;1;0;0;0;0;0;None
+167;M1XFX01;Alimentazione scheda filtro;default;None;X01;1;1;0;0;0;0;None
+168;LSL4X01;Livello minimo;default;None;X01;1;0;0;0;0;0;None
+169;LSH4X01;livello massimo;default;None;X01;1;0;0;0;0;0;None
+170;PS1XUX01;Fluidificazione allo scarico (funghi);default;None;X01;1;1;0;0;0;0;None
+171;PS2XUX01;Fluidificazione allo scarico (martelli);default;None;X01;1;1;0;0;0;0;None
+174;M1XFXW1;Alimentazione scheda filtro;default;None;XW1;0;1;0;0;0;0;None
+175;LSH1XW1;livello massimo;default;None;XW1;1;0;0;0;0;0;None
+176;PS1XUXW1;EV fluidificazione tramoggia (funghi);default;None;XW1;1;1;0;0;0;0;None
+177;PS2XUXW1;EV fluidificazione tramoggia (martelli);default;None;XW1;1;1;0;0;0;0;None
+178;PS3XW1;EV scarico tramoggia;default;None;XW1;2;1;0;0;0;0;None
+181;SS1TXW1;Sensore di movimento ;default;None;TXW1;1;0;0;0;0;0;None
+182;SS2TXW1;Sensori  antisbandamento;default;None;TXW1;1;0;0;0;0;0;None
+183;PS1XUTXW1;Fluidificazione 1 al carico dell'elevatore;default;None;TXW1;0;1;0;0;0;0;None
+184;PS2XUTXW1;Fluidificazione 2  allo scarico dell'elevatore;default;None;TXW1;0;1;0;0;0;0;None
+186;FV1L01;Valvola a farfalla su macchina L01  ;default;None;TXW1;1;1;0;0;0;0;None
+187;FV1L02;Valvola a farfalla su macchina L02;default;None;TXW11;1;1;0;0;0;0;None
+188;FV1SBB01A;Elettrovalvola movimentazione petali 1-2;default;None;SBB01;0;1;0;0;0;0;None
+189;FV1SBB01B;Elettrovalvola movimentazione petali 1-2;default;None;SBB01;0;1;0;0;0;0;None
+190;FV2SBB01A;Elettrovalvola movimentazione petali 3-4;default;None;SBB01;0;1;0;0;0;0;None
+191;FV2SBB01B;Elettrovalvola movimentazione petali 3-4;default;None;SBB01;0;1;0;0;0;0;None
+192;FV3SBB01;Elettrovalvola vibratore pneumatico ;default;None;SBB01;0;1;0;0;0;0;None
+193;FC1SBB01;Finecorsa di sicurezza sportello ;default;None;SBB01;1;0;0;0;0;0;None
+195;P1 SBB01;Start carico ;default;None;PC1 SBB01;1;1;0;0;0;0;None
+196;P2 SBB01;Stop carico;default;None;PC1 SBB01;1;0;0;0;0;0;None
+197;P3 SBB01;Conferma carico;default;None;PC1 SBB01;1;1;0;0;0;0;None
+198;P4 SBB01;Pulsante di Emergenza;default;None;PC1 SBB01;1;0;0;0;0;0;None
+199;S1 SBB01;Selettore cambio big bag;default;None;PC1 SBB01;2;0;0;0;0;0;None
+200;M1 RSM1;Vibratore Pneumatico;default;None;RSM1;1;1;0;0;0;0;None
+202;P1 RSM1;Start rompisacchi;default;None;PC-RSM1;1;1;0;0;0;0;None
+203;P2 RSM1;Stop rompisacchi;default;None;PC-RSM1;1;0;0;0;0;0;None
+204;P3 RSM1;Conferma carico;default;None;PC-RSM1;1;1;0;0;0;0;None
+205;P4 RSM1;Start/Stop vibratore;default;None;PC-RSM1;1;0;0;0;0;0;None
+206;P5 RSM1;Pulsante di Emergenza;default;None;PC-RSM1;1;0;0;0;0;0;None
+208;SS1 TXL1;Sensore movimento trasportatore aeromeccanico estrattore orizzontale-verticale;default;None;TXL1;1;0;0;0;0;0;None
+209;PS1 XU 1TXL1;Elettrovalvola fluidificazione trasportatore aeromeccanico estrattore orizzontale;default;None;TXL1;0;1;0;0;0;0;None
+210;FV15 TXL1A-C;deviatore su 2TXL1 e 3TXL1;default;None;TXL1;2;1;0;0;0;0;None
+211;PS2 TXL1;Elettrovalvola fluidificazione su deviatrice;default;None;TXL1;0;1;0;0;0;0;None
+213;SS2 TXL1;Sensore movimento trasportatore aeromeccanico distributore su macchine a soppalco;default;None;TXL1;1;0;0;0;0;0;None
+214;PS4 TXL1;Elettrovalvola fluidificazione interfaccia trasportatori 1TXL1 e 2TXL1;default;None;TXL1;0;1;0;0;0;0;None
+215;PS5 TXL1;Valvola con bocca di scarico rotativa su L01;default;None;TXL1;1;1;0;0;0;0;None
+216;PS3L01;EV scarico L01;default;None;TXL1;1;1;0;0;0;0;None
+217;PS6 TXL1;Elettrovalvola fluidificazione scarico L01;default;None;TXL1;0;1;0;0;0;0;None
+218;PS7 TXL1;Valvola con bocca di scarico rotativa su L02;default;None;TXL1;0;1;0;0;0;0;None
+219;ZS7 TXL1 A-C;FC Valvola bocca di scarico rotativa su L02;default;None;TXL1;1;0;0;0;0;0;None
+220;PS3L02;EV scarico L02;default;None;TXL1;0;1;0;0;0;0;None
+221;ZS 3L02 A-C;FC EV scarico L02;default;None;TXL1;1;0;0;0;0;0;None
+222;PS8 TXL1;Elettrovalvola fluidificazione scarico L02;default;None;TXL1;0;1;0;0;0;0;None
+223;PS9 TXL1;Valvola con bocca di scarico rotativa su L03;default;None;TXL1;0;1;0;0;0;0;None
+224;ZS9 TXL1 A-C;FC Valvola bocca di scarico rotativa su L03;default;None;TXL1;1;0;0;0;0;0;None
+225;PS3L03;EV scarico L03;default;None;TXL1;0;1;0;0;0;0;None
+226;ZS 3L03 A-C;FC EV scarico L03;default;None;TXL1;1;0;0;0;0;0;None
+227;PS10 TXL1;Elettrovalvola fluidificazione scarico L03;default;None;TXL1;0;1;0;0;0;0;None
+228;PS11 TXL1;Valvola con bocca di scarico rotativa su L04;default;None;TXL1;0;1;0;0;0;0;None
+229;ZS11 TXL1 A-C;FC Valvola bocca di scarico rotativa su L04;default;None;TXL1;1;0;0;0;0;0;None
+230;PS3L04;EV scarico L04;default;None;TXL1;0;1;0;0;0;0;None
+231;ZS 3L04 A-C;FC EV scarico L04;default;None;TXL1;1;0;0;0;0;0;None
+232;PS12 TXL1;Elettrovalvola fluidificazione scarico L04;default;None;TXL1;0;1;0;0;0;0;None
+233;PS13 TXL1;Valvola con bocca di scarico rotativa su L05;default;None;TXL1;0;1;0;0;0;0;None
+234;ZS13 TXL1 A-C;FC Valvola bocca di scarico rotativa su L05;default;None;TXL1;1;0;0;0;0;0;None
+235;PS3L05;EV scarico L05;default;None;TXL1;0;1;0;0;0;0;None
+236;ZS 3L05 A-C;FC EV scarico L05;default;None;TXL1;1;0;0;0;0;0;None
+237;PS14 TXL1;Elettrovalvola fluidificazione scarico L05;default;None;TXL1;0;1;0;0;0;0;None
+239;SS3 TXL1;Sensore movimento trasportatore aeromeccanico distributore su tramoggia XW3;default;None;TXL1;1;0;0;0;0;0;None
+240;PS16 TXL1;Elettrovalvola fluidificazione interfaccia trasportatori 1TXL1 e 3TXL1;default;None;TXL1;0;1;0;0;0;0;None
+241;PS1 XW5;EV dosaggio  1;default;None;XW5;0;1;0;0;0;0;None
+242;PS2 XW5;EV dosaggio  2;default;None;XW5;0;1;0;0;0;0;None
+243;PS3 XW5;EV dosaggio  3;default;None;XW5;0;1;0;0;0;0;None
+244;PS4 XW5;EV dosaggio  4;default;None;XW5;0;1;0;0;0;0;None
+245;PS5 XW5;EV dosaggio  5;default;None;XW5;0;1;0;0;0;0;None
+246;PS6 XW5;EV dosaggio  6;default;None;XW5;0;1;0;0;0;0;None
+247;PS7 XW5;EV dosaggio  7;default;None;XW5;0;1;0;0;0;0;None
+248;PS8 XW5;EV dosaggio  8;default;None;XW5;0;1;0;0;0;0;None
+249;PS9 XW5;EV dosaggio  9;default;None;XW5;0;1;0;0;0;0;None
+250;PS10 XW5;EV dosaggio  10;default;None;XW5;0;1;0;0;0;0;None
+251;PS11 XW5;EV dosaggio  11;default;None;XW5;0;1;0;0;0;0;None
+252;PS12 XW5;EV dosaggio  12;default;None;XW5;0;1;0;0;0;0;None
+253;PS13 XW5;EV dosaggio  13;default;None;XW5;0;1;0;0;0;0;None
+254;PS14 XW5;EV dosaggio  14;default;None;XW5;0;1;0;0;0;0;None
+255;PS15 XW5;EV dosaggio  15;default;None;XW5;0;1;0;0;0;0;None
+256;PS16 XW5;EV dosaggio  16;default;None;XW5;0;1;0;0;0;0;None
+257;PS17 XW5;EV dosaggio  17;default;None;XW5;0;1;0;0;0;0;None
+258;PS18 XW5;EV dosaggio  18;default;None;XW5;0;1;0;0;0;0;None
+259;PS19 XW5;EV H2O su XW5;default;None;XW5;0;1;0;0;0;0;None
+260;PS20 XW5;EV scarico;default;None;XW5;0;1;0;0;0;0;None
+261;ZS20 XW5C;Finecorsa EV fondo tramoggia;default;None;XW5;1;0;0;0;0;0;None
+262;PS21 XW5;Pompa scarico   ;default;None;XW5;0;1;0;0;0;0;None
+263;PS22 XW5;EV destinazione L01;default;None;XW5;0;1;0;0;0;0;None
+264;ZS22 XW5C;Finecorsa EV destinazione L01;default;None;XW5;1;0;0;0;0;0;None
+265;PS14 L01;EV scarico additivo su L01;default;None;XW5;0;1;0;0;0;0;None
+266;ZS14 L01C;Finecorsa EV scarico additivo su L01;default;None;XW5;1;0;0;0;0;0;None
+267;PS23 XW5;EV destinazione L02;default;None;XW5;0;1;0;0;0;0;None
+268;ZS23 XW5C;Finecorsa EV destinazione L02;default;None;XW5;1;0;0;0;0;0;None
+269;PS14 L02;EV scarico additivo su L02;default;None;XW5;0;1;0;0;0;0;None
+270;ZS14 L02C;Finecorsa EV scarico additivo su L02;default;None;XW5;1;0;0;0;0;0;None
+271;M P1;Pompa dosaggio resina acrilica XL1 - XL2 - XL3;default;None;XL;1;1;0;0;0;0;None
+272;M P2;Pompa dosaggio resina vinilica XL5 - XL6;default;None;XL;1;1;0;0;0;0;None
+273;M P3;Pompa dosaggio resina stirolo XL4;default;None;XL;1;1;0;0;0;0;None
+274;PS5 XL1;Pompa dosaggio resina jolly XL7;default;None;XL;0;1;0;0;0;0;None
+275;PS5 XL2;Pompa dosaggio riserva d'acqua XL8;default;None;XL;0;1;0;0;0;0;None
+276;PS6 L01;EV emulsione XR1 su L01;default;None;XL;0;1;0;0;0;0;None
+277;ZS6 L01C;FC EV emulsione XR1 su L01;default;None;XL;1;0;0;0;0;0;None
+278;PS7 L01;EV emulsione XR2 su L01;default;None;XL;0;1;0;0;0;0;None
+279;ZS7 L01C;FC EV emulsione XR2 su L01;default;None;XL;1;0;0;0;0;0;None
+280;PS8 L01;EV emulsione XR3 su L01;default;None;XL;0;1;0;0;0;0;None
+281;ZS8 L01C;FC EV emulsione XR3 su L01;default;None;XL;1;0;0;0;0;0;None
+282;PS9 L01;EV emulsione XR4 su L01;default;None;XL;0;1;0;0;0;0;None
+283;ZS9 L01C;FC EV emulsione XR4 su L01;default;None;XL;1;0;0;0;0;0;None
+284;PS11 L01;EV H2O su L01 COLLETTORE RESINE TRAMITE XL8;default;None;XL;0;1;0;0;0;0;None
+285;ZS11 L01C;FC EV H2O su L01 COLLETTORE RESINE TRAMITE XL8;default;None;XL;1;0;0;0;0;0;None
+286;PS12 L01;EV H2O su L01 TRAMITE TESTINE DI LAVAGGIO;default;None;XL;0;1;0;0;0;0;None
+287;ZS12 L01C;FC EV H2O su L01 TRAMITE TESTINE DI LAVAGGIO;default;None;XL;1;0;0;0;0;0;None
+290;PS4 L01;EV aspirazione su L01;default;None;XF;0;1;0;0;0;0;None
+291;ZS4 L01C;FC EV aspirazione su L01;default;None;XF;1;0;0;0;0;0;None
+292;PS4 L02;EV aspirazione su L02;default;None;XF;0;1;0;0;0;0;None
+293;ZS4 L02C;FC EV aspirazione su L02;default;None;XF;1;0;0;0;0;0;None
+294;PS4 L03;EV aspirazione su L03;default;None;XF;0;1;0;0;0;0;None
+295;ZS4 L03C;FC EV aspirazione su L03;default;None;XF;1;0;0;0;0;0;None
+296;PS4 L04;EV aspirazione su L04;default;None;XF;0;1;0;0;0;0;None
+297;ZS4 L04C;FC EV aspirazione su L04;default;None;XF;1;0;0;0;0;0;None
+298;PS4 L05;EV aspirazione su L05;default;None;XF;0;1;0;0;0;0;None
+299;ZS4 L05C;FC EV aspirazione su L05;default;None;XF;1;0;0;0;0;0;None
+300;PS4 L06;EV aspirazione su L06;default;None;XF;0;1;0;0;0;0;None
+301;ZS4 L06C;FC EV aspirazione su L06;default;None;XF;1;0;0;0;0;0;None
+302;PS4 L07;EV aspirazione su L07;default;None;XF;0;1;0;0;0;0;None
+303;ZS4 L07C;FC EV aspirazione su L07;default;None;XF;1;0;0;0;0;0;None
+304;PS4 L08;EV aspirazione su L08;default;None;XF;0;1;0;0;0;0;None
+305;ZS4 L08C;FC EV aspirazione su L08;default;None;XF;1;0;0;0;0;0;None
+308;M 19L01;Motore sollevamento disp;default;None;L01;1;1;0;0;0;0;None
+309;FV 19L01S;EV comando salita testata;default;None;L01;0;1;0;0;0;0;None
+310;FV 19L01G;EV comando discesa testata;default;None;L01;0;1;0;0;0;0;None
+311;ZS 21L01;FC di sicurezza griglia tramoggia;default;None;L01;1;0;0;0;0;0;None
+312;ZS 22L01;FC di sicurezza coperchio tramoggia;default;None;L01;1;0;0;0;0;0;None
+313;ZS 15L01C;FC di valvola di fondo chiusa;default;None;L01;1;0;0;0;0;0;None
+314;M 28L01;Lampada illuminazione vasca;default;None;L01;0;1;0;0;0;0;None
+315;M 29L01;Lampada gialla bordo macchina ciclo in corso;default;None;L01;0;1;0;0;0;0;None
+316;PT 1L01;Pressostato aria macchina;default;None;L01;1;0;0;0;0;0;None
+317;P1 L01;Marcia albero;default;None;PC1-L01;1;1;0;0;0;0;None
+318;P2 L01;Arresto albero;default;None;PC1-L01;1;0;0;0;0;0;None
+319;P3 L01;Marcia raschiatore;default;None;PC1-L01;1;1;0;0;0;0;None
+320;P4 L01;Arresto raschiatore;default;None;PC1-L01;1;0;0;0;0;0;None
+321;P5 L01;Marcia centralina idraulica;default;None;PC1-L01;1;1;0;0;0;0;None
+322;P6 L01;Salita testata;default;None;PC1-L01;1;0;0;0;0;0;None
+323;P7 L01;Discesa testata;default;None;PC1-L01;1;0;0;0;0;0;None
+324;P8 L01;Discesa testata;default;None;PC1-L01;1;0;0;0;0;0;None
+325;P11 L01;Illuminazione vasca;default;None;PC1-L01;0;1;0;0;0;0;None
+326;P12 L01;AumDim Velocita albero;default;None;PC1-L01;2;0;0;0;0;0;None
+327;P12 L01;Reset Sicurezze;default;None;PC1-L01;0;1;0;0;0;0;None
+328;P13 L01;Reset allarmi P.L.C;default;None;PC1-L01;1;0;0;0;0;0;None
+329;P14 L01;Presenza tensione;default;None;PC1-L01;0;1;0;0;0;0;None
+330;P15 L01;Arresto di emergenza;default;None;PC1-L01;1;0;0;0;0;0;None
