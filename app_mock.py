@@ -1230,6 +1230,115 @@ def genera_schema():
 
 
 # ================================================================
+#  UTILITY MANAGEMENT ENDPOINTS
+# ================================================================
+
+# GET /api/utenze: Get available utilities for a project
+@app.route('/api/utenze', methods=['GET'])
+def get_available_utilities():
+    id_prg = session.get("id_progetto")
+    if not id_prg:
+        return jsonify({"error": "ID progetto non in sessione"}), 400
+    
+    db = get_db_connection()
+    try:
+        cursor = db.execute("""
+            SELECT id_utenza, nome, tipo, stato
+            FROM t_utenze
+            WHERE id_prg = ?
+        """, (id_prg,))
+        utilities = [dict(row) for row in cursor.fetchall()]
+        return jsonify(utilities), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        db.close()
+
+# POST /api/assegna_utenza: Assign a utility to a module
+@app.route('/api/assegna_utenza', methods=['POST'])
+def assign_utility():
+    id_prg = session.get("id_progetto")
+    if not id_prg:
+        return jsonify({"error": "ID progetto non in sessione"}), 400
+    
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Richiesta JSON non valida"}), 400
+    
+    id_utenza = data.get('id_utenza')
+    id_modulo = data.get('id_modulo')
+    if not id_utenza or not id_modulo:
+        return jsonify({"error": "I campi 'id_utenza' e 'id_modulo' sono obbligatori"}), 400
+    
+    db = get_db_connection()
+    try:
+        # Check if utility is already assigned
+        cursor = db.execute("""
+            SELECT COUNT(*) as count
+            FROM t_utenze_modulo
+            WHERE id_utenza = ? AND id_modulo = ?
+        """, (id_utenza, id_modulo))
+        row = cursor.fetchone()
+        if row['count'] > 0:
+            return jsonify({"error": "L'utenza è già assegnata a questo modulo"}), 400
+        
+        # Insert the assignment
+        db.execute("""
+            INSERT INTO t_utenze_modulo (id_utenza, id_modulo, id_prg)
+            VALUES (?, ?, ?)
+        """, (id_utenza, id_modulo, id_prg))
+        db.commit()
+        return jsonify({"message": "Utenza assegnata con successo"}), 200
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error": str(e)}), 500
+    finally:
+        db.close()
+
+# POST /api/salva_assegnazioni: Save multiple utility assignments
+@app.route('/api/salva_assegnazioni', methods=['POST'])
+def save_assignments():
+    id_prg = session.get("id_progetto")
+    if not id_prg:
+        return jsonify({"error": "ID progetto non in sessione"}), 400
+    
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Richiesta JSON non valida"}), 400
+    
+    assignments = data.get('assignments', [])
+    if not assignments:
+        return jsonify({"error": "Nessuna assegnazione da salvare"}), 400
+    
+    db = get_db_connection()
+    try:
+        # Start transaction
+        db.execute("BEGIN TRANSACTION")
+        
+        # Delete existing assignments for this project
+        db.execute("DELETE FROM t_utenze_modulo WHERE id_prg = ?", (id_prg,))
+        
+        # Insert new assignments
+        for assignment in assignments:
+            id_utenza = assignment.get('id_utenza')
+            id_modulo = assignment.get('id_modulo')
+            if not id_utenza or not id_modulo:
+                continue
+                
+            db.execute("""
+                INSERT INTO t_utenze_modulo (id_utenza, id_modulo, id_prg)
+                VALUES (?, ?, ?)
+            """, (id_utenza, id_modulo, id_prg))
+        
+        db.commit()
+        return jsonify({"message": "Assegnazioni salvate con successo"}), 200
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error": str(e)}), 500
+    finally:
+        db.close()
+
+# ================================================================
 #  MOCK  /download/<filename>  – serve qualsiasi file in export_files
 # ================================================================
 @app.route("/download/<path:filename>")
@@ -1241,13 +1350,8 @@ def download_schema_file(filename):
     if not os.path.exists(file_path):
         return f"Il file {filename} non esiste in {export_dir}.", 404
 
-    # restituisce il file così com’è
+    # restituisce il file così com'è
     return send_from_directory(export_dir, filename, as_attachment=True)
-
-
-
-
-# ✅ Assegna Potenza ai Nodi
 @app.route('/assegna_potenza_nodi', methods=['GET'])
 def route_assegna_potenza_nodi():
     return render_template('assegna_potenza_nodi.html')
