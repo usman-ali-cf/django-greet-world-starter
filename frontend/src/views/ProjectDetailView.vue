@@ -1,87 +1,64 @@
 <template>
-  <div v-if="project" class="project-detail">
-    <div class="project-info">
-      <h1>{{ project.data.name }}</h1>
-      <p class="project-description">{{ project.data.description || 'Nessuna descrizione' }}</p>
-      
-      <div class="project-actions mb-4">
-        <button @click="showDeleteModal = true" class="btn btn-danger btn-sm">
-          <i class="fas fa-trash-alt me-1"></i> Elimina Progetto
-        </button>
-      </div>
-    </div>
+  <div v-if="project" class="container mt-4">
+    <h2>{{ project.data.name }}</h2>
+    <p><strong>Descrizione:</strong> {{ project.data.description || 'Nessuna descrizione' }}</p>
+    <p><strong>Data di Creazione:</strong> {{ formatDate(project.data.createdAt) }}</p>
     
-    <div class="project-tabs">
-      <ul class="nav nav-tabs">
-        <li class="nav-item">
+    <section class="mt-4">
+      <h3>Opzioni di Configurazione</h3>
+      <ul class="list-unstyled">
+        <li class="mb-2">
           <router-link 
-            :to="`/projects/${project.data.id_prg}/upload-utilities`" 
-            class="nav-link"
-            :class="{ 'active': $route.name === 'upload-utilities' }"
+            :to="`/projects/${project.data.id_prg}/upload-utilities`"
+            class="text-decoration-none"
           >
-            <i class="fas fa-upload me-2"></i>Carica Utenze
+            <i class="fas fa-upload me-2"></i>Carica File Utenze
           </router-link>
         </li>
-        <li class="nav-item">
+        <li class="mb-2">
           <router-link 
-            :to="`/projects/${project.data.id_prg}/configure-utilities`" 
-            class="nav-link"
-            :class="{ 'active': $route.name === 'configure-utilities' }"
+            :to="`/projects/${project.data.id_prg}/configure-utilities`"
+            class="text-decoration-none"
           >
             <i class="fas fa-cog me-2"></i>Configura Utenze
           </router-link>
         </li>
-        <li class="nav-item">
+        <li class="mb-2">
           <router-link 
-            :to="`/projects/${project.data.id_prg}/configure-power`" 
-            class="nav-link"
-            :class="{ 'active': $route.name === 'configure-power' }"
+            :to="`/projects/${project.data.id_prg}/configure-power`"
+            class="text-decoration-none"
           >
-            <i class="fas fa-bolt me-2"></i>Configura Potenza
+            <i class="fas fa-bolt me-2"></i>Configura Utenze di Potenza
           </router-link>
         </li>
-        <li class="nav-item">
+        <li class="mb-2">
           <router-link 
-            :to="`/projects/${project.data.id_prg}/configure-io`" 
-            class="nav-link"
-            :class="{ 'active': $route.name === 'configure-io' }"
+            :to="`/projects/${project.data.id_prg}/create-node`"
+            class="text-decoration-none"
           >
-            <i class="fas fa-plug me-2"></i>Configura I/O
+            <i class="fas fa-server me-2"></i>Crea Nodi e PLC
           </router-link>
         </li>
-        <li class="nav-item">
+        <li class="mb-2">
           <router-link 
-            :to="`/projects/${project.data.id_prg}/configure-panel`" 
-            class="nav-link"
-            :class="{ 'active': $route.name === 'configure-panel' }"
+            :to="`/projects/${project.data.id_prg}/assign-io`"
+            class="text-decoration-none"
           >
-            <i class="fas fa-th-large me-2"> </i>Configura Quadro
+            <i class="fas fa-exchange-alt me-2"></i>Assegna I/O ai Nodi
           </router-link>
         </li>
-        <li class="nav-item">
+        <li class="mb-2">
           <router-link 
-            :to="`/projects/${project.data.id_prg}/create-node`" 
-            class="nav-link"
-            :class="{ 'active': $route.name === 'create-node' }"
+            :to="`/projects/${project.data.id_prg}/configure-panel`"
+            class="text-decoration-none"
           >
-            <i class="fas fa-server me-2"></i>Crea Nodo
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link 
-            :to="`/projects/${project.data.id_prg}/assign-io`" 
-            class="nav-link"
-            :class="{ 'active': $route.name === 'assign-io' }"
-          >
-            <i class="fas fa-exchange-alt me-2"></i>Assegna I/O
+            <i class="fas fa-th-large me-2"></i>Crea Quadro Elettrico
           </router-link>
         </li>
       </ul>
-      
-      <div class="tab-content p-3 border border-top-0 rounded-bottom">
-        <router-view :project="project" />
-      </div>
-    </div>
+    </section>
+
+    <router-view :project="project" />
     
     <!-- Delete Confirmation Modal -->
     <div v-if="showDeleteModal" class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
@@ -130,8 +107,13 @@ const projectStore = useProjectStore();
 
 const project = ref(null);
 const loading = ref(true);
-const showDeleteModal = ref(false);
-const deleting = ref(false);
+
+// Format date to match the original format
+const formatDate = (dateString) => {
+  if (!dateString) return '';
+  const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+  return new Date(dateString).toLocaleDateString('it-IT', options);
+};
 
 // Load project data when component mounts or route changes
 onMounted(() => {
@@ -155,53 +137,50 @@ async function loadProject() {
     loading.value = false;
   }
 }
-
-async function deleteProject() {
-  try {
-    deleting.value = true;
-    await projectStore.deleteProject(project.value.id_prg);
-    showDeleteModal.value = false;
-    router.push('/projects');
-  } catch (error) {
-    console.error('Error deleting project:', error);
-  } finally {
-    deleting.value = false;
-  }
-}
 </script>
 
 <style scoped>
-.project-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #e9ecef;
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
 }
 
-.project-header h2 {
-  margin: 0;
+h2 {
   color: #2c3e50;
+  margin-bottom: 1rem;
 }
 
-.project-description {
-  color: #6c757d;
-  margin-bottom: 2rem;
-  font-size: 1.1rem;
-  line-height: 1.6;
+h3 {
+  color: #2c3e50;
+  margin: 1.5rem 0 1rem;
+  font-size: 1.25rem;
 }
 
-.project-tabs {
-  margin-top: 2rem;
+a {
+  color: #0d6efd;
+  transition: color 0.2s;
 }
 
-.nav-tabs {
-  border-bottom: 1px solid #dee2e6;
-  margin-bottom: 0;
+a:hover {
+  color: #0a58ca;
+  text-decoration: underline;
 }
 
-.nav-link {
+.list-unstyled {
+  padding-left: 0;
+  list-style: none;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.mt-4 {
+  margin-top: 1.5rem;
+}
+
+.nav-tabs .nav-link {
   color: #495057;
   border: 1px solid transparent;
   border-top-left-radius: 0.25rem;
