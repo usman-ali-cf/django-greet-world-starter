@@ -2,6 +2,239 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ----------------------------------------
+   GLOBAL STYLES MIGRATED FROM FLASK CSS
+----------------------------------------- */
+
+/* Global body styles */
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Sidebar styles */
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background: #032952;
+  position: fixed;
+  left: 0;
+  top: 0;
+  padding-top: 60px;
+  transition: transform 0.3s ease;
+  transform: translateX(0);
+  z-index: 1000;
+}
+
+.sidebar.hidden {
+  transform: translateX(-100%);
+}
+
+.sidebar-nav a {
+  display: block;
+  color: white;
+  padding: 15px;
+  text-decoration: none;
+  font-size: 18px;
+  transition: background 0.3s ease;
+}
+
+.sidebar-nav a:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Main content styles */
+.main-content {
+  flex: 1;
+  margin-left: 250px;
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+  overflow: auto;
+}
+
+.sidebar-hidden .main-content {
+  margin-left: 0;
+}
+
+/* Header styles */
+.header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-image: url('/static/img/schema_elettrico.png');
+  background-size: cover;
+  background-position: center;
+  padding: 20px 40px;
+  min-height: 100px;
+  color: white;
+  box-sizing: border-box;
+  background-size: 120%;
+  background-position: center;
+  animation: headerZoomOut 5s ease-out forwards;
+}
+
+.header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(3, 41, 82, 0.6);
+  pointer-events: none;
+}
+
+.header > * {
+  z-index: 1;
+  overflow: visible;
+}
+
+@keyframes headerZoomOut {
+  from { background-size: 120%; }
+  to { background-size: 100%; }
+}
+
+/* Button styles */
+.btn, .btn-cancel, button {
+  background-color: #ca0909;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover, .btn-cancel:hover, button:hover {
+  background-color: #850404;
+}
+
+/* Table styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+  margin: 0 auto;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  white-space: nowrap;
+}
+
+/* Table row interactions */
+#tabella-moduli tr,
+#tabella-io-assigned tr,
+#tabella-io-unassigned tr,
+#tabella-hw-nodo tr,
+#tabella-hw tr,
+#listaProgetti tr,
+#tabella-utenze tr {
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#tabella-moduli tr:hover,
+#tabella-io-assigned tr:hover,
+#tabella-io-unassigned tr:hover,
+#tabella-hw-nodo tr:hover,
+#tabella-hw tr:hover,
+#listaProgetti tr:hover,
+#tabella-utenze tr:hover {
+  background-color: #f1f1f1;
+}
+
+#tabella-moduli tr.selected,
+#tabella-io-assigned tr.selected,
+#tabella-io-unassigned tr.selected,
+#tabella-hw-nodo tr.selected,
+#listaProgetti tr.selected,
+#tabella-hw tr.selected,
+#tabella-utenze tr.selected {
+  background-color: #cce5ff;
+  font-weight: bold;
+}
+
+/* Table headers */
+.tabella-io-non-assegnati table thead th,
+.tabella-io-assegnati table thead th,
+.tabella-moduli table thead th,
+.seleziona-nodo table thead th,
+.tabella-hw-assegnato table thead th,
+.catalogo-hardware table thead th,
+.listaProgetti table thead th,
+.elenco-utenze table thead th {
+  position: sticky;
+  top: 0;
+  background-color: #032952;
+  color: white;
+  z-index: 1;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Popup styles */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.popup-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+/* Container styles */
+.tabella-io-assegnati,
+.tabella-io-non-assegnati,
+.tabella-moduli,
+.seleziona-nodo,
+.catalogo-hardware,
+.tabella-hw-assegnato,
+.listaProgetti,
+.form-configurazione-nodo {
+  background-color: #f9f9f9;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+  }
+  .sidebar {
+    transform: translateX(-100%);
+  }
+}
+
 :root {
   /* Primary colors */
   --primary: 220 14% 96%;

@@ -1,23 +1,66 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import Layout from './components/Layout'
+import ProjectManagement from './components/ProjectManagement'
+import ProjectDetail from './components/ProjectDetail'
+import PlaceholderPage from './components/PlaceholderPage'
+// Background image handled by CSS with static path
 
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-background">
-        <Routes>
-          <Route path="/" element={
-            <div className="container mx-auto px-4 py-8">
-              <h1 className="text-4xl font-bold text-foreground mb-4">
-                Electrical Project Manager
-              </h1>
-              <p className="text-muted-foreground">
-                React frontend is now configured and ready for migration from Flask+Jinja templates.
-              </p>
-            </div>
-          } />
-        </Routes>
-      </div>
+      <Routes>
+        {/* Main project management page */}
+        <Route path="/" element={
+          <Layout title="Gestione Progetto">
+            <ProjectManagement />
+          </Layout>
+        } />
+        
+        {/* Project detail page */}
+        <Route path="/project/:id" element={
+          <Layout title="Dettagli Progetto">
+            <ProjectDetail />
+          </Layout>
+        } />
+        
+        {/* Project-specific pages - placeholders for now */}
+        <Route path="/project/:id/upload-utilities" element={
+          <Layout title="Carica File Utenze">
+            <PlaceholderPage pageName="Carica File Utenze" />
+          </Layout>
+        } />
+        
+        <Route path="/project/:id/configure-utilities" element={
+          <Layout title="Configura Utenze">
+            <PlaceholderPage pageName="Configura Utenze" />
+          </Layout>
+        } />
+        
+        <Route path="/project/:id/configure-power" element={
+          <Layout title="Configura Utenze di Potenza">
+            <PlaceholderPage pageName="Configura Utenze di Potenza" />
+          </Layout>
+        } />
+        
+        <Route path="/project/:id/create-nodes" element={
+          <Layout title="Crea Nodi e PLC">
+            <PlaceholderPage pageName="Crea Nodi e PLC" />
+          </Layout>
+        } />
+        
+        <Route path="/project/:id/assign-io" element={
+          <Layout title="Assegna I/O ai Nodi">
+            <PlaceholderPage pageName="Assegna I/O ai Nodi" />
+          </Layout>
+        } />
+        
+        <Route path="/project/:id/configure-panel" element={
+          <Layout title="Configura Quadro Elettrico">
+            <PlaceholderPage pageName="Configura Quadro Elettrico" />
+          </Layout>
+        } />
+      </Routes>
     </Router>
   )
 }
