@@ -4,6 +4,8 @@ import Layout from './components/Layout'
 import ProjectManagement from './components/ProjectManagement'
 import ProjectDetail from './components/ProjectDetail'
 import PlaceholderPage from './components/PlaceholderPage'
+import CreateNodesPage from './components/CreateNodesPage'
+import AssignIOPage from './components/AssignIOPage'
 // Background image handled by CSS with static path
 
 function App() {
@@ -45,13 +47,13 @@ function App() {
         
         <Route path="/project/:id/create-nodes" element={
           <Layout title="Crea Nodi e PLC">
-            <PlaceholderPage pageName="Crea Nodi e PLC" />
+            <CreateNodesPage />
           </Layout>
         } />
         
         <Route path="/project/:id/assign-io" element={
           <Layout title="Assegna I/O ai Nodi">
-            <PlaceholderPage pageName="Assegna I/O ai Nodi" />
+            <AssignIOPage />
           </Layout>
         } />
         
