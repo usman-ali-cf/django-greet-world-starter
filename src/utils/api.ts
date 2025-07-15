@@ -1,3 +1,4 @@
+
 /**
  * Effettua una chiamata fetch e restituisce i dati in formato JSON.
  * Se la risposta non è ok, solleva un errore con il messaggio restituito.
@@ -9,11 +10,34 @@
  */
 export async function apiFetch(url: string, options: RequestInit = {}): Promise<any> {
   try {
-    const response = await fetch(url, options)
+    // Get token from localStorage
+    const token = localStorage.getItem('access_token')
+    
+    // Prepare headers
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    }
+    
+    // Add authorization header if token exists
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+    
+    const response = await fetch(url, {
+      ...options,
+      headers,
+    })
+    
     const data = await response.json()
 
     if (!response.ok) {
-      throw new Error(data.error || 'Errore sconosciuto')
+      // If unauthorized, remove token and redirect to login
+      if (response.status === 401) {
+        localStorage.removeItem('access_token')
+        window.location.href = '/login'
+      }
+      throw new Error(data.detail || data.error || 'Errore sconosciuto')
     }
 
     return data

@@ -1,5 +1,7 @@
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-// Use static path for now - will work with the existing Flask static files
+import { Menu, X, LogOut } from 'lucide-react'
+import { useAuth } from '../contexts/AuthContext'
 
 interface HeaderProps {
   title: string
@@ -8,68 +10,73 @@ interface HeaderProps {
 }
 
 export default function Header({ title, projectId, onToggleSidebar }: HeaderProps) {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+
+    handleResize()
+    window.addEventListener('resize', handleResize)
+
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+  const { user, logout } = useAuth()
+
+  const handleLogout = () => {
+    logout()
+  }
+
   return (
-    <header className="header relative flex items-center justify-between min-h-[100px] text-white box-border p-5 md:px-10">
-      {/* Background image and overlay handled by CSS */}
-      <style jsx>{`
-        .header {
-          background-image: url('/static/img/schema_elettrico.png');
-          background-size: 100%;
-          background-position: center;
-          animation: headerZoomOut 5s ease-out forwards;
-        }
-        .header::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: rgba(3, 41, 82, 0.6);
-          pointer-events: none;
-        }
-        .header > * {
-          z-index: 1;
-        }
-        @keyframes headerZoomOut {
-          from { background-size: 120%; }
-          to { background-size: 100%; }
-        }
-      `}</style>
+    <header className="header bg-white shadow-lg border-b border-gray-200 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-50 via-blue-100 to-blue-50 opacity-50"></div>
+      <div className="container mx-auto px-4 h-full relative z-10">
+        <div className="flex items-center justify-between h-full">
+          {/* Left section */}
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={onToggleSidebar}
+              className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              aria-label="Toggle sidebar"
+            >
+              <Menu className="h-6 w-6 text-gray-600" />
+            </button>
+            
+            <Link to="/" className="flex items-center space-x-3">
+              <img 
+                src="/static/img/Logo.png" 
+                alt="Logo" 
+                className="h-10 w-auto"
+              />
+              <div>
+                <h1 className="text-xl font-bold text-gray-800">{title}</h1>
+                {projectId && (
+                  <p className="text-sm text-gray-600">Progetto ID: {projectId}</p>
+                )}
+              </div>
+            </Link>
+          </div>
 
-      <button 
-        className="sidebar-toggle bg-none border-none text-white text-[28px] cursor-pointer z-[1001] mr-4"
-        onClick={onToggleSidebar}
-      >
-        ☰
-      </button>
-
-      <div className="header-left">
-        <h1 className="text-2xl m-0">{title}</h1>
+          {/* Right section */}
+          <div className="flex items-center space-x-4">
+            {user && (
+              <div className="flex items-center space-x-3">
+                <span className="text-sm text-gray-600">
+                  Benvenuto, {user.full_name || user.username}
+                </span>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Esci</span>
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
-
-      <nav className="header-nav flex gap-4 mr-[250px]">
-        <Link 
-          to="/" 
-          className="text-white text-base px-3 py-2 rounded transition-colors hover:bg-white/20 no-underline"
-        >
-          🏠 Home
-        </Link>
-        {projectId && (
-          <Link 
-            to={`/project/${projectId}`}
-            className="text-white text-base px-3 py-2 rounded transition-colors hover:bg-white/20 no-underline"
-          >
-            🔙 Torna al Progetto
-          </Link>
-        )}
-      </nav>
-
-      <img 
-        className="logo-app absolute top-2.5 right-5 w-[250px] h-auto z-[1000]"
-        src="/static/img/Logo.png"
-        alt="Logo"
-      />
     </header>
   )
 }

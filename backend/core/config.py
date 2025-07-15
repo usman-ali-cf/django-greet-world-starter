@@ -1,10 +1,10 @@
+
 """
 Application configuration module
 """
 import os
 from typing import List
 from pydantic_settings import BaseSettings
-
 
 class Settings(BaseSettings):
     # Application
@@ -13,10 +13,10 @@ class Settings(BaseSettings):
     app_version: str = "1.0.0"
     debug: bool = True
     
-    # Security
-    secret_key: str = "your-secret-key-here"
-    session_cookie_name: str = "session_id"
-    session_lifetime: int = 86400  # 24 hours in seconds
+    # JWT Security
+    secret_key: str = "your-secret-key-here-change-in-production"
+    algorithm: str = "HS256"
+    access_token_expire_minutes: int = 1440  # 24 hours
     
     # CORS
     allowed_origins: List[str] = ["http://localhost:5173"]
@@ -31,6 +31,5 @@ class Settings(BaseSettings):
     
     class Config:
         env_file = ".env"
-
 
 settings = Settings()
