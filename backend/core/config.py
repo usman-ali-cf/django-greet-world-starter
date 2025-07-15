@@ -1,10 +1,10 @@
-
 """
 Application configuration module
 """
 import os
 from typing import List
 from pydantic_settings import BaseSettings
+
 
 class Settings(BaseSettings):
     # Application
@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     debug: bool = True
     
     # JWT Security
-    secret_key: str = "your-secret-key-here-change-in-production"
+    secret_key: str = "dfedfb48-22ec-4a69-b104-1609c9afe1eb-5nj5e93-4b1c-8f0d-2a5c6e7f8b9a"
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 1440  # 24 hours
     
@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     allowed_origins: List[str] = ["http://localhost:5173"]
     
     # Database
-    database_url: str = "sqlite:///./mysqlite3.db"
+    database_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5433/electric"
     
     # Static files
     static_dir: str = "static"

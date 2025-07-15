@@ -1,23 +1,23 @@
 """
-Database configuration and session management with async SQLAlchemy 2.x
+Database configuration and session management with async SQLAlchemy 2.x for PostgreSQL
 """
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.orm import declarative_base
-from sqlalchemy.pool import StaticPool
+from sqlalchemy.pool import NullPool
 from core.config import settings
 import logging
 
 logger = logging.getLogger(__name__)
 
-# Convert sqlite URL to async version
-async_database_url = settings.database_url.replace("sqlite:///", "sqlite+aiosqlite:///")
+# Use the database URL directly from settings (already in asyncpg format)
+async_database_url = settings.database_url
 
-# Create async engine
+# Create async engine for PostgreSQL
 engine = create_async_engine(
     async_database_url,
-    poolclass=StaticPool,
-    connect_args={"check_same_thread": False},
+    poolclass=NullPool,  # Using NullPool for better async performance with PostgreSQL
     echo=settings.debug,
+    future=True
 )
 
 # Create async session factory
@@ -49,18 +49,17 @@ async def get_db() -> AsyncSession:
 
 async def init_database():
     """
-    Initialize database tables
+    Initialize database tables for PostgreSQL
     """
     try:
         # Import all models to ensure they are registered
-        from models import *
+        from models import Base, Project, Node, HardwareNode, Hardware, IO, User
         
         async with engine.begin() as conn:
-            # For now, we won't create tables as we're working with existing SQLite database
-            # await conn.run_sync(Base.metadata.create_all)
-            pass
+            # Create all tables
+            await conn.run_sync(Base.metadata.create_all)
         
-        logger.info("Database initialized successfully")
+        logger.info("PostgreSQL database initialized successfully")
     except Exception as e:
         logger.error(f"Database initialization failed: {e}")
         raise
