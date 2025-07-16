@@ -5,7 +5,7 @@ from typing import List, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
 from schemas.io import IOResponse, IOAssignRequest, IORemoveRequest
-from scripts.assegna_io import assegna_io_automaticamente
+from scripts.assegna_io_alchemy import assegna_io_automaticamente
 import logging
 
 logger = logging.getLogger(__name__)

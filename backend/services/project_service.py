@@ -7,7 +7,7 @@ from sqlalchemy import select, delete
 from sqlalchemy.orm import selectinload
 from models.project import Project
 from schemas.project import ProjectCreate, ProjectResponse
-from scripts.crea_progetto import crea_progetto
+from scripts.crea_progetto_alchemy import crea_progetto
 import logging
 
 logger = logging.getLogger(__name__)

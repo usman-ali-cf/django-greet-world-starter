@@ -5,6 +5,7 @@ from .base import Base
 from .project import Project, Node, HardwareNode
 from .hardware import Hardware, IO
 from .user import User
+from .utility import Utenza, Potenza
 
 __all__ = [
     "Base",
@@ -13,5 +14,7 @@ __all__ = [
     "HardwareNode", 
     "Hardware",
     "IO",
-    "User"
+    "User",
+    "Utenza",
+    "Potenza"
 ]

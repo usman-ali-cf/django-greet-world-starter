@@ -6,11 +6,13 @@ from .projects import router as projects_router
 from .nodes import router as nodes_router
 from .hardware import router as hardware_router
 from .io import router as io_router
+from .legacy import legacy_router
 
 __all__ = [
     "auth_router",
     "projects_router", 
     "nodes_router",
     "hardware_router",
-    "io_router"
+    "io_router",
+    "legacy_router"
 ]

@@ -66,7 +66,7 @@ app.include_router(hardware_router, prefix="/api")
 app.include_router(io_router, prefix="/api")
 
 # Legacy API compatibility routes
-from api import router as legacy_router
+from routers.legacy import legacy_router
 app.include_router(legacy_router, prefix="/api")
 
 # Global exception handler

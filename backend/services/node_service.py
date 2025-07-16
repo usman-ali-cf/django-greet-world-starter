@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, text
 from models.project import Node
 from schemas.project import NodeCreate, NodeResponse
-from scripts.crea_nodo import crea_nodo_plc_automatico
+from scripts.crea_nodo_alchemy import crea_nodo_plc_automatico
 import logging
 
 logger = logging.getLogger(__name__)
