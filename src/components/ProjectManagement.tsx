@@ -1,21 +1,13 @@
 
 import React, { useState, useEffect } from 'react'
 import { apiFetch } from '../utils/api'
-import DataTable from './DataTable'
 
 interface Project {
   id_prg: number
   nome_progetto: string
   descrizione: string
   data_creazione: string
-  url_dettaglio?: string
 }
-
-const columnsProgetti = [
-  { header: "Nome progetto", field: "nome_progetto" },
-  { header: "Descrizione", field: "descrizione" },
-  { header: "Azioni", field: "id_prg" }
-]
 
 const ProjectManagement: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([])
@@ -27,12 +19,7 @@ const ProjectManagement: React.FC = () => {
     try {
       setLoading(true)
       const data = await apiFetch('/api/projects/')
-      // Add url_dettaglio to each project
-      const projectsWithUrls = data.map((project: Project) => ({
-        ...project,
-        url_dettaglio: `/project/${project.id_prg}`
-      }))
-      setProjects(projectsWithUrls)
+      setProjects(data)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Errore nel caricamento dei progetti')
     } finally {
@@ -68,99 +55,148 @@ const ProjectManagement: React.FC = () => {
     }
   }
 
-  const addActionButtons = (projects: Project[]) => {
-    const tbody = document.querySelector('#listaProgetti tbody')
-    if (!tbody) return
-
-    const rows = tbody.querySelectorAll('tr')
-    rows.forEach((row, idx) => {
-      const proj = projects[idx]
-      if (!proj) return
-      
-      const td = row.lastElementChild as HTMLTableCellElement
-
-      const btnOpen = document.createElement("button")
-      btnOpen.textContent = "Apri"
-      btnOpen.className = "btn-apri"
-      btnOpen.addEventListener("click", () => {
-        window.location.href = proj.url_dettaglio || `/project/${proj.id_prg}`
-      })
-
-      const btnDel = document.createElement("button")
-      btnDel.textContent = "Elimina"
-      btnDel.className = "btn-elimina"
-      btnDel.style.marginLeft = "6px"
-      btnDel.addEventListener("click", () => handleDeleteProject(proj.id_prg))
-
-      td.style.textAlign = "center"
-      td.innerHTML = ""
-      td.append(btnOpen, btnDel)
-    })
-  }
-
-  const handleRowClick = (item: Project, tr: HTMLTableRowElement) => {
-    tr.parentNode?.querySelectorAll('tr').forEach(r => r.classList.remove('selected'))
-    tr.classList.add('selected')
+  const handleOpenProject = (projectId: number) => {
+    window.location.href = `/project/${projectId}`
   }
 
   useEffect(() => {
     loadProjects()
   }, [])
 
-  if (loading) {
-    return <div className="text-center p-8">Caricamento...</div>
-  }
-
   return (
-    <div className="space-y-6">
-      {/* Header with buttons */}
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Lista Progetti</h2>
-        <div className="space-x-2">
-          <button 
-            id="btnNuovoProgetto"
-            onClick={() => setIsModalOpen(true)}
-            className="btn"
-          >
-            Nuovo Progetto
-          </button>
-          <button 
-            id="btnAggiornaProgetti"
-            onClick={loadProjects}
-            className="btn"
-          >
-            Aggiorna
-          </button>
-        </div>
+    <div className="container">
+      <h1 style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '30px', color: '#333' }}>
+        Gestione Progetto
+      </h1>
+
+      {/* Action Buttons */}
+      <div style={{ marginBottom: '30px' }}>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="btn"
+          style={{ marginRight: '15px' }}
+        >
+          + Nuovo Progetto
+        </button>
+        <button
+          onClick={loadProjects}
+          className="btn"
+        >
+          Aggiorna Lista
+        </button>
       </div>
 
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+        <div className="alert alert-danger" style={{ 
+          backgroundColor: '#f8d7da', 
+          border: '1px solid #f5c6cb', 
+          color: '#721c24', 
+          padding: '12px', 
+          borderRadius: '4px',
+          marginBottom: '20px'
+        }}>
           {error}
         </div>
       )}
 
+      {/* Section Title */}
+      <h2 style={{ fontSize: '20px', fontWeight: 'normal', marginBottom: '20px', color: '#333' }}>
+        Seleziona un progetto o creane uno nuovo
+      </h2>
+
+      <h3 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '15px', color: '#333' }}>
+        Progetti disponibili
+      </h3>
+
       {/* Projects Table */}
-      <div className="listaProgetti">
-        <DataTable
-          columns={columnsProgetti}
-          data={projects}
-          onRowClick={handleRowClick}
-          postRender={addActionButtons}
-          containerSelector="#listaProgetti"
-        />
-        <table style={{ display: 'none' }}>
-          <tbody id="listaProgetti"></tbody>
+      <div className="listaProgetti" style={{ backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '8px', border: '1px solid #ccc' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ backgroundColor: '#032952', color: 'white' }}>
+              <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>
+                Nome progetto
+              </th>
+              <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>
+                Descrizione
+              </th>
+              <th style={{ padding: '12px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>
+                Azioni
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              <tr>
+                <td colSpan={3} style={{ padding: '20px', textAlign: 'center', color: '#666' }}>
+                  Caricamento...
+                </td>
+              </tr>
+            ) : projects.length === 0 ? (
+              <tr>
+                <td colSpan={3} style={{ padding: '20px', textAlign: 'center', color: '#666' }}>
+                  Nessun progetto trovato. Crea un nuovo progetto per iniziare.
+                </td>
+              </tr>
+            ) : (
+              projects.map((project) => (
+                <tr 
+                  key={project.id_prg} 
+                  style={{ 
+                    cursor: 'pointer',
+                    transition: 'background-color 0.3s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#f1f1f1'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent'
+                  }}
+                >
+                  <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+                    {project.nome_progetto}
+                  </td>
+                  <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+                    {project.descrizione}
+                  </td>
+                  <td style={{ padding: '12px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>
+                    <button
+                      onClick={() => handleOpenProject(project.id_prg)}
+                      className="btn"
+                      style={{ 
+                        marginRight: '6px',
+                        fontSize: '14px',
+                        padding: '6px 12px'
+                      }}
+                    >
+                      Apri
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleDeleteProject(project.id_prg)
+                      }}
+                      className="btn"
+                      style={{ 
+                        fontSize: '14px',
+                        padding: '6px 12px'
+                      }}
+                    >
+                      Elimina
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
         </table>
       </div>
 
       {/* Modal for creating new project */}
       {isModalOpen && (
-        <div id="popupNuovoProj" className="popup-overlay" style={{ display: 'flex' }}>
+        <div className="popup-overlay" style={{ display: 'flex' }}>
           <div className="popup-content">
-            <h3>Nuovo Progetto</h3>
+            <h3 style={{ marginBottom: '20px', fontSize: '20px', fontWeight: 'bold' }}>Nuovo Progetto</h3>
             <form 
-              id="formNuovoProgetto"
               onSubmit={(e) => {
                 e.preventDefault()
                 const formData = new FormData(e.currentTarget)
@@ -171,30 +207,44 @@ const ProjectManagement: React.FC = () => {
                 }
               }}
             >
-              <div className="mb-4">
-                <label htmlFor="inpNomeProj" className="block text-gray-700 mb-2">Nome Progetto:</label>
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                  Nome Progetto:
+                </label>
                 <input
                   type="text"
-                  id="inpNomeProj"
                   name="nome_progetto"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  style={{
+                    width: '100%',
+                    padding: '8px',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    fontSize: '14px'
+                  }}
                 />
               </div>
-              <div className="mb-4">
-                <label htmlFor="txtDescProj" className="block text-gray-700 mb-2">Descrizione:</label>
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                  Descrizione:
+                </label>
                 <textarea
-                  id="txtDescProj"
                   name="descrizione_progetto"
                   required
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  style={{
+                    width: '100%',
+                    padding: '8px',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    fontSize: '14px',
+                    resize: 'vertical'
+                  }}
                 ></textarea>
               </div>
-              <div className="flex justify-end space-x-2">
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
                 <button
                   type="button"
-                  id="btnChiudiPopup"
                   onClick={() => setIsModalOpen(false)}
                   className="btn-cancel"
                 >
