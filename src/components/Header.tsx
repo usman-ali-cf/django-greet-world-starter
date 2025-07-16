@@ -1,5 +1,5 @@
-
 import React from 'react'
+import logoImage from '@/img/Logo.png'
 
 interface HeaderProps {
   title: string
@@ -36,7 +36,7 @@ const Header: React.FC<HeaderProps> = ({ title, projectId, onToggleSidebar }) =>
       </nav>
       
       <img 
-        src="/static/img/Logo.png" 
+        src={logoImage} 
         alt="Logo"
         className="logo-app"
       />

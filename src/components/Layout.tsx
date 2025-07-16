@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react'
 import { Outlet, useParams, Link } from 'react-router-dom'
+import logoImage from '@/img/Logo.png'
 
 interface LayoutProps {
   title?: string
@@ -13,6 +14,7 @@ export default function Layout({ title = "Progetto" }: LayoutProps) {
   const toggleSidebar = () => {
     setSidebarHidden(!sidebarHidden)
     document.body.classList.toggle('sidebar-hidden')
+    console.log("Sidebar toggle", sidebarHidden)
   }
 
   useEffect(() => {
@@ -21,9 +23,11 @@ export default function Layout({ title = "Progetto" }: LayoutProps) {
       if (window.innerWidth <= 768) {
         setSidebarHidden(true)
         document.body.classList.add('sidebar-hidden')
+        console.log("Sidebar hidden")
       } else {
         setSidebarHidden(false)
         document.body.classList.remove('sidebar-hidden')
+        console.log("Sidebar visible")
       }
     }
 
@@ -65,7 +69,7 @@ export default function Layout({ title = "Progetto" }: LayoutProps) {
         </nav>
         
         <img 
-          src="/static/img/Logo.png" 
+          src={logoImage} 
           alt="Logo"
           className="logo-app"
         />
