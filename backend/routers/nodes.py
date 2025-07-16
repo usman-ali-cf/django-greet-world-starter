@@ -42,3 +42,4 @@ async def create_plc_automatically(
     """Create PLC automatically"""
     result = await node_service.create_plc_automatically(db, project_id)
     return result
+    

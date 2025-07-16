@@ -9,6 +9,7 @@ from fastapi.responses import JSONResponse
 import uvicorn
 import logging
 from core.config import settings
+from routers.legacy import legacy_router
 from core.database import init_database
 from routers import auth_router, projects_router, nodes_router, hardware_router, io_router
 
@@ -64,9 +65,6 @@ app.include_router(projects_router, prefix="/api")
 app.include_router(nodes_router, prefix="/api")
 app.include_router(hardware_router, prefix="/api")
 app.include_router(io_router, prefix="/api")
-
-# Legacy API compatibility routes
-from routers.legacy import legacy_router
 app.include_router(legacy_router, prefix="/api")
 
 # Global exception handler
