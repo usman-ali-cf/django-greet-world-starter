@@ -1,15 +1,21 @@
 
 import React, { useState, useEffect } from 'react'
 import { apiFetch } from '../utils/api'
-import CreateProjectModal from './CreateProjectModal'
+import DataTable from './DataTable'
 
 interface Project {
   id_prg: number
   nome_progetto: string
   descrizione: string
   data_creazione: string
-  utente?: string
+  url_dettaglio?: string
 }
+
+const columnsProgetti = [
+  { header: "Nome progetto", field: "nome_progetto" },
+  { header: "Descrizione", field: "descrizione" },
+  { header: "Azioni", field: "id_prg" }
+]
 
 const ProjectManagement: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([])
@@ -21,7 +27,12 @@ const ProjectManagement: React.FC = () => {
     try {
       setLoading(true)
       const data = await apiFetch('/api/projects/')
-      setProjects(data)
+      // Add url_dettaglio to each project
+      const projectsWithUrls = data.map((project: Project) => ({
+        ...project,
+        url_dettaglio: `/project/${project.id_prg}`
+      }))
+      setProjects(projectsWithUrls)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Errore nel caricamento dei progetti')
     } finally {
@@ -29,17 +40,13 @@ const ProjectManagement: React.FC = () => {
     }
   }
 
-  useEffect(() => {
-    loadProjects()
-  }, [])
-
   const handleCreateProject = async (projectData: { nome_progetto: string; descrizione: string }) => {
     try {
       await apiFetch('/api/projects/', {
         method: 'POST',
         body: JSON.stringify(projectData)
       })
-      await loadProjects() // Reload projects
+      await loadProjects()
       setIsModalOpen(false)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Errore nella creazione del progetto')
@@ -55,11 +62,50 @@ const ProjectManagement: React.FC = () => {
       await apiFetch(`/api/projects/${projectId}`, {
         method: 'DELETE'
       })
-      await loadProjects() // Reload projects
+      await loadProjects()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Errore nell\'eliminazione del progetto')
     }
   }
+
+  const addActionButtons = (projects: Project[]) => {
+    const tbody = document.querySelector('#listaProgetti tbody')
+    if (!tbody) return
+
+    const rows = tbody.querySelectorAll('tr')
+    rows.forEach((row, idx) => {
+      const proj = projects[idx]
+      if (!proj) return
+      
+      const td = row.lastElementChild as HTMLTableCellElement
+
+      const btnOpen = document.createElement("button")
+      btnOpen.textContent = "Apri"
+      btnOpen.className = "btn-apri"
+      btnOpen.addEventListener("click", () => {
+        window.location.href = proj.url_dettaglio || `/project/${proj.id_prg}`
+      })
+
+      const btnDel = document.createElement("button")
+      btnDel.textContent = "Elimina"
+      btnDel.className = "btn-elimina"
+      btnDel.style.marginLeft = "6px"
+      btnDel.addEventListener("click", () => handleDeleteProject(proj.id_prg))
+
+      td.style.textAlign = "center"
+      td.innerHTML = ""
+      td.append(btnOpen, btnDel)
+    })
+  }
+
+  const handleRowClick = (item: Project, tr: HTMLTableRowElement) => {
+    tr.parentNode?.querySelectorAll('tr').forEach(r => r.classList.remove('selected'))
+    tr.classList.add('selected')
+  }
+
+  useEffect(() => {
+    loadProjects()
+  }, [])
 
   if (loading) {
     return <div className="text-center p-8">Caricamento...</div>
@@ -67,14 +113,25 @@ const ProjectManagement: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Gestione Progetti</h1>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
-        >
-          Nuovo Progetto
-        </button>
+      {/* Header with buttons */}
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold">Lista Progetti</h2>
+        <div className="space-x-2">
+          <button 
+            id="btnNuovoProgetto"
+            onClick={() => setIsModalOpen(true)}
+            className="btn"
+          >
+            Nuovo Progetto
+          </button>
+          <button 
+            id="btnAggiornaProgetti"
+            onClick={loadProjects}
+            className="btn"
+          >
+            Aggiorna
+          </button>
+        </div>
       </div>
 
       {error && (
@@ -83,77 +140,73 @@ const ProjectManagement: React.FC = () => {
         </div>
       )}
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Nome Progetto
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Descrizione
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Data Creazione
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Utente
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Azioni
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {projects.map((project) => (
-                <tr key={project.id_prg} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">
-                      {project.nome_progetto}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-gray-900">
-                      {project.descrizione}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {new Date(project.data_creazione).toLocaleDateString('it-IT')}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {project.utente || '-'}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                    <a
-                      href={`/project/${project.id_prg}`}
-                      className="text-blue-600 hover:text-blue-900"
-                    >
-                      Visualizza
-                    </a>
-                    <button
-                      onClick={() => handleDeleteProject(project.id_prg)}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      Elimina
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      {/* Projects Table */}
+      <div className="listaProgetti">
+        <DataTable
+          columns={columnsProgetti}
+          data={projects}
+          onRowClick={handleRowClick}
+          postRender={addActionButtons}
+          containerSelector="#listaProgetti"
+        />
+        <table style={{ display: 'none' }}>
+          <tbody id="listaProgetti"></tbody>
+        </table>
       </div>
 
+      {/* Modal for creating new project */}
       {isModalOpen && (
-        <CreateProjectModal
-          onClose={() => setIsModalOpen(false)}
-          onCreate={handleCreateProject}
-        />
+        <div id="popupNuovoProj" className="popup-overlay" style={{ display: 'flex' }}>
+          <div className="popup-content">
+            <h3>Nuovo Progetto</h3>
+            <form 
+              id="formNuovoProgetto"
+              onSubmit={(e) => {
+                e.preventDefault()
+                const formData = new FormData(e.currentTarget)
+                const nome = formData.get('nome_progetto') as string
+                const desc = formData.get('descrizione_progetto') as string
+                if (nome && desc) {
+                  handleCreateProject({ nome_progetto: nome, descrizione: desc })
+                }
+              }}
+            >
+              <div className="mb-4">
+                <label htmlFor="inpNomeProj" className="block text-gray-700 mb-2">Nome Progetto:</label>
+                <input
+                  type="text"
+                  id="inpNomeProj"
+                  name="nome_progetto"
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="txtDescProj" className="block text-gray-700 mb-2">Descrizione:</label>
+                <textarea
+                  id="txtDescProj"
+                  name="descrizione_progetto"
+                  required
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                ></textarea>
+              </div>
+              <div className="flex justify-end space-x-2">
+                <button
+                  type="button"
+                  id="btnChiudiPopup"
+                  onClick={() => setIsModalOpen(false)}
+                  className="btn-cancel"
+                >
+                  Annulla
+                </button>
+                <button type="submit" className="btn">
+                  Crea Progetto
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
     </div>
   )

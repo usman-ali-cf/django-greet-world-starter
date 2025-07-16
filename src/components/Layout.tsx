@@ -1,7 +1,6 @@
+
 import { useState, useEffect } from 'react'
 import { Outlet, useParams } from 'react-router-dom'
-import Header from './Header'
-import Sidebar from './Sidebar'
 
 interface LayoutProps {
   title?: string
@@ -13,6 +12,7 @@ export default function Layout({ title = "Progetto" }: LayoutProps) {
 
   const toggleSidebar = () => {
     setSidebarHidden(!sidebarHidden)
+    document.body.classList.toggle('sidebar-hidden')
   }
 
   useEffect(() => {
@@ -20,6 +20,7 @@ export default function Layout({ title = "Progetto" }: LayoutProps) {
     const handleResize = () => {
       if (window.innerWidth <= 768) {
         setSidebarHidden(true)
+        document.body.classList.add('sidebar-hidden')
       }
     }
 
@@ -29,20 +30,54 @@ export default function Layout({ title = "Progetto" }: LayoutProps) {
   }, [])
 
   return (
-    <div className={`min-h-screen flex flex-col overflow-hidden ${sidebarHidden ? 'sidebar-hidden' : ''}`}>
-      <Header 
-        title={title} 
-        projectId={id}
-        onToggleSidebar={toggleSidebar}
-      />
-      <Sidebar 
-        projectId={id}
-        hidden={sidebarHidden}
-      />
-      <main className={`main-content flex-1 transition-all duration-300 ease-in-out overflow-auto ${
-        sidebarHidden ? 'ml-0' : 'ml-[250px]'
-      } p-5`}>
-        <div className="max-w-[1200px] mx-auto bg-white rounded-lg shadow-lg p-5">
+    <div className="min-h-screen flex flex-col overflow-hidden">
+      {/* Header */}
+      <header className="header">
+        <div className="header-left">
+          <button 
+            className="sidebar-toggle"
+            onClick={toggleSidebar}
+          >
+            ☰
+          </button>
+          <h1>{title}</h1>
+        </div>
+        
+        <nav className="header-nav">
+          <a href="/">🏠 Home</a>
+          {id && (
+            <a href={`/project/${id}`}>🔙 Torna al Progetto</a>
+          )}
+        </nav>
+        
+        <img 
+          src="/static/img/Logo.png" 
+          alt="Logo"
+          className="logo-app"
+        />
+      </header>
+
+      {/* Sidebar */}
+      <div className={`sidebar ${sidebarHidden ? 'hidden' : ''}`}>
+        <nav className="sidebar-nav">
+          <a href="/">🏠 Home</a>
+          {id && (
+            <>
+              <a href={`/project/${id}`}>🔙 Torna al Progetto</a>
+              <a href={`/project/${id}/upload-utilities`}>📁 Carica File Utenze</a>
+              <a href={`/project/${id}/configure-utilities`}>🛠️ Configura Utenze</a>
+              <a href={`/project/${id}/configure-power`}>⚡ Configura Utenze di Potenza</a>
+              <a href={`/project/${id}/create-nodes`}>🖧 Crea Nodi e PLC</a>
+              <a href={`/project/${id}/assign-io`}>🔗 Assegna I/O ai Nodi</a>
+              <a href={`/project/${id}/configure-panel`}>🗄️ Configura Quadro Elettrico</a>
+            </>
+          )}
+        </nav>
+      </div>
+
+      {/* Main Content */}
+      <main className="main-content">
+        <div className="container">
           <Outlet />
         </div>
       </main>

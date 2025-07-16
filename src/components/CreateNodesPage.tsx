@@ -1,280 +1,261 @@
+
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { apiFetch } from '../utils/api'
+import DataTable from './DataTable'
 
-interface HardwareItem {
+interface Hardware {
   id_hw: number
   nome_hw: string
   descrizione_hw: string
-  tipo: string
-  DI: number
-  DO: number
-  AI: number
-  AO: number
-  F_DI: number
-  F_DO: number
-  Ox: number
-  Oy: number
-  L: number
-  H: number
-  blocco_grafico?: string
 }
 
 interface Node {
   id_nodo: number
   nome_nodo: string
-  tipo_nodo: string
   descrizione?: string
-  id_prg: number
-  id_quadro?: number
 }
 
-interface HardwareNode {
+interface NodeHardware {
   id_nodo_hw: number
-  id_nodo: number
-  id_hw: number
-  slot: number
-  quantita: number
   nome_hw: string
-  tipo: string
+  slot: number
   DI: number
   DO: number
 }
 
-export default function CreateNodesPage() {
+const columnsCatalogoHW = [
+  { header: "Nome HW", field: "nome_hw" },
+  { header: "Descrizione", field: "descrizione_hw" }
+]
+
+const columnsHWAssegnato = [
+  { header: "Nome HW", field: "nome_hw" },
+  { header: "Slot", field: "slot" },
+  { header: "DI", field: "DI" },
+  { header: "DO", field: "DO" },
+  { header: "Azioni", field: "id_nodo_hw" }
+]
+
+const CreateNodesPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
-  const projectId = parseInt(id || '0')
-
-  // State management
-  const [hardwareCatalog, setHardwareCatalog] = useState<HardwareItem[]>([])
+  const [hardware, setHardware] = useState<Hardware[]>([])
   const [nodes, setNodes] = useState<Node[]>([])
-  const [selectedNode, setSelectedNode] = useState<number | null>(null)
-  const [nodeHardware, setNodeHardware] = useState<HardwareNode[]>([])
-  const [selectedHardware, setSelectedHardware] = useState<HardwareItem | null>(null)
-  const [showCreateModal, setShowCreateModal] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [nodeHardware, setNodeHardware] = useState<NodeHardware[]>([])
+  const [selectedHW, setSelectedHW] = useState<Hardware | null>(null)
+  const [selectedNodo, setSelectedNodo] = useState<string>('')
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [loading, setLoading] = useState(true)
 
-  // Form state for node creation
-  const [newNodeName, setNewNodeName] = useState('')
-  const [newNodeDescription, setNewNodeDescription] = useState('')
-
-  // Load data on component mount
-  useEffect(() => {
-    loadHardwareCatalog()
-    loadNodes()
-  }, [])
-
-  // Load node hardware when selected node changes
-  useEffect(() => {
-    if (selectedNode) {
-      loadNodeHardware(selectedNode)
-    }
-  }, [selectedNode])
-
-  const loadHardwareCatalog = async () => {
+  const loadCatalogoHW = async () => {
     try {
-      const data = await apiFetch('/api/hardware/catalog')
-      setHardwareCatalog(data)
+      const data = await apiFetch('/api/catalogo_hw')
+      setHardware(data)
     } catch (error) {
-      console.error('Error loading hardware catalog:', error)
+      console.error("Errore caricamento catalogo hw:", error)
     }
   }
 
-  const loadNodes = async () => {
+  const loadNodi = async () => {
     try {
-      const data = await apiFetch(`/api/nodes/project/${projectId}`)
-      setNodes(data)
-      if (data.length > 0 && !selectedNode) {
-        setSelectedNode(data[0].id_nodo)
+      const nodi = await apiFetch('/api/lista_nodi')
+      setNodes(nodi)
+      if (nodi.length > 0) {
+        setSelectedNodo(nodi[0].id_nodo.toString())
+        await loadHWAssegnato(nodi[0].id_nodo)
       }
     } catch (error) {
-      console.error('Error loading nodes:', error)
+      console.error("Errore caricamento nodi:", error)
     }
   }
 
-  const loadNodeHardware = async (nodeId: number) => {
+  const loadHWAssegnato = async (idNodo: number) => {
     try {
-      const data = await apiFetch(`/api/hardware/node/${nodeId}`)
+      const data = await apiFetch(`/api/hw_nodo_list?id_nodo=${idNodo}`)
       setNodeHardware(data)
     } catch (error) {
-      console.error('Error loading node hardware:', error)
+      console.error("Errore caricamento HW assegnato:", error)
     }
   }
 
-  const createNode = async () => {
-    if (!newNodeName.trim()) {
-      alert('Inserisci un nome per il nodo')
-      return
-    }
-
-    setLoading(true)
+  const creaNuovoNodo = async (formData: { nome_nodo: string; descrizione: string }) => {
     try {
-      const nodeData = {
-        nome_nodo: newNodeName,
-        descrizione: newNodeDescription,
-        id_prg: projectId,
-        tipo_nodo: 'PLC'
+      const payload = {
+        id_prg: parseInt(id || '1'),
+        nome_nodo: formData.nome_nodo,
+        descrizione: formData.descrizione
       }
-
-      await apiFetch('/api/nodes/', {
+      await apiFetch('/api/crea_nodo', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(nodeData)
+        body: JSON.stringify(payload)
       })
-
-      // Reset form and reload data
-      setNewNodeName('')
-      setNewNodeDescription('')
-      setShowCreateModal(false)
-      await loadNodes()
+      await loadNodi()
+      setIsModalOpen(false)
     } catch (error) {
-      console.error('Error creating node:', error)
-      alert('Errore nella creazione del nodo')
-    } finally {
-      setLoading(false)
+      console.error("Errore nella creazione nodo:", error)
     }
   }
 
-  const assignHardwareToNode = async () => {
-    if (!selectedNode || !selectedHardware) {
-      alert('Seleziona un nodo e un hardware')
+  const assegnaHardwareAlNodo = async () => {
+    if (!selectedNodo) {
+      alert("Seleziona un nodo dall'elenco (o creane uno).")
+      return
+    }
+    if (!selectedHW) {
+      alert("Seleziona un hardware dalla tabella di sinistra.")
       return
     }
 
     try {
-      const assignData = {
-        id_nodo: selectedNode,
-        id_hw: selectedHardware.id_hw,
+      const payload = {
+        id_nodo: parseInt(selectedNodo),
+        id_hw: selectedHW.id_hw,
         quantita: 1
       }
-
-      await apiFetch('/api/hardware/node', {
+      await apiFetch('/api/hw_nodo_add', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(assignData)
+        body: JSON.stringify(payload)
       })
-
-      // Reload node hardware
-      await loadNodeHardware(selectedNode)
-      setSelectedHardware(null)
+      await loadHWAssegnato(parseInt(selectedNodo))
     } catch (error) {
-      console.error('Error assigning hardware:', error)
-      alert('Errore nell\'assegnazione dell\'hardware')
+      console.error("Errore assegnazione HW:", error)
     }
   }
 
-  const removeHardwareFromNode = async (hardwareNodeId: number) => {
-    if (!confirm('Sei sicuro di voler rimuovere questo hardware?')) {
-      return
-    }
-
+  const eliminaHWAssegnato = async (idNodoHw: number) => {
+    if (!confirm("Sei sicuro di voler eliminare questo HW assegnato?")) return
+    
     try {
-      await apiFetch(`/api/hardware/node/${hardwareNodeId}`, {
+      await apiFetch(`/api/hw_nodo_list/${idNodoHw}`, {
         method: 'DELETE'
       })
-
-      // Reload node hardware
-      if (selectedNode) {
-        await loadNodeHardware(selectedNode)
-      }
+      await loadHWAssegnato(parseInt(selectedNodo))
     } catch (error) {
-      console.error('Error removing hardware:', error)
-      alert('Errore nella rimozione dell\'hardware')
+      console.error("Errore eliminazione HW:", error)
     }
   }
 
-  const createAutomaticPLC = async () => {
+  const creaPlcAutomatico = async () => {
     try {
-      const response = await apiFetch(`/api/nodes/plc/auto/${projectId}`, {
+      const response = await apiFetch('/api/crea_plc_automatico', {
         method: 'POST'
       })
-
+      
       if (response.message) {
         alert(response.message)
-        await loadNodes()
+        loadNodi()
       } else if (response.error) {
-        alert('Errore: ' + response.error)
+        alert("Errore: " + response.error)
       }
-    } catch (error) {
-      console.error('Error creating automatic PLC:', error)
-      alert('Errore nella creazione automatica del PLC')
+    } catch (err) {
+      console.error("Errore nella creazione automatica PLC:", err)
+      alert("Si è verificato un errore nella creazione automatica del PLC.")
     }
+  }
+
+  const addActionButtons = (data: NodeHardware[]) => {
+    const tbody = document.querySelector('#tabella-hw-nodo tbody')
+    if (!tbody) return
+
+    const rows = tbody.querySelectorAll('tr')
+    rows.forEach((row, index) => {
+      const item = data[index]
+      if (!item) return
+      
+      const cellAzioni = row.lastElementChild as HTMLTableCellElement
+      const btnDelete = document.createElement("button")
+      btnDelete.textContent = "Elimina"
+      btnDelete.className = "btn-delete-hw"
+      btnDelete.addEventListener("click", () => eliminaHWAssegnato(item.id_nodo_hw))
+      
+      cellAzioni.innerHTML = ""
+      cellAzioni.appendChild(btnDelete)
+    })
+  }
+
+  const handleHWRowClick = (item: Hardware, tr: HTMLTableRowElement) => {
+    tr.parentNode?.querySelectorAll('tr').forEach(r => r.classList.remove('selected'))
+    tr.classList.add('selected')
+    setSelectedHW(item)
+  }
+
+  const handleNodeChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const nodeId = e.target.value
+    setSelectedNodo(nodeId)
+    await loadHWAssegnato(parseInt(nodeId))
+  }
+
+  useEffect(() => {
+    const initPage = async () => {
+      await loadCatalogoHW()
+      await loadNodi()
+      setLoading(false)
+    }
+    initPage()
+  }, [])
+
+  if (loading) {
+    return <div className="text-center p-8">Caricamento...</div>
   }
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-foreground">Crea Nodi e PLC</h1>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setShowCreateModal(true)}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+      {/* Header with buttons */}
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold">Crea Nodi e PLC</h2>
+        <div className="space-x-2">
+          <button 
+            id="btnApriPopup"
+            onClick={() => setIsModalOpen(true)}
+            className="btn"
           >
             Crea Nuovo Nodo
           </button>
-          <button
-            onClick={createAutomaticPLC}
-            className="px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/90 transition-colors"
+          <button 
+            id="btnCreazioneAutomaticaPLC"
+            onClick={creaPlcAutomatico}
+            className="btn"
           >
             Creazione Automatica PLC
+          </button>
+          <button 
+            id="aggiorna-lista-hw"
+            onClick={loadCatalogoHW}
+            className="btn"
+          >
+            Aggiorna Lista HW
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Left Panel - Hardware Catalog */}
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold text-foreground">Catalogo Hardware</h2>
-            <button
-              onClick={loadHardwareCatalog}
-              className="px-3 py-1 text-sm bg-muted text-muted-foreground rounded hover:bg-muted/80 transition-colors"
-            >
-              Aggiorna
-            </button>
-          </div>
-          
-          <div className="border border-border rounded-lg overflow-hidden">
-            <div className="bg-muted px-4 py-2 font-medium text-muted-foreground text-sm">
-              <div className="grid grid-cols-2 gap-4">
-                <span>Nome HW</span>
-                <span>Descrizione</span>
-              </div>
-            </div>
-            <div className="max-h-96 overflow-y-auto">
-              {hardwareCatalog.map((hw) => (
-                <div
-                  key={hw.id_hw}
-                  className={`px-4 py-2 cursor-pointer border-b border-border hover:bg-muted/50 transition-colors ${
-                    selectedHardware?.id_hw === hw.id_hw ? 'bg-primary/10 border-primary' : ''
-                  }`}
-                  onClick={() => setSelectedHardware(hw)}
-                >
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <span className="font-medium text-foreground">{hw.nome_hw}</span>
-                    <span className="text-muted-foreground">{hw.descrizione_hw}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+        {/* Left side - Hardware Catalog */}
+        <div className="catalogo-hardware">
+          <h3>Catalogo Hardware</h3>
+          <DataTable
+            columns={columnsCatalogoHW}
+            data={hardware}
+            onRowClick={handleHWRowClick}
+            containerSelector="#tabella-hw"
+          />
+          <table style={{ display: 'none' }}>
+            <tbody id="tabella-hw"></tbody>
+          </table>
         </div>
 
-        {/* Right Panel - Node Management */}
-        <div className="space-y-4">
-          {/* Node Selection */}
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Seleziona Nodo
-            </label>
-            <select
-              value={selectedNode || ''}
-              onChange={(e) => setSelectedNode(Number(e.target.value))}
-              className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+        {/* Right side - Node Configuration */}
+        <div className="form-configurazione-nodo">
+          <h3>Configurazione Nodo</h3>
+          
+          <div className="seleziona-nodo">
+            <label htmlFor="selectNodo">Seleziona Nodo:</label>
+            <select 
+              id="selectNodo" 
+              value={selectedNodo} 
+              onChange={handleNodeChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md"
             >
-              <option value="">Seleziona un nodo...</option>
-              {nodes.map((node) => (
+              {nodes.map(node => (
                 <option key={node.id_nodo} value={node.id_nodo}>
                   {node.nome_nodo}
                 </option>
@@ -282,109 +263,85 @@ export default function CreateNodesPage() {
             </select>
           </div>
 
-          {/* Assign Hardware Button */}
-          <button
-            onClick={assignHardwareToNode}
-            disabled={!selectedNode || !selectedHardware}
-            className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            Assegna Hardware al Nodo
-          </button>
+          <div className="mt-4">
+            <button 
+              id="btnAssegnaHW"
+              onClick={assegnaHardwareAlNodo}
+              className="btn w-full"
+            >
+              Assegna Hardware al Nodo
+            </button>
+          </div>
 
-          {/* Assigned Hardware */}
-          <div>
-            <h3 className="text-md font-semibold text-foreground mb-2">Hardware Assegnato</h3>
-            <div className="border border-border rounded-lg overflow-hidden">
-              <div className="bg-muted px-4 py-2 font-medium text-muted-foreground text-sm">
-                <div className="grid grid-cols-4 gap-2">
-                  <span>Nome HW</span>
-                  <span>Slot</span>
-                  <span>DI</span>
-                  <span>DO</span>
-                </div>
-              </div>
-              <div className="max-h-64 overflow-y-auto">
-                {nodeHardware.map((hw) => (
-                  <div
-                    key={hw.id_nodo_hw}
-                    className="px-4 py-2 border-b border-border hover:bg-muted/50 transition-colors"
-                  >
-                    <div className="grid grid-cols-4 gap-2 text-sm items-center">
-                      <span className="font-medium text-foreground">{hw.nome_hw}</span>
-                      <span className="text-muted-foreground">{hw.slot}</span>
-                      <span className="text-muted-foreground">{hw.DI}</span>
-                      <span className="text-muted-foreground">{hw.DO}</span>
-                    </div>
-                    <button
-                      onClick={() => removeHardwareFromNode(hw.id_nodo_hw)}
-                      className="mt-1 px-2 py-1 text-xs bg-destructive text-destructive-foreground rounded hover:bg-destructive/90 transition-colors"
-                    >
-                      Elimina
-                    </button>
-                  </div>
-                ))}
-                {nodeHardware.length === 0 && (
-                  <div className="px-4 py-8 text-center text-muted-foreground">
-                    Nessun hardware assegnato
-                  </div>
-                )}
-              </div>
-            </div>
+          <div className="tabella-hw-assegnato mt-4">
+            <h4>Hardware Assegnato</h4>
+            <DataTable
+              columns={columnsHWAssegnato}
+              data={nodeHardware}
+              postRender={addActionButtons}
+              containerSelector="#tabella-hw-nodo"
+            />
+            <table style={{ display: 'none' }}>
+              <tbody id="tabella-hw-nodo"></tbody>
+            </table>
           </div>
         </div>
       </div>
 
-      {/* Create Node Modal */}
-      {showCreateModal && (
-        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-card border border-border rounded-lg shadow-lg w-full max-w-md mx-4">
-            <div className="px-6 py-4 border-b border-border">
-              <h3 className="text-lg font-semibold text-card-foreground">Crea Nuovo Nodo</h3>
-            </div>
-            <div className="px-6 py-4 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-card-foreground mb-2">
-                  Nome Nodo *
-                </label>
+      {/* Modal for creating new node */}
+      {isModalOpen && (
+        <div id="popupOverlay" className="popup-overlay" style={{ display: 'flex' }}>
+          <div className="popup-content">
+            <h3>Crea Nuovo Nodo</h3>
+            <form 
+              onSubmit={(e) => {
+                e.preventDefault()
+                const formData = new FormData(e.currentTarget)
+                const nome_nodo = formData.get('nome_nodo') as string
+                const descrizione = formData.get('descrizione') as string
+                if (nome_nodo) {
+                  creaNuovoNodo({ nome_nodo, descrizione })
+                }
+              }}
+            >
+              <div className="mb-4">
+                <label htmlFor="nomeNodoPopup" className="block text-gray-700 mb-2">Nome Nodo:</label>
                 <input
                   type="text"
-                  value={newNodeName}
-                  onChange={(e) => setNewNodeName(e.target.value)}
-                  className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="Inserisci nome nodo"
+                  id="nomeNodoPopup"
+                  name="nome_nodo"
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-card-foreground mb-2">
-                  Descrizione
-                </label>
+              <div className="mb-4">
+                <label htmlFor="descrNodoPopup" className="block text-gray-700 mb-2">Descrizione:</label>
                 <textarea
-                  value={newNodeDescription}
-                  onChange={(e) => setNewNodeDescription(e.target.value)}
-                  className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  id="descrNodoPopup"
+                  name="descrizione"
                   rows={3}
-                  placeholder="Inserisci descrizione (opzionale)"
-                />
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                ></textarea>
               </div>
-            </div>
-            <div className="px-6 py-4 border-t border-border flex justify-end gap-2">
-              <button
-                onClick={() => setShowCreateModal(false)}
-                className="px-4 py-2 text-sm border border-border rounded-md hover:bg-muted transition-colors"
-              >
-                Annulla
-              </button>
-              <button
-                onClick={createNode}
-                disabled={loading || !newNodeName.trim()}
-                className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                {loading ? 'Creazione...' : 'Crea Nodo'}
-              </button>
-            </div>
+              <div className="flex justify-end space-x-2">
+                <button
+                  type="button"
+                  id="btnChiudiPopup"
+                  onClick={() => setIsModalOpen(false)}
+                  className="btn-cancel"
+                >
+                  Annulla
+                </button>
+                <button type="submit" className="btn">
+                  Crea Nodo
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
     </div>
   )
 }
+
+export default CreateNodesPage

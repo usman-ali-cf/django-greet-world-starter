@@ -1,467 +1,447 @@
+
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { apiFetch } from '../utils/api'
+import DataTable from './DataTable'
+import DataTableMulti from './DataTableMulti'
 
 interface Node {
   id_nodo: number
   nome_nodo: string
-  tipo_nodo: string
 }
 
 interface Module {
   id_nodo_hw: number
-  id_nodo: number
-  id_hw: number
   slot: number
   nome_hw: string
   tipo: string
 }
 
-interface IOItem {
+interface IOData {
   id_io: number
-  codice: string
   descrizione: string
-  tipo: string
-  id_modulo?: number
-  indirizzo?: string
-  note?: string
-  id_prg: number
+  selezionato?: boolean
 }
 
-export default function AssignIOPage() {
-  const { id } = useParams<{ id: string }>()
-  const projectId = parseInt(id || '0')
+const columnsModuli = [
+  { header: "Slot", field: "slot" },
+  { header: "Nome HW", field: "nome_hw" },
+  { header: "Tipo HW", field: "tipo" }
+]
 
-  // State management
+const columnsIOunassigned = [
+  { header: "", field: "selezionato", type: "checkbox" },
+  { header: "Commento IO", field: "descrizione" }
+]
+
+const columnsIOassigned = [
+  { header: "", field: "selezionato", type: "checkbox" },
+  { header: "Commento IO", field: "descrizione" }
+]
+
+const AssignIOPage: React.FC = () => {
+  const { id } = useParams<{ id: string }>()
   const [nodes, setNodes] = useState<Node[]>([])
   const [modules, setModules] = useState<Module[]>([])
-  const [unassignedIO, setUnassignedIO] = useState<IOItem[]>([])
-  const [assignedIO, setAssignedIO] = useState<IOItem[]>([])
-  
-  const [selectedNode, setSelectedNode] = useState<number | null>(null)
-  const [selectedModule, setSelectedModule] = useState<number | null>(null)
-  const [selectedModuleType, setSelectedModuleType] = useState<string>('')
-  
-  const [selectedUnassignedIds, setSelectedUnassignedIds] = useState<Set<number>>(new Set())
-  const [selectedAssignedIds, setSelectedAssignedIds] = useState<Set<number>>(new Set())
-  
-  const [unassignedFilter, setUnassignedFilter] = useState('')
-  const [assignedFilter, setAssignedFilter] = useState('')
-  
-  const [loading, setLoading] = useState(false)
+  const [unassignedIO, setUnassignedIO] = useState<IOData[]>([])
+  const [assignedIO, setAssignedIO] = useState<IOData[]>([])
+  const [selectedNodo, setSelectedNodo] = useState<string>('')
+  const [selectedModulo, setSelectedModulo] = useState<number | null>(null)
+  const [tipoModulo, setTipoModulo] = useState<string>('')
+  const [filterUnassigned, setFilterUnassigned] = useState('')
+  const [filterAssigned, setFilterAssigned] = useState('')
+  const [loading, setLoading] = useState(true)
 
-  // Load nodes on component mount
-  useEffect(() => {
-    loadNodes()
-  }, [])
-
-  // Load modules when node changes
-  useEffect(() => {
-    if (selectedNode) {
-      loadModules(selectedNode)
-    } else {
-      setModules([])
-      setUnassignedIO([])
-      setAssignedIO([])
-    }
-  }, [selectedNode])
-
-  // Load IO when module changes
-  useEffect(() => {
-    if (selectedModule && selectedModuleType) {
-      loadUnassignedIO()
-      loadAssignedIO(selectedModule, selectedNode!)
-    } else {
-      setUnassignedIO([])
-      setAssignedIO([])
-    }
-  }, [selectedModule, selectedModuleType])
-
-  const loadNodes = async () => {
+  const loadNodi = async () => {
     try {
-      const data = await apiFetch(`/api/nodes/project/${projectId}`)
-      setNodes(data)
-      if (data.length > 0) {
-        setSelectedNode(data[0].id_nodo)
+      const nodi = await apiFetch('/api/lista_nodi')
+      setNodes(nodi)
+      if (nodi.length > 0) {
+        setSelectedNodo(nodi[0].id_nodo.toString())
+        await loadModuliNodo(nodi[0].id_nodo)
       }
-    } catch (error) {
-      console.error('Error loading nodes:', error)
+    } catch (err) {
+      console.error("Errore loadNodi:", err)
     }
   }
 
-  const loadModules = async (nodeId: number) => {
+  const loadModuliNodo = async (idNodo: number) => {
     try {
-      const data = await apiFetch(`/api/hardware/node/${nodeId}`)
+      const data = await apiFetch(`/api/hw_nodo_list?id_nodo=${idNodo}`)
       setModules(data)
-      setSelectedModule(null)
-      setSelectedModuleType('')
-    } catch (error) {
-      console.error('Error loading modules:', error)
+      // Reset selection
+      setSelectedModulo(null)
+      setTipoModulo('')
+      setUnassignedIO([])
+      setAssignedIO([])
+    } catch (err) {
+      console.error("Errore loadModuliNodo:", err)
     }
   }
 
-  const loadUnassignedIO = async () => {
-    try {
-      const data = await apiFetch(`/api/io/unassigned?project_id=${projectId}&tipo=${encodeURIComponent(selectedModuleType)}`)
-      setUnassignedIO(data)
-    } catch (error) {
-      console.error('Error loading unassigned IO:', error)
-    }
-  }
-
-  const loadAssignedIO = async (moduleId: number, nodeId: number) => {
-    try {
-      const data = await apiFetch(`/api/io/assigned?module_id=${moduleId}&node_id=${nodeId}`)
-      setAssignedIO(data)
-    } catch (error) {
-      console.error('Error loading assigned IO:', error)
-    }
-  }
-
-  const handleModuleSelect = (module: Module) => {
-    setSelectedModule(module.id_nodo_hw)
-    setSelectedModuleType(module.tipo)
-    setSelectedUnassignedIds(new Set())
-    setSelectedAssignedIds(new Set())
-  }
-
-  const toggleUnassignedSelection = (ioId: number) => {
-    const newSelection = new Set(selectedUnassignedIds)
-    if (newSelection.has(ioId)) {
-      newSelection.delete(ioId)
-    } else {
-      newSelection.add(ioId)
-    }
-    setSelectedUnassignedIds(newSelection)
-  }
-
-  const toggleAssignedSelection = (ioId: number) => {
-    const newSelection = new Set(selectedAssignedIds)
-    if (newSelection.has(ioId)) {
-      newSelection.delete(ioId)
-    } else {
-      newSelection.add(ioId)
-    }
-    setSelectedAssignedIds(newSelection)
-  }
-
-  const selectAllUnassigned = (select: boolean) => {
-    if (select) {
-      const filteredIds = filteredUnassignedIO.map(io => io.id_io)
-      setSelectedUnassignedIds(new Set(filteredIds))
-    } else {
-      setSelectedUnassignedIds(new Set())
-    }
-  }
-
-  const selectAllAssigned = (select: boolean) => {
-    if (select) {
-      const filteredIds = filteredAssignedIO.map(io => io.id_io)
-      setSelectedAssignedIds(new Set(filteredIds))
-    } else {
-      setSelectedAssignedIds(new Set())
-    }
-  }
-
-  const assignIO = async () => {
-    if (!selectedModule || selectedUnassignedIds.size === 0) {
-      alert('Seleziona un modulo e almeno un I/O non assegnato')
+  const loadIOunassigned = async () => {
+    if (!selectedModulo || !tipoModulo) {
+      setUnassignedIO([])
       return
     }
-
-    setLoading(true)
     try {
-      for (const ioId of selectedUnassignedIds) {
-        const assignData = {
-          id_io: ioId,
-          id_modulo: selectedModule
-        }
+      const data = await apiFetch(`/api/io_unassigned?tipo=${encodeURIComponent(tipoModulo)}`)
+      setUnassignedIO(data)
+    } catch (err) {
+      console.error("Errore loadIOunassigned:", err)
+    }
+  }
 
-        const response = await apiFetch('/api/io/assign', {
+  const loadIOassigned = async (idNodo: number, idModuloHW: number) => {
+    if (!idModuloHW) {
+      setAssignedIO([])
+      return
+    }
+    try {
+      const data = await apiFetch(`/api/io_assigned?id_modulo=${idModuloHW}&id_nodo=${idNodo}`)
+      setAssignedIO(data)
+    } catch (err) {
+      console.error("Errore loadIOassigned:", err)
+    }
+  }
+
+  const assegnaIOalModulo = async () => {
+    if (!selectedModulo) {
+      alert("Seleziona un modulo dalla tabella moduli")
+      return
+    }
+    const rowsSelected = document.querySelectorAll('#tabella-io-unassigned tr.selected')
+    if (rowsSelected.length === 0) {
+      alert("Nessun IO selezionato in 'IO Non Assegnati'")
+      return
+    }
+    
+    const ids = Array.from(rowsSelected).map(tr => tr.getAttribute('data-id'))
+    try {
+      for (const idIO of ids) {
+        const payload = { id_io: idIO, id_modulo: selectedModulo }
+        const response = await apiFetch('/api/io_assign', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(assignData)
+          body: JSON.stringify(payload)
         })
-
+        
         if (response.error) {
-          alert('Operazione non consentita: ' + response.error)
+          alert("Operazione non consentita: " + response.error)
+          return
+        }
+        if (response.message && (response.message.indexOf("Capacità superata") !== -1 ||
+            response.message.indexOf("non corrisponde") !== -1)) {
+          alert(response.message)
+          loadIOunassigned()
+          loadIOassigned(parseInt(selectedNodo), selectedModulo)
           return
         }
       }
-
-      // Refresh data
-      await loadUnassignedIO()
-      await loadAssignedIO(selectedModule, selectedNode!)
-      setSelectedUnassignedIds(new Set())
-    } catch (error) {
-      console.error('Error assigning IO:', error)
-      alert('Errore nell\'assegnazione I/O')
-    } finally {
-      setLoading(false)
+      loadIOunassigned()
+      loadIOassigned(parseInt(selectedNodo), selectedModulo)
+    } catch (err) {
+      console.error("Errore assegnaIOalModulo:", err)
     }
   }
 
-  const unassignIO = async () => {
-    if (selectedAssignedIds.size === 0) {
-      alert('Seleziona almeno un I/O assegnato da rimuovere')
+  const rimuoviIOdalModulo = async () => {
+    if (!selectedModulo) {
+      alert("Seleziona un modulo dalla tabella moduli")
       return
     }
-
-    setLoading(true)
+    const rowsSelected = document.querySelectorAll('#tabella-io-assigned tr.selected')
+    if (rowsSelected.length === 0) {
+      alert("Nessun IO selezionato in 'IO Assegnati'")
+      return
+    }
+    
+    const ids = Array.from(rowsSelected).map(tr => tr.getAttribute('data-id'))
     try {
-      for (const ioId of selectedAssignedIds) {
-        await apiFetch(`/api/io/assign/${ioId}`, {
-          method: 'DELETE'
-        })
+      for (const idIO of ids) {
+        await apiFetch(`/api/io_assign?id_io=${idIO}`, { method: 'DELETE' })
       }
-
-      // Refresh data
-      await loadUnassignedIO()
-      await loadAssignedIO(selectedModule!, selectedNode!)
-      setSelectedAssignedIds(new Set())
-    } catch (error) {
-      console.error('Error unassigning IO:', error)
-      alert('Errore nella rimozione I/O')
-    } finally {
-      setLoading(false)
+      loadIOunassigned()
+      loadIOassigned(parseInt(selectedNodo), selectedModulo)
+    } catch (err) {
+      console.error("Errore rimuoviIOdalModulo:", err)
     }
   }
 
-  const autoAssignIO = async () => {
-    if (!selectedNode) {
-      alert('Seleziona un nodo')
+  const assegnazioneAutomatica = async () => {
+    if (!selectedNodo) {
+      alert("Seleziona un nodo prima di procedere con l'assegnazione automatica.")
       return
     }
-
+    
+    const payload = { id_nodo: parseInt(selectedNodo) }
+    
     try {
-      const response = await apiFetch(`/api/io/assign/auto?node_id=${selectedNode}&project_id=${projectId}`, {
+      const response = await apiFetch('/api/assegna_io_automatico', {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      })
+      
+      if (response.success) {
+        alert(response.message)
+      } else {
+        alert("Errore: " + response.message)
+      }
+      
+      loadIOunassigned()
+      if (selectedModulo) loadIOassigned(parseInt(selectedNodo), selectedModulo)
+    } catch (err) {
+      console.error("Errore nell'assegnazione automatica:", err)
+      alert("Si è verificato un errore durante l'assegnazione automatica.")
+    }
+  }
+
+  const exportaIO = async (format = 'xml') => {
+    try {
+      const response = await apiFetch(`/api/export_io?format=${format}`, {
         method: 'POST'
       })
 
-      if (response.success) {
-        alert(response.message)
-        await loadUnassignedIO()
-        if (selectedModule) {
-          await loadAssignedIO(selectedModule, selectedNode)
-        }
+      if (response.file) {
+        window.location.href = '/download/' + response.file
       } else {
-        alert('Errore: ' + response.message)
+        alert("Export completato, ma senza file restituito.")
       }
-    } catch (error) {
-      console.error('Error in auto assignment:', error)
-      alert('Errore nell\'assegnazione automatica')
+    } catch (err) {
+      console.error("Errore durante l'esportazione IO:", err)
+      alert("❌ Errore durante l'esportazione IO.")
     }
   }
 
-  // Filter functions
-  const filteredUnassignedIO = unassignedIO.filter(io =>
-    io.descrizione.toLowerCase().includes(unassignedFilter.toLowerCase())
-  )
+  const esportaSchemainExcel = async () => {
+    try {
+      const response = await apiFetch('/api/genera_schema', {
+        method: 'POST'
+      })
 
-  const filteredAssignedIO = assignedIO.filter(io =>
-    io.descrizione.toLowerCase().includes(assignedFilter.toLowerCase())
-  )
+      if (response.message && response.file) {
+        window.location.href = '/download/' + response.file
+      } else {
+        alert("⚠️ Export completato, ma senza messaggio di conferma.")
+      }
+    } catch (err) {
+      console.error("Errore durante esportazione Excel:", err)
+      alert("❌ Errore durante l'esportazione del file.")
+    }
+  }
+
+  const handleNodeChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const nodeId = e.target.value
+    setSelectedNodo(nodeId)
+    setSelectedModulo(null)
+    setTipoModulo('')
+    await loadModuliNodo(parseInt(nodeId))
+    setUnassignedIO([])
+    setAssignedIO([])
+  }
+
+  const handleModuleRowClick = (item: Module, tr: HTMLTableRowElement) => {
+    tr.parentNode?.querySelectorAll('tr').forEach(r => r.classList.remove('selected'))
+    tr.classList.add('selected')
+    setSelectedModulo(item.id_nodo_hw)
+    setTipoModulo(item.tipo)
+    // Load IO data for this module
+    loadIOunassigned()
+    loadIOassigned(parseInt(selectedNodo), item.id_nodo_hw)
+  }
+
+  const handleSelectAllUnassigned = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rows = document.querySelectorAll('#tabella-io-unassigned tr')
+    rows.forEach(row => {
+      if (e.target.checked) {
+        row.classList.add('selected')
+      } else {
+        row.classList.remove('selected')
+      }
+    })
+  }
+
+  const handleSelectAllAssigned = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rows = document.querySelectorAll('#tabella-io-assigned tr')
+    rows.forEach(row => {
+      if (e.target.checked) {
+        row.classList.add('selected')
+      } else {
+        row.classList.remove('selected')
+      }
+    })
+  }
+
+  useEffect(() => {
+    loadNodi().finally(() => setLoading(false))
+  }, [])
+
+  useEffect(() => {
+    loadIOunassigned()
+  }, [selectedModulo, tipoModulo])
+
+  if (loading) {
+    return <div className="text-center p-8">Caricamento...</div>
+  }
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-foreground">Assegna I/O ai Nodi</h1>
-        <button
-          onClick={autoAssignIO}
-          className="px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/90 transition-colors"
-        >
-          Assegnazione Automatica
-        </button>
-      </div>
-
-      {/* Node and Module Selection */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
-            Seleziona Nodo
-          </label>
-          <select
-            value={selectedNode || ''}
-            onChange={(e) => setSelectedNode(Number(e.target.value) || null)}
-            className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+      {/* Header with buttons */}
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold">Assegna I/O ai Nodi</h2>
+        <div className="space-x-2">
+          <button 
+            id="btnAggiornaNodi"
+            onClick={loadNodi}
+            className="btn"
           >
-            <option value="">Seleziona un nodo...</option>
-            {nodes.map((node) => (
-              <option key={node.id_nodo} value={node.id_nodo}>
-                {node.nome_nodo}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
-            Moduli Hardware
-          </label>
-          <div className="border border-border rounded-lg max-h-32 overflow-y-auto">
-            {modules.map((module) => (
-              <div
-                key={module.id_nodo_hw}
-                className={`px-3 py-2 cursor-pointer border-b border-border hover:bg-muted/50 transition-colors ${
-                  selectedModule === module.id_nodo_hw ? 'bg-primary/10 border-primary' : ''
-                }`}
-                onClick={() => handleModuleSelect(module)}
-              >
-                <div className="grid grid-cols-3 gap-2 text-sm">
-                  <span className="font-medium text-foreground">Slot {module.slot}</span>
-                  <span className="text-muted-foreground">{module.nome_hw}</span>
-                  <span className="text-muted-foreground">{module.tipo}</span>
-                </div>
-              </div>
-            ))}
-            {modules.length === 0 && selectedNode && (
-              <div className="px-3 py-4 text-center text-muted-foreground text-sm">
-                Nessun modulo disponibile per questo nodo
-              </div>
-            )}
-          </div>
+            Aggiorna Nodi
+          </button>
+          <button 
+            id="btnAggiornaIO"
+            onClick={loadIOunassigned}
+            className="btn"
+          >
+            Aggiorna IO
+          </button>
+          <button 
+            id="btnAssegnazioneAutomatica"
+            onClick={assegnazioneAutomatica}
+            className="btn"
+          >
+            Assegnazione Automatica
+          </button>
+          <button 
+            id="btnExportIO"
+            onClick={() => exportaIO('xml')}
+            className="btn"
+          >
+            Export IO
+          </button>
+          <button 
+            id="btnGeneraSchema"
+            onClick={esportaSchemainExcel}
+            className="btn"
+          >
+            Genera Schema
+          </button>
         </div>
       </div>
 
-      {/* IO Management */}
-      {selectedModule && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Unassigned IO */}
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <h3 className="text-lg font-semibold text-foreground">I/O Non Assegnati</h3>
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  onChange={(e) => selectAllUnassigned(e.target.checked)}
-                  className="rounded border-border"
-                />
-                <span className="text-sm text-muted-foreground">Seleziona tutti</span>
-              </div>
-            </div>
-            
-            <input
-              type="text"
-              placeholder="Filtra per descrizione..."
-              value={unassignedFilter}
-              onChange={(e) => setUnassignedFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-            />
+      {/* Node Selection */}
+      <div className="seleziona-nodo">
+        <label htmlFor="selectNodo">Seleziona Nodo:</label>
+        <select 
+          id="selectNodo" 
+          value={selectedNodo} 
+          onChange={handleNodeChange}
+          className="ml-2 px-3 py-2 border border-gray-300 rounded-md"
+        >
+          {nodes.map(node => (
+            <option key={node.id_nodo} value={node.id_nodo}>
+              {node.nome_nodo}
+            </option>
+          ))}
+        </select>
+      </div>
 
-            <div className="border border-border rounded-lg overflow-hidden">
-              <div className="bg-muted px-4 py-2 font-medium text-muted-foreground text-sm">
-                <div className="grid grid-cols-3 gap-4">
-                  <span>Selezione</span>
-                  <span>Commento I/O</span>
-                  <span>Tipo</span>
-                </div>
-              </div>
-              <div className="max-h-96 overflow-y-auto">
-                {filteredUnassignedIO.map((io) => (
-                  <div
-                    key={io.id_io}
-                    className={`px-4 py-2 border-b border-border hover:bg-muted/50 transition-colors ${
-                      selectedUnassignedIds.has(io.id_io) ? 'bg-primary/10' : ''
-                    }`}
-                  >
-                    <div className="grid grid-cols-3 gap-4 text-sm items-center">
-                      <input
-                        type="checkbox"
-                        checked={selectedUnassignedIds.has(io.id_io)}
-                        onChange={() => toggleUnassignedSelection(io.id_io)}
-                        className="rounded border-border"
-                      />
-                      <span className="text-foreground">{io.descrizione}</span>
-                      <span className="text-muted-foreground">{io.tipo}</span>
-                    </div>
-                  </div>
-                ))}
-                {filteredUnassignedIO.length === 0 && (
-                  <div className="px-4 py-8 text-center text-muted-foreground">
-                    Nessun I/O non assegnato
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <button
-              onClick={assignIO}
-              disabled={loading || selectedUnassignedIds.size === 0}
-              className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              {loading ? 'Assegnazione...' : 'Assegna I/O →'}
-            </button>
-          </div>
-
-          {/* Assigned IO */}
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <h3 className="text-lg font-semibold text-foreground">I/O Assegnati</h3>
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  onChange={(e) => selectAllAssigned(e.target.checked)}
-                  className="rounded border-border"
-                />
-                <span className="text-sm text-muted-foreground">Seleziona tutti</span>
-              </div>
-            </div>
-
-            <input
-              type="text"
-              placeholder="Filtra per descrizione..."
-              value={assignedFilter}
-              onChange={(e) => setAssignedFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-            />
-
-            <div className="border border-border rounded-lg overflow-hidden">
-              <div className="bg-muted px-4 py-2 font-medium text-muted-foreground text-sm">
-                <div className="grid grid-cols-3 gap-4">
-                  <span>Selezione</span>
-                  <span>Commento I/O</span>
-                  <span>Tipo</span>
-                </div>
-              </div>
-              <div className="max-h-96 overflow-y-auto">
-                {filteredAssignedIO.map((io) => (
-                  <div
-                    key={io.id_io}
-                    className={`px-4 py-2 border-b border-border hover:bg-muted/50 transition-colors ${
-                      selectedAssignedIds.has(io.id_io) ? 'bg-primary/10' : ''
-                    }`}
-                  >
-                    <div className="grid grid-cols-3 gap-4 text-sm items-center">
-                      <input
-                        type="checkbox"
-                        checked={selectedAssignedIds.has(io.id_io)}
-                        onChange={() => toggleAssignedSelection(io.id_io)}
-                        className="rounded border-border"
-                      />
-                      <span className="text-foreground">{io.descrizione}</span>
-                      <span className="text-muted-foreground">{io.tipo}</span>
-                    </div>
-                  </div>
-                ))}
-                {filteredAssignedIO.length === 0 && (
-                  <div className="px-4 py-8 text-center text-muted-foreground">
-                    Nessun I/O assegnato a questo modulo
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <button
-              onClick={unassignIO}
-              disabled={loading || selectedAssignedIds.size === 0}
-              className="w-full px-4 py-2 bg-destructive text-destructive-foreground rounded-md hover:bg-destructive/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              {loading ? 'Rimozione...' : '← Rimuovi I/O'}
-            </button>
-          </div>
+      {/* Main Grid Layout */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px' }}>
+        {/* Modules Table */}
+        <div className="tabella-moduli">
+          <h3>Moduli</h3>
+          <DataTable
+            columns={columnsModuli}
+            data={modules}
+            onRowClick={handleModuleRowClick}
+            containerSelector="#tabella-moduli"
+          />
+          <table style={{ display: 'none' }}>
+            <tbody id="tabella-moduli"></tbody>
+          </table>
         </div>
-      )}
+
+        {/* Unassigned IO */}
+        <div className="tabella-io-non-assegnati">
+          <div className="flex justify-between items-center mb-2">
+            <h3>IO Non Assegnati</h3>
+            <label>
+              <input 
+                type="checkbox" 
+                id="selectAllUnassigned"
+                onChange={handleSelectAllUnassigned}
+              />
+              Seleziona Tutto
+            </label>
+          </div>
+          <input
+            type="text"
+            id="filterUnassigned"
+            placeholder="Filtra per commento..."
+            value={filterUnassigned}
+            onChange={(e) => setFilterUnassigned(e.target.value)}
+            className="w-full px-3 py-1 border border-gray-300 rounded-md mb-2"
+          />
+          <DataTableMulti
+            columns={columnsIOunassigned}
+            data={unassignedIO.filter(item => 
+              item.descrizione.toLowerCase().includes(filterUnassigned.toLowerCase())
+            )}
+            containerSelector="#tabella-io-unassigned"
+          />
+          <table style={{ display: 'none' }}>
+            <tbody id="tabella-io-unassigned"></tbody>
+          </table>
+          <button 
+            id="btnAssegnaIO"
+            onClick={assegnaIOalModulo}
+            className="btn w-full mt-2"
+          >
+            Assegna IO →
+          </button>
+        </div>
+
+        {/* Assigned IO */}
+        <div className="tabella-io-assegnati">
+          <div className="flex justify-between items-center mb-2">
+            <h3>IO Assegnati</h3>
+            <label>
+              <input 
+                type="checkbox" 
+                id="selectAllAssigned"
+                onChange={handleSelectAllAssigned}
+              />
+              Seleziona Tutto
+            </label>
+          </div>
+          <input
+            type="text"
+            id="filterAssigned"
+            placeholder="Filtra per commento..."
+            value={filterAssigned}
+            onChange={(e) => setFilterAssigned(e.target.value)}
+            className="w-full px-3 py-1 border border-gray-300 rounded-md mb-2"
+          />
+          <DataTableMulti
+            columns={columnsIOassigned}
+            data={assignedIO.filter(item => 
+              item.descrizione.toLowerCase().includes(filterAssigned.toLowerCase())
+            )}
+            containerSelector="#tabella-io-assigned"
+          />
+          <table style={{ display: 'none' }}>
+            <tbody id="tabella-io-assigned"></tbody>
+          </table>
+          <button 
+            id="btnRimuoviIO"
+            onClick={rimuoviIOdalModulo}
+            className="btn w-full mt-2"
+          >
+            ← Rimuovi IO
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
+
+export default AssignIOPage
