@@ -1,22 +1,23 @@
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+
+import React, { useState, useEffect } from 'react'
 import { apiFetch } from '../utils/api'
-import CreateProjectModal from './CreateProjectModal'
-// Use static path for now - will work with the existing Flask static files
 
 interface Project {
   id_prg: number
-  nome: string
-  descrizione: string
+  nome_progetto: string
+  descrizione_progetto: string
+  data_creazione: string
   url_dettaglio: string
 }
 
-export default function ProjectManagement() {
+const ProjectManagement: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([])
-  const [selectedRow, setSelectedRow] = useState<HTMLTableRowElement | null>(null)
-  const [showCreateModal, setShowCreateModal] = useState(false)
-  const [loading, setLoading] = useState(true)
-  const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
+  const [showCreateForm, setShowCreateForm] = useState(false)
+  const [formData, setFormData] = useState({
+    nome_progetto: '',
+    descrizione_progetto: ''
+  })
 
   const loadProjects = async () => {
     try {
@@ -30,150 +31,154 @@ export default function ProjectManagement() {
     }
   }
 
-  const deleteProject = async (id: number, name: string) => {
-    if (!confirm(`Eliminare il progetto «${name}»?`)) return
-    
+  const createProject = async (e: React.FormEvent) => {
+    e.preventDefault()
     try {
-      await apiFetch(`/api/progetti/${id}`, { method: 'DELETE' })
-      await loadProjects()
+      await apiFetch('/api/progetti', {
+        method: 'POST',
+        body: JSON.stringify(formData)
+      })
+      setShowCreateForm(false)
+      setFormData({ nome_progetto: '', descrizione_progetto: '' })
+      loadProjects()
     } catch (error) {
-      console.error('Error deleting project:', error)
+      console.error('Error creating project:', error)
     }
   }
 
-  const handleRowClick = (event: React.MouseEvent<HTMLTableRowElement>) => {
-    // Remove selection from all rows
-    document.querySelectorAll('#listaProgetti tr').forEach(row => {
-      row.classList.remove('selected')
-    })
-    
-    // Select current row
-    const row = event.currentTarget
-    row.classList.add('selected')
-    setSelectedRow(row)
-  }
-
-  const openProject = (project: Project) => {
-    // Navigate to project detail page
-    navigate(`/project/${project.id_prg}`)
+  const deleteProject = async (id: number, nome: string) => {
+    if (!confirm(`Eliminare il progetto «${nome}»?`)) return
+    try {
+      await apiFetch(`/api/progetti/${id}`, { method: 'DELETE' })
+      loadProjects()
+    } catch (error) {
+      console.error('Error deleting project:', error)
+    }
   }
 
   useEffect(() => {
     loadProjects()
   }, [])
 
+  if (loading) {
+    return <div className="text-center p-8">Caricamento...</div>
+  }
+
   return (
-    <>
-      <header className="mb-8">
-        <h1 className="text-2xl font-bold mb-4">Gestione Progetto</h1>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Gestione Progetto</h1>
+        <div className="space-x-2">
+          <button
+            onClick={() => setShowCreateForm(true)}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            + Nuovo Progetto
+          </button>
+          <button
+            onClick={loadProjects}
+            className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
+          >
+            Aggiorna Lista
+          </button>
+        </div>
+      </div>
 
-        <nav className="mb-4">
-          <ul className="nav-buttons flex gap-4 list-none">
-            <li>
-              <button 
-                className="btn bg-[#ca0909] text-white border-none px-5 py-3 cursor-pointer rounded text-base transition-colors hover:bg-[#850404]"
-                onClick={() => setShowCreateModal(true)}
-              >
-                + Nuovo Progetto
-              </button>
-            </li>
-            <li>
-              <button 
-                className="btn bg-[#ca0909] text-white border-none px-5 py-3 cursor-pointer rounded text-base transition-colors hover:bg-[#850404]"
-                onClick={loadProjects}
-              >
-                Aggiorna Lista
-              </button>
-            </li>
-          </ul>
-        </nav>
-
-        <img 
-          className="logo-app w-[250px] h-auto"
-          src="/static/img/Logo.png"
-          alt="Logo"
-        />
-      </header>
-
-      <main>
-        <h2 className="text-xl mb-6">Seleziona un progetto o creane uno nuovo</h2>
-
-        <section>
-          <h3 className="text-lg mb-4">Progetti disponibili</h3>
-
-          <table className="table w-full border-collapse text-sm">
-            <thead>
-              <tr>
-                <th className="sticky top-0 bg-[#032952] text-white z-10 p-3 text-left border-b border-gray-300">
-                  Nome progetto
-                </th>
-                <th className="sticky top-0 bg-[#032952] text-white z-10 p-3 text-left border-b border-gray-300">
-                  Descrizione
-                </th>
-                <th className="sticky top-0 bg-[#032952] text-white z-10 p-3 text-center border-b border-gray-300">
-                  Azioni
-                </th>
-              </tr>
-            </thead>
-            <tbody id="listaProgetti">
-              {loading ? (
-                <tr>
-                  <td colSpan={3} className="p-3 text-center">
-                    Caricamento progetti...
-                  </td>
-                </tr>
-              ) : projects.length === 0 ? (
-                <tr>
-                  <td colSpan={3} className="p-3 text-center">
-                    Nessun progetto disponibile
-                  </td>
-                </tr>
-              ) : (
-                projects.map((project) => (
-                  <tr 
-                    key={project.id_prg}
-                    className="cursor-pointer transition-colors hover:bg-gray-100"
-                    onClick={handleRowClick}
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <table className="w-full">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Nome progetto
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Descrizione
+              </th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Azioni
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {projects.map((project) => (
+              <tr key={project.id_prg} className="hover:bg-gray-50">
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  {project.nome_progetto}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {project.descrizione_progetto}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-center space-x-2">
+                  <button
+                    onClick={() => window.location.href = `/project/${project.id_prg}`}
+                    className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700"
                   >
-                    <td className="p-3 border-b border-gray-300 whitespace-nowrap">
-                      {project.nome}
-                    </td>
-                    <td className="p-3 border-b border-gray-300 whitespace-nowrap">
-                      {project.descrizione}
-                    </td>
-                    <td className="p-3 border-b border-gray-300 text-center">
-                      <button
-                        className="btn-apri bg-[#ca0909] text-white border-none px-4 py-2 cursor-pointer rounded text-sm transition-colors hover:bg-[#850404] mr-2"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          openProject(project)
-                        }}
-                      >
-                        Apri
-                      </button>
-                      <button
-                        className="btn-elimina bg-[#ca0909] text-white border-none px-4 py-2 cursor-pointer rounded text-sm transition-colors hover:bg-[#850404]"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          deleteProject(project.id_prg, project.nome)
-                        }}
-                      >
-                        Elimina
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </section>
-      </main>
+                    Apri
+                  </button>
+                  <button
+                    onClick={() => deleteProject(project.id_prg, project.nome_progetto)}
+                    className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
+                  >
+                    Elimina
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-      <CreateProjectModal
-        isOpen={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-        onProjectCreated={loadProjects}
-      />
-    </>
+      {/* Create Project Modal */}
+      {showCreateForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+            <h3 className="text-lg font-semibold mb-4">Crea Nuovo Progetto</h3>
+            <form onSubmit={createProject} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Nome progetto
+                </label>
+                <input
+                  type="text"
+                  value={formData.nome_progetto}
+                  onChange={(e) => setFormData({ ...formData, nome_progetto: e.target.value })}
+                  required
+                  className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Descrizione
+                </label>
+                <textarea
+                  value={formData.descrizione_progetto}
+                  onChange={(e) => setFormData({ ...formData, descrizione_progetto: e.target.value })}
+                  required
+                  rows={3}
+                  className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div className="flex justify-end space-x-2">
+                <button
+                  type="button"
+                  onClick={() => setShowCreateForm(false)}
+                  className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                >
+                  Annulla
+                </button>
+                <button
+                  type="submit"
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                >
+                  Salva
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
+
+export default ProjectManagement

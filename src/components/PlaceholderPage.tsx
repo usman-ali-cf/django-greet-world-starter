@@ -1,29 +1,27 @@
-import { useParams } from 'react-router-dom'
-// Use static path for now - will work with the existing Flask static files
+
+import React from 'react'
 
 interface PlaceholderPageProps {
   pageName: string
 }
 
-export default function PlaceholderPage({ pageName }: PlaceholderPageProps) {
-  const { id } = useParams<{ id: string }>()
-
+const PlaceholderPage: React.FC<PlaceholderPageProps> = ({ pageName }) => {
   return (
-    <div className="text-center py-12">
-      <img 
-        src="/static/img/under_construction.png"
-        alt="Under Construction"
-        className="mx-auto mb-6 max-w-md"
-      />
-      <h2 className="text-2xl font-bold mb-4">{pageName}</h2>
-      <p className="text-gray-600 mb-4">
-        Questa pagina è in fase di migrazione da Flask/Jinja a React.
+    <div className="text-center py-16">
+      <div className="text-6xl mb-4">🚧</div>
+      <h2 className="text-2xl font-bold text-gray-900 mb-2">Pagina in fase di sviluppo</h2>
+      <p className="text-lg text-gray-600 mb-8">
+        Stiamo lavorando per offrirti presto un'interfaccia completa per <strong>{pageName}</strong>.
       </p>
-      {id && (
-        <p className="text-sm text-gray-500">
-          Progetto ID: {id}
-        </p>
-      )}
+      <div className="max-w-md mx-auto">
+        <img 
+          src="/api/placeholder/300/200" 
+          alt="In costruzione"
+          className="w-full opacity-80 rounded-lg"
+        />
+      </div>
     </div>
   )
 }
+
+export default PlaceholderPage

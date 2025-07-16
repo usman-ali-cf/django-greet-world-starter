@@ -24,7 +24,8 @@ export async function apiFetch(url: string, options: RequestInit = {}): Promise<
       headers['Authorization'] = `Bearer ${token}`
     }
     
-    const response = await fetch(url, {
+    // Make the request to Flask backend (port 5000)
+    const response = await fetch(`http://localhost:5000${url}`, {
       ...options,
       headers,
     })

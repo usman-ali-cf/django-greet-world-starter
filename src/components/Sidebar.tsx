@@ -1,70 +1,44 @@
-import { Link } from 'react-router-dom'
+
+import React from 'react'
 
 interface SidebarProps {
   projectId?: string
   hidden: boolean
 }
 
-export default function Sidebar({ projectId, hidden }: SidebarProps) {
+const Sidebar: React.FC<SidebarProps> = ({ projectId, hidden }) => {
+  const menuItems = [
+    { href: '/', label: '🏠 Home', show: true },
+    { href: `/project/${projectId}`, label: '🔙 Torna al Progetto', show: !!projectId },
+    { href: `/project/${projectId}/upload-utilities`, label: '📁 Carica File Utenze', show: !!projectId },
+    { href: `/project/${projectId}/configure-utilities`, label: '🛠️ Configura Utenze', show: !!projectId },
+    { href: `/project/${projectId}/configure-power`, label: '⚡ Configura Utenze di Potenza', show: !!projectId },
+    { href: `/project/${projectId}/create-nodes`, label: '🖧 Crea Nodi e PLC', show: !!projectId },
+    { href: `/project/${projectId}/assign-io`, label: '🔗 Assegna I/O ai Nodi', show: !!projectId },
+    { href: `/project/${projectId}/configure-panel`, label: '🗄️ Configura Quadro Elettrico', show: !!projectId }
+  ]
+
+  if (hidden) {
+    return null
+  }
+
   return (
-    <div className={`sidebar fixed left-0 top-0 w-[250px] h-screen bg-[#032952] pt-15 transition-transform duration-300 ease-in-out z-[1000] ${
-      hidden ? '-translate-x-full' : 'translate-x-0'
-    }`}>
-      <nav className="sidebar-nav">
-        <Link 
-          to="/" 
-          className="block text-white p-4 text-lg no-underline transition-colors hover:bg-white/20"
-        >
-          🏠 Home
-        </Link>
-        
-        {projectId && (
-          <>
-            <Link 
-              to={`/project/${projectId}`}
-              className="block text-white p-4 text-lg no-underline transition-colors hover:bg-white/20"
+    <div className="fixed left-0 top-16 bottom-0 w-64 bg-gray-50 border-r border-gray-200 overflow-y-auto z-40">
+      <nav className="p-4">
+        <div className="space-y-2">
+          {menuItems.filter(item => item.show).map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors"
             >
-              🔙 Torna al Progetto
-            </Link>
-            <Link 
-              to={`/project/${projectId}/upload-utilities`}
-              className="block text-white p-4 text-lg no-underline transition-colors hover:bg-white/20"
-            >
-              📁 Carica File Utenze
-            </Link>
-            <Link 
-              to={`/project/${projectId}/configure-utilities`}
-              className="block text-white p-4 text-lg no-underline transition-colors hover:bg-white/20"
-            >
-              🛠️ Configura Utenze
-            </Link>
-            <Link 
-              to={`/project/${projectId}/configure-power`}
-              className="block text-white p-4 text-lg no-underline transition-colors hover:bg-white/20"
-            >
-              ⚡ Configura Utenze di Potenza
-            </Link>
-            <Link 
-              to={`/project/${projectId}/create-nodes`}
-              className="block text-white p-4 text-lg no-underline transition-colors hover:bg-white/20"
-            >
-              🖧 Crea Nodi e PLC
-            </Link>
-            <Link 
-              to={`/project/${projectId}/assign-io`}
-              className="block text-white p-4 text-lg no-underline transition-colors hover:bg-white/20"
-            >
-              🔗 Assegna I/O ai Nodi
-            </Link>
-            <Link 
-              to={`/project/${projectId}/configure-panel`}
-              className="block text-white p-4 text-lg no-underline transition-colors hover:bg-white/20"
-            >
-              🗄️ Configura Quadro Elettrico
-            </Link>
-          </>
-        )}
+              {item.label}
+            </a>
+          ))}
+        </div>
       </nav>
     </div>
   )
 }
+
+export default Sidebar
