@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -20,6 +21,13 @@ body {
   overflow: hidden;
 }
 
+/* Container adjustments */
+.container {
+  max-width: none;
+  width: 100%;
+  padding: 20px;
+}
+
 /* Sidebar styles */
 .sidebar {
   width: 250px;
@@ -32,10 +40,16 @@ body {
   transition: transform 0.3s ease;
   transform: translateX(0);
   z-index: 1000;
+  overflow-y: auto;
 }
 
 .sidebar.hidden {
   transform: translateX(-100%);
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar-nav a {
@@ -45,9 +59,16 @@ body {
   text-decoration: none;
   font-size: 18px;
   transition: background 0.3s ease;
+  border: none;
+  background: transparent;
 }
 
 .sidebar-nav a:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-nav a:focus {
+  outline: none;
   background: rgba(255, 255, 255, 0.2);
 }
 
@@ -58,9 +79,10 @@ body {
   padding: 20px;
   transition: margin-left 0.3s ease;
   overflow: auto;
+  height: calc(100vh - 60px);
 }
 
-.sidebar-hidden .main-content {
+body.sidebar-hidden .main-content {
   margin-left: 0;
 }
 
@@ -80,6 +102,7 @@ body {
   background-size: 120%;
   background-position: center;
   animation: headerZoomOut 5s ease-out forwards;
+  z-index: 1001;
 }
 
 .header::before {
@@ -96,6 +119,53 @@ body {
 .header > * {
   z-index: 1;
   overflow: visible;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-nav a,
+.header-nav button {
+  color: white;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.header-nav a:hover,
+.header-nav button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-toggle {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.logo-app {
+  height: 60px;
+  max-width: 150px;
+  object-fit: contain;
 }
 
 @keyframes headerZoomOut {
@@ -233,8 +303,12 @@ th, td {
   .sidebar {
     transform: translateX(-100%);
   }
+  body.sidebar-hidden .sidebar {
+    transform: translateX(-100%);
+  }
 }
 
+/* Tailwind CSS variables */
 :root {
   /* Primary colors */
   --primary: 220 14% 96%;

@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react'
-import { Outlet, useParams } from 'react-router-dom'
+import { Outlet, useParams, Link } from 'react-router-dom'
 
 interface LayoutProps {
   title?: string
@@ -21,6 +21,9 @@ export default function Layout({ title = "Progetto" }: LayoutProps) {
       if (window.innerWidth <= 768) {
         setSidebarHidden(true)
         document.body.classList.add('sidebar-hidden')
+      } else {
+        setSidebarHidden(false)
+        document.body.classList.remove('sidebar-hidden')
       }
     }
 
@@ -29,8 +32,13 @@ export default function Layout({ title = "Progetto" }: LayoutProps) {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  const handleLogout = () => {
+    localStorage.removeItem('access_token')
+    window.location.href = '/login'
+  }
+
   return (
-    <div className="min-h-screen flex flex-col overflow-hidden">
+    <div className="min-h-screen flex flex-col">
       {/* Header */}
       <header className="header">
         <div className="header-left">
@@ -44,10 +52,16 @@ export default function Layout({ title = "Progetto" }: LayoutProps) {
         </div>
         
         <nav className="header-nav">
-          <a href="/">🏠 Home</a>
+          <Link to="/">🏠 Home</Link>
           {id && (
-            <a href={`/project/${id}`}>🔙 Torna al Progetto</a>
+            <Link to={`/project/${id}`}>🔙 Torna al Progetto</Link>
           )}
+          <button 
+            onClick={handleLogout} 
+            style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer' }}
+          >
+            🚪 Logout
+          </button>
         </nav>
         
         <img 
@@ -57,30 +71,32 @@ export default function Layout({ title = "Progetto" }: LayoutProps) {
         />
       </header>
 
-      {/* Sidebar */}
-      <div className={`sidebar ${sidebarHidden ? 'hidden' : ''}`}>
-        <nav className="sidebar-nav">
-          <a href="/">🏠 Home</a>
-          {id && (
-            <>
-              <a href={`/project/${id}`}>🔙 Torna al Progetto</a>
-              <a href={`/project/${id}/upload-utilities`}>📁 Carica File Utenze</a>
-              <a href={`/project/${id}/configure-utilities`}>🛠️ Configura Utenze</a>
-              <a href={`/project/${id}/configure-power`}>⚡ Configura Utenze di Potenza</a>
-              <a href={`/project/${id}/create-nodes`}>🖧 Crea Nodi e PLC</a>
-              <a href={`/project/${id}/assign-io`}>🔗 Assegna I/O ai Nodi</a>
-              <a href={`/project/${id}/configure-panel`}>🗄️ Configura Quadro Elettrico</a>
-            </>
-          )}
-        </nav>
-      </div>
-
-      {/* Main Content */}
-      <main className="main-content">
-        <div className="container">
-          <Outlet />
+      <div className="flex flex-1">
+        {/* Sidebar */}
+        <div id="sidebar" className={`sidebar ${sidebarHidden ? 'hidden' : ''}`}>
+          <nav className="sidebar-nav">
+            <Link to="/">🏠 Home</Link>
+            {id && (
+              <>
+                <Link to={`/project/${id}`}>🔙 Torna al Progetto</Link>
+                <Link to={`/project/${id}/upload-utilities`}>📁 Carica File Utenze</Link>
+                <Link to={`/project/${id}/configure-utilities`}>🛠️ Configura Utenze</Link>
+                <Link to={`/project/${id}/configure-power`}>⚡ Configura Utenze di Potenza</Link>
+                <Link to={`/project/${id}/create-nodes`}>🖧 Crea Nodi e PLC</Link>
+                <Link to={`/project/${id}/assign-io`}>🔗 Assegna I/O ai Nodi</Link>
+                <Link to={`/project/${id}/configure-panel`}>🗄️ Configura Quadro Elettrico</Link>
+              </>
+            )}
+          </nav>
         </div>
-      </main>
+
+        {/* Main Content */}
+        <main className="main-content">
+          <div className="container">
+            <Outlet />
+          </div>
+        </main>
+      </div>
     </div>
   )
 }
