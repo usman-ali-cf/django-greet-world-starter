@@ -24,8 +24,8 @@ export async function apiFetch(url: string, options: RequestInit = {}): Promise<
       headers['Authorization'] = `Bearer ${token}`
     }
     
-    // Make the request to Flask backend (port 5000)
-    const response = await fetch(`http://localhost:5000${url}`, {
+    // Make the request to FastAPI backend (port 8000)
+    const response = await fetch(`http://localhost:8000${url}`, {
       ...options,
       headers,
     })

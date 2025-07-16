@@ -18,7 +18,7 @@ const ProjectDetail: React.FC = () => {
   useEffect(() => {
     const loadProject = async () => {
       try {
-        const data = await apiFetch(`/api/progetto/${id}`)
+        const data = await apiFetch(`/api/projects/${id}`)
         setProject(data)
       } catch (error) {
         console.error('Error loading project:', error)

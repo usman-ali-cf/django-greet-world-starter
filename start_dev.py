@@ -2,7 +2,7 @@
 #!/usr/bin/env python3
 """
 Development startup script for the Electrical Project Manager
-Starts both Flask backend and React frontend in development mode
+Starts both FastAPI backend and React frontend in development mode
 """
 import subprocess
 import os
@@ -10,19 +10,19 @@ import sys
 import time
 from threading import Thread
 
-def run_flask():
-    """Run Flask backend"""
-    print("🔧 Starting Flask backend on port 5000...")
+def run_fastapi():
+    """Run FastAPI backend"""
+    print("🚀 Starting FastAPI backend on port 8000...")
     os.chdir('backend')
     try:
-        subprocess.run([sys.executable, 'flask_api_adapter.py'], check=True)
+        subprocess.run([sys.executable, '-m', 'uvicorn', 'main:app', '--reload', '--port', '8000'], check=True)
     except KeyboardInterrupt:
-        print("\n🔧 Flask backend stopped.")
+        print("\n🚀 FastAPI backend stopped.")
 
 def run_react():
     """Run React frontend"""
-    print("⚛️  Starting React frontend on port 5173...")
-    time.sleep(2)  # Wait a bit for Flask to start
+    print("⚛️  Starting React frontend on port 8080...")
+    time.sleep(2)  # Wait a bit for FastAPI to start
     try:
         subprocess.run(['npm', 'run', 'dev'], check=True)
     except KeyboardInterrupt:
@@ -33,9 +33,9 @@ def main():
     print("🚀 Starting Electrical Project Manager Development Environment")
     print("=" * 60)
     
-    # Start Flask backend in a separate thread
-    flask_thread = Thread(target=run_flask, daemon=True)
-    flask_thread.start()
+    # Start FastAPI backend in a separate thread
+    fastapi_thread = Thread(target=run_fastapi, daemon=True)
+    fastapi_thread.start()
     
     # Start React frontend in main thread
     try:

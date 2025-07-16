@@ -1,35 +1,39 @@
 
 # Electrical Project Manager
 
-A modern web application for managing electrical projects, built with React frontend and Flask backend.
+A comprehensive electrical project management system built with React frontend and FastAPI backend.
 
 ## Features
 
 - **Project Management**: Create, view, and manage electrical projects
-- **Node & PLC Configuration**: Create and configure hardware nodes and PLCs
-- **I/O Assignment**: Assign input/output points to hardware modules
-- **Hardware Catalog**: Manage hardware components and their specifications
-- **Authentication**: Secure login system with JWT tokens
+- **Node and PLC Management**: Create and configure electrical nodes and PLCs
+- **Hardware Assignment**: Assign hardware modules to nodes
+- **I/O Configuration**: Manage input/output assignments
+- **JWT Authentication**: Secure authentication system
+- **Modern UI**: Responsive React interface with Tailwind CSS
 
-## Technology Stack
+## Tech Stack
 
 ### Frontend
-- **React 18** with TypeScript
-- **React Router** for navigation
-- **Tailwind CSS** for styling
-- **Vite** for development and building
+- **React 18**: Modern React with hooks and function components
+- **TypeScript**: Type-safe JavaScript
+- **Tailwind CSS**: Utility-first CSS framework
+- **React Router**: Client-side routing
+- **Vite**: Fast build tool and dev server
 
 ### Backend
-- **Flask** with SQLite database
-- **JWT Authentication**
-- **CORS** enabled for cross-origin requests
-- **SQLite** for development database
+- **FastAPI**: Modern, fast Python web framework
+- **SQLAlchemy**: Python SQL toolkit and ORM
+- **PostgreSQL**: Database
+- **JWT Authentication**: JSON Web Token authentication
+- **Pydantic**: Data validation using Python type annotations
 
 ## Quick Start
 
 ### Prerequisites
-- Node.js 18+ and npm
 - Python 3.8+
+- Node.js 16+
+- PostgreSQL database
 
 ### Installation
 
@@ -47,23 +51,26 @@ A modern web application for managing electrical projects, built with React fron
 3. **Install backend dependencies**
    ```bash
    cd backend
-   pip install flask flask-cors sqlite3
-   cd ..
+   pip install -r requirements.txt
    ```
+
+4. **Configure the database**
+   - Update `backend/core/config.py` with your PostgreSQL connection details
+   - The database will be automatically initialized on first run
 
 ### Development
 
-**Option 1: Automatic startup (Recommended)**
+**Option 1: Start everything with one command**
 ```bash
 python start_dev.py
 ```
 
-**Option 2: Manual startup**
+**Option 2: Start services separately**
 
-1. **Start Flask backend** (Terminal 1):
+1. **Start FastAPI backend** (Terminal 1):
    ```bash
    cd backend
-   python flask_api_adapter.py
+   uvicorn main:app --reload --port 8000
    ```
 
 2. **Start React frontend** (Terminal 2):
@@ -71,86 +78,69 @@ python start_dev.py
    npm run dev
    ```
 
-### Access the Application
+The application will be available at:
+- **Frontend**: http://localhost:8080
+- **Backend API**: http://localhost:8000
+- **API Documentation**: http://localhost:8000/docs
 
-- **Frontend**: http://localhost:5173
-- **Backend API**: http://localhost:5000
-- **Default Login**: username: `admin`, password: `admin`
+### Default Login
+- **Username**: `admin`
+- **Password**: `secret`
 
 ## Project Structure
 
 ```
-electrical-project-manager/
 ├── src/                    # React frontend source
-│   ├── components/        # React components
-│   ├── contexts/         # React contexts (Auth, etc.)
-│   ├── utils/           # Utility functions and API calls
-│   └── App.tsx          # Main App component
-├── backend/             # Flask backend
-│   ├── flask_api_adapter.py  # Main Flask application
-│   └── database.db      # SQLite database (auto-created)
-├── public/             # Static assets
-└── README.md          # This file
+│   ├── components/         # React components
+│   ├── contexts/          # React contexts (Auth)
+│   ├── utils/             # Utility functions
+│   └── main.tsx           # Application entry point
+├── backend/               # FastAPI backend
+│   ├── core/              # Core configuration and security
+│   ├── models/            # SQLAlchemy models
+│   ├── routers/           # API route handlers
+│   ├── schemas/           # Pydantic schemas
+│   ├── services/          # Business logic services
+│   └── main.py            # FastAPI application entry point
+└── start_dev.py           # Development startup script
 ```
 
 ## API Endpoints
 
 ### Authentication
 - `POST /api/auth/login` - User login
-- `POST /api/auth/logout` - User logout
 - `GET /api/auth/me` - Get current user
+- `POST /api/auth/logout` - User logout
 
 ### Projects
-- `GET /api/progetti` - Get all projects
-- `POST /api/progetti` - Create new project
-- `DELETE /api/progetti/{id}` - Delete project
-- `GET /api/progetto/{id}` - Get project details
+- `GET /api/projects/` - List all projects
+- `POST /api/projects/` - Create new project
+- `GET /api/projects/{id}` - Get project details
+- `DELETE /api/projects/{id}` - Delete project
 
-### Nodes & Hardware
-- `GET /api/lista_nodi` - Get all nodes
-- `POST /api/crea_nodo` - Create new node
-- `GET /api/catalogo_hw` - Get hardware catalog
-- `GET /api/hw_nodo_list` - Get hardware assigned to node
-- `POST /api/hw_nodo_add` - Assign hardware to node
-- `DELETE /api/hw_nodo_list/{id}` - Remove hardware from node
+### Nodes
+- `GET /api/nodes/project/{project_id}` - Get nodes by project
+- `POST /api/nodes/` - Create new node
+- `POST /api/nodes/plc/auto/{project_id}` - Auto-create PLC
 
-### I/O Management
-- `GET /api/io_unassigned` - Get unassigned I/O points
-- `GET /api/io_assigned` - Get assigned I/O points
-- `POST /api/io_assign` - Assign I/O to module
-- `DELETE /api/io_assign` - Unassign I/O from module
+### Hardware
+- `GET /api/hardware/catalog` - Get hardware catalog
+- `GET /api/hardware/node/{node_id}` - Get node hardware
+- `POST /api/hardware/node` - Add hardware to node
 
-## Features Implemented
-
-✅ **User Authentication** - JWT-based login/logout  
-✅ **Project Management** - Create, view, delete projects  
-✅ **Node Management** - Create and manage hardware nodes  
-✅ **Hardware Catalog** - View and assign hardware components  
-✅ **I/O Assignment** - Assign I/O points to hardware modules  
-✅ **Responsive Design** - Mobile-friendly interface  
-
-## Development Notes
-
-- The Flask backend includes sample data for testing
-- Authentication is simplified for development (admin/admin)
-- Database is automatically initialized on first run
-- CORS is configured for local development
-
-## Building for Production
-
-```bash
-npm run build
-```
-
-The built files will be in the `dist/` directory.
+### I/O
+- `GET /api/io/unassigned` - Get unassigned I/O
+- `GET /api/io/assigned` - Get assigned I/O
+- `POST /api/io/assign` - Assign I/O to module
 
 ## Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Submit a pull request
+4. Add tests if applicable
+5. Submit a pull request
 
 ## License
 
-This project is licensed under the MIT License.
+This project is proprietary software. All rights reserved.

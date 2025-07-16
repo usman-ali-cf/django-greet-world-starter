@@ -12,19 +12,10 @@ export default defineConfig({
     },
   },
   server: {
+    port: 8080,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
-        changeOrigin: true,
-        secure: false
-      },
-      '/static': {
-        target: 'http://localhost:5000',
-        changeOrigin: true,
-        secure: false
-      },
-      '/download_template': {
-        target: 'http://localhost:5000',
+        target: 'http://localhost:8000',
         changeOrigin: true,
         secure: false
       }
