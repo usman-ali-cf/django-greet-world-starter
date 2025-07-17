@@ -126,112 +126,114 @@ const ConfigurePowerUtilitiesPage: React.FC = () => {
   }
 
   return (
-    <div className="configure-power-utilities-page">
-      {/* Processing Status */}
-      {processingStatus && (
-        <div className="configure-processing-status">
-          {processingStatus}
-        </div>
-      )}
-
-      {/* Main Content */}
-      <div className="configure-power-utilities-layout">
-        {/* Left Section - Power Utilities List */}
-        <div className="configure-power-utilities-left">
-          <div className="configure-power-utilities-header">
-            <h1 className="configure-power-utilities-title">Lista Utenze di Potenza</h1>
-            <button
-              onClick={loadPowerUtilities}
-              className="configure-update-button"
-            >
-              Aggiorna
-            </button>
+    <div style={{ overflowX: 'auto', width: '100%', height: 'calc(100vh - 64px)', overflowY: 'auto' }}>
+      <div className="configure-power-utilities-page" style={{ minWidth: 900 }}>
+        {/* Processing Status */}
+        {processingStatus && (
+          <div className="configure-processing-status">
+            {processingStatus}
           </div>
+        )}
 
-          <div className="configure-table-container">
-            <div className="configure-table-wrapper">
-              <table className="configure-table">
-                <thead>
-                  <tr>
-                    <th>Elaborato</th>
-                    <th>Nome</th>
-                    <th>Tensione</th>
-                    <th>Descrizione</th>
-                    <th>Potenza</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {powerUtilities.length === 0 ? (
+        {/* Main Content */}
+        <div className="configure-power-utilities-layout">
+          {/* Left Section - Power Utilities List */}
+          <div className="configure-power-utilities-left">
+            <div className="configure-power-utilities-header">
+              <h1 className="configure-power-utilities-title">Lista Utenze di Potenza</h1>
+              <button
+                onClick={loadPowerUtilities}
+                className="configure-update-button"
+              >
+                Aggiorna
+              </button>
+            </div>
+
+            <div className="configure-table-container">
+              <div className="configure-table-wrapper">
+                <table className="configure-table" style={{ borderSpacing: 0, width: '100%' }}>
+                  <thead>
                     <tr>
-                      <td colSpan={5} className="configure-table td" style={{ textAlign: 'center', color: '#6b7280' }}>
-                        Nessuna utenza di potenza trovata.
-                      </td>
+                      <th style={{ padding: '4px 8px' }}>Elaborato</th>
+                      <th style={{ padding: '4px 8px' }}>Nome</th>
+                      <th style={{ padding: '4px 8px' }}>Tensione</th>
+                      <th style={{ padding: '4px 8px' }}>Descrizione</th>
+                      <th style={{ padding: '4px 8px' }}>Potenza</th>
                     </tr>
-                  ) : (
-                    powerUtilities.map((utility) => (
-                      <tr
-                        key={utility.id_potenza}
-                        onClick={() => handleUtilityClick(utility)}
-                        className={`configure-table tbody tr ${
-                          selectedUtility?.id_potenza === utility.id_potenza ? 'selected' : ''
-                        }`}
-                      >
-                        <td className="configure-table td">
-                          <span className={`configure-checkbox ${utility.elaborato ? 'checked' : 'unchecked'}`}>
-                            {utility.elaborato ? '✓' : ''}
-                          </span>
-                        </td>
-                        <td className="configure-table td utility-name">
-                          {utility.nome}
-                        </td>
-                        <td className="configure-table td">
-                          {utility.tensione}V
-                        </td>
-                        <td className="configure-table td">
-                          {utility.descrizione}
-                        </td>
-                        <td className="configure-table td">
-                          {utility.potenza} kW
+                  </thead>
+                  <tbody>
+                    {powerUtilities.length === 0 ? (
+                      <tr>
+                        <td colSpan={5} className="configure-table td" style={{ textAlign: 'center', color: '#6b7280' }}>
+                          Nessuna utenza di potenza trovata.
                         </td>
                       </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
+                    ) : (
+                      powerUtilities.map((utility) => (
+                        <tr
+                          key={utility.id_potenza}
+                          onClick={() => handleUtilityClick(utility)}
+                          className={`configure-table tbody tr ${
+                            selectedUtility?.id_potenza === utility.id_potenza ? 'selected' : ''
+                          }`}
+                        >
+                          <td className="configure-table td" style={{ padding: '4px 8px' }}>
+                            <span className={`configure-checkbox ${utility.elaborato ? 'checked' : 'unchecked'}`}>
+                              {utility.elaborato ? '✓' : ''}
+                            </span>
+                          </td>
+                          <td className="configure-table td utility-name" style={{ padding: '4px 8px' }}>
+                            {utility.nome}
+                          </td>
+                          <td className="configure-table td" style={{ padding: '4px 8px' }}>
+                            {utility.tensione}V
+                          </td>
+                          <td className="configure-table td" style={{ padding: '4px 8px' }}>
+                            {utility.descrizione}
+                          </td>
+                          <td className="configure-table td" style={{ padding: '4px 8px' }}>
+                            {utility.potenza} kW
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Right Section - Startup Configuration */}
-        <div className="configure-power-utilities-right">
-          <div className="configure-startup-panel">
-            <h2 className="configure-startup-title">Configurazione Avviamento</h2>
-            
-            <div className="configure-startup-options">
-              {startupOptions.map((option) => (
-                <label key={option.id_opzione} className="configure-radio-option">
-                  <input
-                    type="radio"
-                    name="startupOption"
-                    value={option.id_opzione}
-                    checked={selectedOption === option.id_opzione}
-                    onChange={() => handleOptionChange(option.id_opzione)}
-                    className="configure-radio-input"
-                  />
-                  <span className="configure-radio-label">
-                    {option.descrizione}
-                  </span>
-                </label>
-              ))}
+          {/* Right Section - Startup Configuration */}
+          <div className="configure-power-utilities-right">
+            <div className="configure-startup-panel">
+              <h2 className="configure-startup-title">Configurazione Avviamento</h2>
+              
+              <div className="configure-startup-options">
+                {startupOptions.map((option) => (
+                  <label key={option.id_opzione} className="configure-radio-option">
+                    <input
+                      type="radio"
+                      name="startupOption"
+                      value={option.id_opzione}
+                      checked={selectedOption === option.id_opzione}
+                      onChange={() => handleOptionChange(option.id_opzione)}
+                      className="configure-radio-input"
+                    />
+                    <span className="configure-radio-label">
+                      {option.descrizione}
+                    </span>
+                  </label>
+                ))}
+              </div>
+
+              <button
+                onClick={handleUpdate}
+                disabled={!selectedUtility || !selectedOption}
+                className="configure-confirm-startup-button"
+              >
+                Conferma Avviamento
+              </button>
             </div>
-
-            <button
-              onClick={handleUpdate}
-              disabled={!selectedUtility || !selectedOption}
-              className="configure-confirm-startup-button"
-            >
-              Conferma Avviamento
-            </button>
           </div>
         </div>
       </div>

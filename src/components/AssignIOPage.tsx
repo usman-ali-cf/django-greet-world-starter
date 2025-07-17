@@ -284,160 +284,162 @@ const AssignIOPage: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header with buttons */}
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Assegna I/O ai Nodi</h2>
-        <div className="space-x-2">
-          <button 
-            id="btnAggiornaNodi"
-            onClick={loadNodi}
-            className="btn"
-          >
-            Aggiorna Nodi
-          </button>
-          <button 
-            id="btnAggiornaIO"
-            onClick={loadIOunassigned}
-            className="btn"
-          >
-            Aggiorna IO
-          </button>
-          <button 
-            id="btnAssegnazioneAutomatica"
-            onClick={assegnazioneAutomatica}
-            className="btn"
-          >
-            Assegnazione Automatica
-          </button>
-          <button 
-            id="btnExportIO"
-            onClick={() => exportaIO('xml')}
-            className="btn"
-          >
-            Export IO
-          </button>
-          <button 
-            id="btnGeneraSchema"
-            onClick={esportaSchemainExcel}
-            className="btn"
-          >
-            Genera Schema
-          </button>
-        </div>
-      </div>
-
-      {/* Node Selection */}
-      <div className="seleziona-nodo">
-        <label htmlFor="selectNodo">Seleziona Nodo:</label>
-        <select 
-          id="selectNodo" 
-          value={selectedNodo} 
-          onChange={handleNodeChange}
-          className="ml-2 px-3 py-2 border border-gray-300 rounded-md"
-        >
-          {nodes.map(node => (
-            <option key={node.id_nodo} value={node.id_nodo}>
-              {node.nome_nodo}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Main Grid Layout */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px' }}>
-        {/* Modules Table */}
-        <div className="tabella-moduli">
-          <h3>Moduli</h3>
-          <DataTable
-            columns={columnsModuli}
-            data={modules}
-            onRowClick={handleModuleRowClick}
-            containerSelector="#tabella-moduli"
-          />
-          <table style={{ display: 'none' }}>
-            <tbody id="tabella-moduli"></tbody>
-          </table>
-        </div>
-
-        {/* Unassigned IO */}
-        <div className="tabella-io-non-assegnati">
-          <div className="flex justify-between items-center mb-2">
-            <h3>IO Non Assegnati</h3>
-            <label>
-              <input 
-                type="checkbox" 
-                id="selectAllUnassigned"
-                onChange={handleSelectAllUnassigned}
-              />
-              Seleziona Tutto
-            </label>
+    <div style={{ overflowX: 'auto', width: '100%', height: 'calc(100vh - 64px)', overflowY: 'auto' }}>
+      <div className="space-y-6" style={{ minWidth: 900, display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        {/* Header with buttons */}
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">Assegna I/O ai Nodi</h2>
+          <div className="space-x-2">
+            <button 
+              id="btnAggiornaNodi"
+              onClick={loadNodi}
+              className="btn"
+            >
+              Aggiorna Nodi
+            </button>
+            <button 
+              id="btnAggiornaIO"
+              onClick={loadIOunassigned}
+              className="btn"
+            >
+              Aggiorna IO
+            </button>
+            <button 
+              id="btnAssegnazioneAutomatica"
+              onClick={assegnazioneAutomatica}
+              className="btn"
+            >
+              Assegnazione Automatica
+            </button>
+            <button 
+              id="btnExportIO"
+              onClick={() => exportaIO('xml')}
+              className="btn"
+            >
+              Export IO
+            </button>
+            <button 
+              id="btnGeneraSchema"
+              onClick={esportaSchemainExcel}
+              className="btn"
+            >
+              Genera Schema
+            </button>
           </div>
-          <input
-            type="text"
-            id="filterUnassigned"
-            placeholder="Filtra per commento..."
-            value={filterUnassigned}
-            onChange={(e) => setFilterUnassigned(e.target.value)}
-            className="w-full px-3 py-1 border border-gray-300 rounded-md mb-2"
-          />
-          <DataTableMulti
-            columns={columnsIOunassigned}
-            data={unassignedIO.filter(item => 
-              item.descrizione.toLowerCase().includes(filterUnassigned.toLowerCase())
-            )}
-            containerSelector="#tabella-io-unassigned"
-          />
-          <table style={{ display: 'none' }}>
-            <tbody id="tabella-io-unassigned"></tbody>
-          </table>
-          <button 
-            id="btnAssegnaIO"
-            onClick={assegnaIOalModulo}
-            className="btn w-full mt-2"
-          >
-            Assegna IO →
-          </button>
         </div>
 
-        {/* Assigned IO */}
-        <div className="tabella-io-assegnati">
-          <div className="flex justify-between items-center mb-2">
-            <h3>IO Assegnati</h3>
-            <label>
-              <input 
-                type="checkbox" 
-                id="selectAllAssigned"
-                onChange={handleSelectAllAssigned}
-              />
-              Seleziona Tutto
-            </label>
-          </div>
-          <input
-            type="text"
-            id="filterAssigned"
-            placeholder="Filtra per commento..."
-            value={filterAssigned}
-            onChange={(e) => setFilterAssigned(e.target.value)}
-            className="w-full px-3 py-1 border border-gray-300 rounded-md mb-2"
-          />
-          <DataTableMulti
-            columns={columnsIOassigned}
-            data={assignedIO.filter(item => 
-              item.descrizione.toLowerCase().includes(filterAssigned.toLowerCase())
-            )}
-            containerSelector="#tabella-io-assigned"
-          />
-          <table style={{ display: 'none' }}>
-            <tbody id="tabella-io-assigned"></tbody>
-          </table>
-          <button 
-            id="btnRimuoviIO"
-            onClick={rimuoviIOdalModulo}
-            className="btn w-full mt-2"
+        {/* Node Selection */}
+        <div className="seleziona-nodo">
+          <label htmlFor="selectNodo">Seleziona Nodo:</label>
+          <select 
+            id="selectNodo" 
+            value={selectedNodo} 
+            onChange={handleNodeChange}
+            className="ml-2 px-3 py-2 border border-gray-300 rounded-md"
           >
-            ← Rimuovi IO
-          </button>
+            {nodes.map(node => (
+              <option key={node.id_nodo} value={node.id_nodo}>
+                {node.nome_nodo}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Main Grid Layout */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px' }}>
+          {/* Modules Table */}
+          <div className="tabella-moduli">
+            <h3>Moduli</h3>
+            <DataTable
+              columns={columnsModuli}
+              data={modules}
+              onRowClick={handleModuleRowClick}
+              containerSelector="#tabella-moduli"
+            />
+            <table style={{ display: 'none' }}>
+              <tbody id="tabella-moduli"></tbody>
+            </table>
+          </div>
+
+          {/* Unassigned IO */}
+          <div className="tabella-io-non-assegnati">
+            <div className="flex justify-between items-center mb-2">
+              <h3>IO Non Assegnati</h3>
+              <label>
+                <input 
+                  type="checkbox" 
+                  id="selectAllUnassigned"
+                  onChange={handleSelectAllUnassigned}
+                />
+                Seleziona Tutto
+              </label>
+            </div>
+            <input
+              type="text"
+              id="filterUnassigned"
+              placeholder="Filtra per commento..."
+              value={filterUnassigned}
+              onChange={(e) => setFilterUnassigned(e.target.value)}
+              className="w-full px-3 py-1 border border-gray-300 rounded-md mb-2"
+            />
+            <DataTableMulti
+              columns={columnsIOunassigned}
+              data={unassignedIO.filter(item => 
+                item.descrizione.toLowerCase().includes(filterUnassigned.toLowerCase())
+              )}
+              containerSelector="#tabella-io-unassigned"
+            />
+            <table style={{ display: 'none' }}>
+              <tbody id="tabella-io-unassigned"></tbody>
+            </table>
+            <button 
+              id="btnAssegnaIO"
+              onClick={assegnaIOalModulo}
+              className="btn w-full mt-2"
+            >
+              Assegna IO →
+            </button>
+          </div>
+
+          {/* Assigned IO */}
+          <div className="tabella-io-assegnati">
+            <div className="flex justify-between items-center mb-2">
+              <h3>IO Assegnati</h3>
+              <label>
+                <input 
+                  type="checkbox" 
+                  id="selectAllAssigned"
+                  onChange={handleSelectAllAssigned}
+                />
+                Seleziona Tutto
+              </label>
+            </div>
+            <input
+              type="text"
+              id="filterAssigned"
+              placeholder="Filtra per commento..."
+              value={filterAssigned}
+              onChange={(e) => setFilterAssigned(e.target.value)}
+              className="w-full px-3 py-1 border border-gray-300 rounded-md mb-2"
+            />
+            <DataTableMulti
+              columns={columnsIOassigned}
+              data={assignedIO.filter(item => 
+                item.descrizione.toLowerCase().includes(filterAssigned.toLowerCase())
+              )}
+              containerSelector="#tabella-io-assigned"
+            />
+            <table style={{ display: 'none' }}>
+              <tbody id="tabella-io-assigned"></tbody>
+            </table>
+            <button 
+              id="btnRimuoviIO"
+              onClick={rimuoviIOdalModulo}
+              className="btn w-full mt-2"
+            >
+              ← Rimuovi IO
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -18,19 +18,11 @@ class NodeService:
     async def get_nodes_by_project(self, db: AsyncSession, project_id: int) -> List[NodeResponse]:
         """Get all nodes for a project"""
         try:
-            # Use raw SQL for compatibility
             result = await db.execute(
-                text("SELECT * FROM t_nodo WHERE id_prg = :project_id ORDER BY nome_nodo"),
-                {"project_id": project_id}
+                select(Node).where(Node.id_prg == project_id).order_by(Node.nome_nodo)
             )
-            rows = result.fetchall()
-            
-            nodes = []
-            for row in rows:
-                node_dict = dict(row._mapping)
-                nodes.append(NodeResponse(**node_dict))
-            
-            return nodes
+            nodes = result.scalars().all()
+            return [NodeResponse.from_orm(node) for node in nodes]
         except Exception as e:
             logger.error(f"Error getting nodes for project {project_id}: {e}")
             raise
@@ -38,51 +30,17 @@ class NodeService:
     async def create_node(self, db: AsyncSession, node_data: NodeCreate) -> NodeResponse:
         """Create a new node"""
         try:
-            # Use raw SQL for compatibility
-            result = await db.execute(
-                text("""
-                    INSERT INTO t_nodo (nome_nodo, tipo_nodo, descrizione, id_prg, id_quadro)
-                    VALUES (:nome_nodo, :tipo_nodo, :descrizione, :id_prg, :id_quadro)
-                    RETURNING id_nodo
-                """),
-                {
-                    "nome_nodo": node_data.nome_nodo,
-                    "tipo_nodo": node_data.tipo_nodo or 'PLC',
-                    "descrizione": node_data.descrizione,
-                    "id_prg": node_data.id_prg,
-                    "id_quadro": node_data.id_quadro
-                }
+            node = Node(
+                nome_nodo=node_data.nome_nodo,
+                tipo_nodo=node_data.tipo_nodo or 'PLC',
+                descrizione=node_data.descrizione,
+                id_prg=node_data.id_prg,
+                id_quadro=node_data.id_quadro
             )
-            
-            # For SQLite, we need to handle this differently
-            await db.execute(
-                text("""
-                    INSERT INTO t_nodo (nome_nodo, tipo_nodo, descrizione, id_prg, id_quadro)
-                    VALUES (:nome_nodo, :tipo_nodo, :descrizione, :id_prg, :id_quadro)
-                """),
-                {
-                    "nome_nodo": node_data.nome_nodo,
-                    "tipo_nodo": node_data.tipo_nodo or 'PLC',
-                    "descrizione": node_data.descrizione,
-                    "id_prg": node_data.id_prg,
-                    "id_quadro": node_data.id_quadro
-                }
-            )
+            db.add(node)
             await db.commit()
-            
-            # Get the created node
-            result = await db.execute(
-                text("SELECT * FROM t_nodo WHERE nome_nodo = :nome_nodo AND id_prg = :id_prg ORDER BY id_nodo DESC LIMIT 1"),
-                {"nome_nodo": node_data.nome_nodo, "id_prg": node_data.id_prg}
-            )
-            row = result.fetchone()
-            
-            if row:
-                node_dict = dict(row._mapping)
-                return NodeResponse(**node_dict)
-            else:
-                raise Exception("Failed to retrieve created node")
-                
+            await db.refresh(node)
+            return NodeResponse.from_orm(node)
         except Exception as e:
             logger.error(f"Error creating node: {e}")
             await db.rollback()
@@ -92,7 +50,7 @@ class NodeService:
         """Create PLC automatically using legacy function"""
         try:
             # Use existing function but adapt for async context
-            result = crea_nodo_plc_automatico(project_id)
+            result = await crea_nodo_plc_automatico(project_id, db)
             return result
         except Exception as e:
             logger.error(f"Error creating automatic PLC: {e}")

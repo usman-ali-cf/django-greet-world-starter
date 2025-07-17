@@ -85,7 +85,7 @@ const CreateNodesPage: React.FC = () => {
         nome_nodo: formData.nome_nodo,
         descrizione: formData.descrizione
       }
-      await apiFetch('/api/crea_nodo', {
+      await apiFetch('/api/nodes/', {
         method: 'POST',
         body: JSON.stringify(payload)
       })
@@ -112,7 +112,7 @@ const CreateNodesPage: React.FC = () => {
         id_hw: selectedHW.id_hw,
         quantita: 1
       }
-      await apiFetch('/api/hw_nodo_add', {
+      await apiFetch('/api/hardware/node', {
         method: 'POST',
         body: JSON.stringify(payload)
       })
@@ -137,7 +137,7 @@ const CreateNodesPage: React.FC = () => {
 
   const creaPlcAutomatico = async () => {
     try {
-      const response = await apiFetch('/api/crea_plc_automatico', {
+      const response = await apiFetch(`/api/nodes/plc/auto/${id}`, {
         method: 'POST'
       })
       
@@ -199,100 +199,112 @@ const CreateNodesPage: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header with buttons */}
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Crea Nodi e PLC</h2>
-        <div className="space-x-2">
-          <button 
-            id="btnApriPopup"
-            onClick={() => setIsModalOpen(true)}
-            className="btn"
-          >
-            Crea Nuovo Nodo
-          </button>
-          <button 
-            id="btnCreazioneAutomaticaPLC"
-            onClick={creaPlcAutomatico}
-            className="btn"
-          >
-            Creazione Automatica PLC
-          </button>
-          <button 
-            id="aggiorna-lista-hw"
-            onClick={loadCatalogoHW}
-            className="btn"
-          >
-            Aggiorna Lista HW
-          </button>
-        </div>
-      </div>
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-        {/* Left side - Hardware Catalog */}
-        <div className="catalogo-hardware">
-          <h3>Catalogo Hardware</h3>
-          <DataTable
-            columns={columnsCatalogoHW}
-            data={hardware}
-            onRowClick={handleHWRowClick}
-            containerSelector="#tabella-hw"
-          />
-          <table style={{ display: 'none' }}>
-            <tbody id="tabella-hw"></tbody>
-          </table>
-        </div>
-
-        {/* Right side - Node Configuration */}
-        <div className="form-configurazione-nodo">
-          <h3>Configurazione Nodo</h3>
-          
-          <div className="seleziona-nodo">
-            <label htmlFor="selectNodo">Seleziona Nodo:</label>
-            <select 
-              id="selectNodo" 
-              value={selectedNodo} 
-              onChange={handleNodeChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-            >
-              {nodes.map(node => (
-                <option key={node.id_nodo} value={node.id_nodo}>
-                  {node.nome_nodo}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="mt-4">
+    <div style={{ overflowX: 'auto', width: '100%', height: 'calc(100vh - 64px)', overflowY: 'auto' }}>
+      <div className="space-y-6" style={{ minWidth: 900, display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        {/* Header with buttons */}
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">Crea Nodi e PLC</h2>
+          <div className="space-x-2">
             <button 
-              id="btnAssegnaHW"
-              onClick={assegnaHardwareAlNodo}
-              className="btn w-full"
+              id="btnApriPopup"
+              onClick={() => setIsModalOpen(true)}
+              className="btn"
             >
-              Assegna Hardware al Nodo
+              Crea Nuovo Nodo
+            </button>
+            <button 
+              id="btnCreazioneAutomaticaPLC"
+              onClick={creaPlcAutomatico}
+              className="btn"
+            >
+              Creazione Automatica PLC
+            </button>
+            <button 
+              id="aggiorna-lista-hw"
+              onClick={loadCatalogoHW}
+              className="btn"
+            >
+              Aggiorna Lista HW
             </button>
           </div>
+        </div>
 
-          <div className="tabella-hw-assegnato mt-4">
-            <h4>Hardware Assegnato</h4>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {/* Left side - Hardware Catalog */}
+          <div className="catalogo-hardware">
+            <h3>Catalogo Hardware</h3>
             <DataTable
-              columns={columnsHWAssegnato}
-              data={nodeHardware}
-              postRender={addActionButtons}
-              containerSelector="#tabella-hw-nodo"
+              columns={columnsCatalogoHW}
+              data={hardware}
+              onRowClick={handleHWRowClick}
+              containerSelector="#tabella-hw"
             />
             <table style={{ display: 'none' }}>
-              <tbody id="tabella-hw-nodo"></tbody>
+              <tbody id="tabella-hw"></tbody>
             </table>
+          </div>
+
+          {/* Right side - Node Configuration */}
+          <div className="form-configurazione-nodo">
+            <h3>Configurazione Nodo</h3>
+            
+            <div className="seleziona-nodo">
+              <label htmlFor="selectNodo">Seleziona Nodo:</label>
+              <select 
+                id="selectNodo" 
+                value={selectedNodo} 
+                onChange={handleNodeChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              >
+                {nodes.map(node => (
+                  <option key={node.id_nodo} value={node.id_nodo}>
+                    {node.nome_nodo}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="mt-4">
+              <button 
+                id="btnAssegnaHW"
+                onClick={assegnaHardwareAlNodo}
+                className="btn w-full"
+              >
+                Assegna Hardware al Nodo
+              </button>
+            </div>
+
+            <div className="tabella-hw-assegnato mt-4">
+              <h4>Hardware Assegnato</h4>
+              <DataTable
+                columns={columnsHWAssegnato}
+                data={nodeHardware}
+                postRender={addActionButtons}
+                containerSelector="#tabella-hw-nodo"
+              />
+              <table style={{ display: 'none' }}>
+                <tbody id="tabella-hw-nodo"></tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Modal for creating new node */}
       {isModalOpen && (
-        <div id="popupOverlay" className="popup-overlay" style={{ display: 'flex' }}>
-          <div className="popup-content">
-            <h3>Crea Nuovo Nodo</h3>
+        <div id="popupOverlay" className="popup-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(30, 41, 59, 0.35)', zIndex: 1000 }}>
+          <div className="popup-content" style={{ position: 'relative', background: 'rgba(255,255,255,0.97)', borderRadius: '1.5rem', boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.18)', padding: '2.5rem 2rem 2rem 2rem', minWidth: 350, maxWidth: 400, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', border: '1.5px solid #e0e7ef', transition: 'all 0.2s' }}>
+            <button
+              type="button"
+              aria-label="Chiudi"
+              onClick={() => setIsModalOpen(false)}
+              style={{ position: 'absolute', top: 18, right: 18, background: 'none', border: 'none', fontSize: 22, color: '#64748b', cursor: 'pointer', transition: 'color 0.2s' }}
+              onMouseOver={e => (e.currentTarget.style.color = '#ef4444')}
+              onMouseOut={e => (e.currentTarget.style.color = '#64748b')}
+            >
+              ×
+            </button>
+            <h3 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1e293b', marginBottom: '1.2rem', textAlign: 'center', letterSpacing: 0.01 }}>Crea Nuovo Nodo</h3>
             <form 
               onSubmit={(e) => {
                 e.preventDefault()
@@ -303,36 +315,43 @@ const CreateNodesPage: React.FC = () => {
                   creaNuovoNodo({ nome_nodo, descrizione })
                 }
               }}
+              style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}
             >
-              <div className="mb-4">
-                <label htmlFor="nomeNodoPopup" className="block text-gray-700 mb-2">Nome Nodo:</label>
+              <div>
+                <label htmlFor="nomeNodoPopup" style={{ display: 'block', color: '#334155', fontWeight: 600, marginBottom: 6 }}>Nome Nodo</label>
                 <input
                   type="text"
                   id="nomeNodoPopup"
                   name="nome_nodo"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  style={{ width: '100%', padding: '0.85rem 1rem', borderRadius: '0.9rem', border: '1.5px solid #cbd5e1', background: '#f8fafc', fontSize: '1.05rem', color: '#1e293b', outline: 'none', transition: 'border 0.2s, box-shadow 0.2s' }}
+                  onFocus={e => (e.currentTarget.style.border = '1.5px solid #6366f1')}
+                  onBlur={e => (e.currentTarget.style.border = '1.5px solid #cbd5e1')}
                 />
               </div>
-              <div className="mb-4">
-                <label htmlFor="descrNodoPopup" className="block text-gray-700 mb-2">Descrizione:</label>
+              <div>
+                <label htmlFor="descrNodoPopup" style={{ display: 'block', color: '#334155', fontWeight: 600, marginBottom: 6 }}>Descrizione</label>
                 <textarea
                   id="descrNodoPopup"
                   name="descrizione"
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  style={{ width: '100%', padding: '0.85rem 1rem', borderRadius: '0.9rem', border: '1.5px solid #cbd5e1', background: '#f8fafc', fontSize: '1.05rem', color: '#1e293b', outline: 'none', transition: 'border 0.2s, box-shadow 0.2s', resize: 'vertical' }}
+                  onFocus={e => (e.currentTarget.style.border = '1.5px solid #6366f1')}
+                  onBlur={e => (e.currentTarget.style.border = '1.5px solid #cbd5e1')}
                 ></textarea>
               </div>
-              <div className="flex justify-end space-x-2">
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.7rem', marginTop: 8 }}>
                 <button
                   type="button"
                   id="btnChiudiPopup"
                   onClick={() => setIsModalOpen(false)}
-                  className="btn-cancel"
+                  style={{ padding: '0.7rem 1.3rem', borderRadius: '0.9rem', border: 'none', background: '#e2e8f0', color: '#334155', fontWeight: 600, fontSize: '1.05rem', cursor: 'pointer', transition: 'background 0.2s' }}
+                  onMouseOver={e => (e.currentTarget.style.background = '#ca0909')}
+                  onMouseOut={e => (e.currentTarget.style.background = '#ca0909')}
                 >
                   Annulla
                 </button>
-                <button type="submit" className="btn">
+                <button type="submit" style={{ padding: '0.7rem 1.3rem', borderRadius: '0.9rem', border: 'none', background: 'linear-gradient(90deg, #ca0909 0%,rgb(214, 88, 88) 100%)', color: '#fff', fontWeight: 700, fontSize: '1.05rem', cursor: 'pointer', boxShadow: '0 1px 4px #ca0909', transition: 'background 0.2s, box-shadow 0.2s' }}>
                   Crea Nodo
                 </button>
               </div>
