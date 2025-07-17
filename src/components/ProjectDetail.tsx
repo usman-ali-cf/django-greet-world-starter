@@ -91,18 +91,31 @@ const ProjectDetail: React.FC = () => {
 
       <div className="bg-white rounded-lg shadow p-6">
         <h2 className="text-xl font-semibold mb-4">Opzioni di Configurazione</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', overflowY: 'auto'}}>
           {menuItems.map((item) => (
             <button
               key={item.path}
               onClick={() => window.location.href = item.path}
-              className="p-4 border border-gray-200 rounded-lg hover:border-blue-500 hover:shadow-md transition-all text-left"
+              style={{
+                padding: '0.5rem',
+                border: '1px solid #032952',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                transition: 'background-color 0.3s ease',
+                width: '100%',
+                maxWidth: '450px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.2rem'
+              }}
             >
-              <div className="flex items-center mb-2">
-                <span className="text-2xl mr-3">{item.icon}</span>
-                <h3 className="font-medium text-gray-900">{item.title}</h3>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.2rem', justifyContent: 'center' }}>
+                <span style={{ fontSize: '1rem', marginRight: '0.5rem' }}>{item.icon}</span>
+                <h3 style={{ fontSize: '1rem', fontWeight: 'bold', marginBottom: '0' }}>{item.title}</h3>
               </div>
-              <p className="text-sm text-gray-600">{item.description}</p>
+              <p style={{ fontSize: '0.875rem', color: '#fff', textAlign: 'center' }}>{item.description}</p>
             </button>
           ))}
         </div>

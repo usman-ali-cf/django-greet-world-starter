@@ -93,6 +93,10 @@ const DataTable: React.FC<DataTableProps> = ({
               ))}
             </tr>
           ))}
+          {/* Add extra space at the bottom */}
+          <tr>
+            <td colSpan={columns.length} style={{ height: '32px', backgroundColor: 'transparent' }}></td>
+          </tr>
         </tbody>
       </table>
     </div>

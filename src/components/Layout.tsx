@@ -1,13 +1,14 @@
 
 import { useState, useEffect } from 'react'
-import { Outlet, useParams, Link } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import logoImage from '@/img/Logo.png'
 
 interface LayoutProps {
-  title?: string
+  title?: string;
+  children: React.ReactNode;
 }
 
-export default function Layout({ title = "Progetto" }: LayoutProps) {
+export default function Layout({ title = "Progetto", children }: LayoutProps) {
   const [sidebarHidden, setSidebarHidden] = useState(false)
   const { id } = useParams()
 
@@ -97,7 +98,7 @@ export default function Layout({ title = "Progetto" }: LayoutProps) {
         {/* Main Content */}
         <main className="main-content">
           <div className="container">
-            <Outlet />
+            {children}
           </div>
         </main>
       </div>

@@ -82,12 +82,31 @@ class ProjectService:
     async def _create_project_legacy(self, nome: str, descrizione: str, username: str) -> int:
         """Create project using legacy function"""
         try:
-            # Use the existing crea_progetto function
-            result = crea_progetto(nome, descrizione, username)
-            if result.get('success'):
-                return result.get('id_prg')
-            else:
-                raise Exception(result.get('error', 'Unknown error'))
+            from datetime import datetime
+            # Use the existing crea_progetto function with current datetime
+            current_time = datetime.now()
+            result = await crea_progetto(nome, descrizione, current_time)
+            
+            # Get the project ID by querying the latest project with this name
+            from sqlalchemy import select
+            from models.project import Project
+            from core.database import get_db
+            
+            async for db in get_db():
+                result = await db.execute(
+                    select(Project)
+                    .where(Project.nome_progetto == nome)
+                    .order_by(Project.id_prg.desc())
+                )
+                project = result.scalars().first()
+                if project:
+                    # The username is not used in the legacy function, but we can log it
+                    logger.info(f"Project created by user: {username}")
+                    return int(project.id_prg)
+                
+            raise Exception("Failed to retrieve created project ID")
+            
         except Exception as e:
             logger.error(f"Error in legacy project creation: {e}")
             raise
+        

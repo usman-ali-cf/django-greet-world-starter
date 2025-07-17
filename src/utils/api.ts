@@ -14,9 +14,13 @@ export async function apiFetch(url: string, options: RequestInit = {}): Promise<
     const token = localStorage.getItem('access_token')
     
     // Prepare headers
-    const headers: HeadersInit = {
-      'Content-Type': 'application/json',
-      ...options.headers,
+    const headers: Record<string, string> = {
+      ...(options.headers as Record<string, string> || {}),
+    }
+    
+    // Only set Content-Type if not FormData and not already set
+    if (!(options.body instanceof FormData) && !headers['Content-Type']) {
+      headers['Content-Type'] = 'application/json'
     }
     
     // Add authorization header if token exists
@@ -29,8 +33,35 @@ export async function apiFetch(url: string, options: RequestInit = {}): Promise<
       ...options,
       headers,
     })
+
+    // Handle different response types
+    let data
+    const contentType = response.headers.get('content-type')
     
-    const data = await response.json()
+    if (contentType && contentType.includes('application/json')) {
+      data = await response.json()
+    } else if (contentType && contentType.includes('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
+      // Handle Excel file download
+      const blob = await response.blob()
+      const downloadUrl = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = downloadUrl
+      link.download = 'Template.xlsx'
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(downloadUrl)
+      return { success: true, message: 'File downloaded successfully' }
+    } else {
+      // Handle text responses
+      data = await response.text()
+      try {
+        data = JSON.parse(data)
+      } catch {
+        // If not JSON, return as text
+        return { success: true, data: data }
+      }
+    }
 
     if (!response.ok) {
       // If unauthorized, remove token and redirect to login

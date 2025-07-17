@@ -10,6 +10,9 @@ import CreateNodesPage from './components/CreateNodesPage'
 import AssignIOPage from './components/AssignIOPage'
 import LoginPage from './components/LoginPage'
 import ProtectedRoute from './components/ProtectedRoute'
+import UploadUtilitiesPage from './components/UploadUtilitiesPage'
+import ConfigureUtilitiesPage from './components/ConfigureUtilitiesPage'
+import ConfigurePowerUtilitiesPage from './components/ConfigurePowerUtilitiesPage'
 
 function App() {
   return (
@@ -39,7 +42,7 @@ function App() {
           <Route path="/project/:id/upload-utilities" element={
             <ProtectedRoute>
               <Layout title="Carica File Utenze">
-                <PlaceholderPage pageName="Carica File Utenze" />
+                <UploadUtilitiesPage />
               </Layout>
             </ProtectedRoute>
           } />
@@ -47,7 +50,7 @@ function App() {
           <Route path="/project/:id/configure-utilities" element={
             <ProtectedRoute>
               <Layout title="Configura Utenze">
-                <PlaceholderPage pageName="Configura Utenze" />
+                <ConfigureUtilitiesPage />
               </Layout>
             </ProtectedRoute>
           } />
@@ -55,7 +58,7 @@ function App() {
           <Route path="/project/:id/configure-power" element={
             <ProtectedRoute>
               <Layout title="Configura Utenze di Potenza">
-                <PlaceholderPage pageName="Configura Utenze di Potenza" />
+                <ConfigurePowerUtilitiesPage />
               </Layout>
             </ProtectedRoute>
           } />

@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = Field(default=1440)  # 24 hours
     
     # CORS
-    allowed_origins: List[str] = Field(default=["http://localhost:5173"])
+    allowed_origins: List[str] = Field(default=["http://localhost:8080", "http://localhost:5173"])
     
     # Database
     database_url: str = Field(default="postgresql+asyncpg://postgres:postgres@localhost:5433/electric")

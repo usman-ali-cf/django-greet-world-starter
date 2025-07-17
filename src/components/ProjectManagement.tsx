@@ -93,7 +93,10 @@ const ProjectManagement: React.FC = () => {
           color: '#721c24', 
           padding: '12px', 
           borderRadius: '4px',
-          marginBottom: '20px'
+          marginBottom: '20px',
+          position: 'sticky',
+          top: '120px',
+          zIndex: 10
         }}>
           {error}
         </div>
@@ -109,17 +112,62 @@ const ProjectManagement: React.FC = () => {
       </h3>
 
       {/* Projects Table */}
-      <div className="listaProgetti" style={{ backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '8px', border: '1px solid #ccc' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+      <div className="listaProgetti" style={{ 
+        backgroundColor: '#f9f9f9', 
+        padding: '20px', 
+        borderRadius: '8px', 
+        border: '1px solid #ccc',
+        marginBottom: '30px',
+        maxHeight: '450px',
+        overflowY: 'auto'
+      }}>
+        <div style={{ 
+          width: '100%', 
+          overflowX: 'auto',
+          maxHeight: '450px',
+          overflowY: 'auto'
+        }}>
+          <table style={{ 
+            width: '100%', 
+            borderCollapse: 'collapse',
+            tableLayout: 'fixed'
+          }}>
           <thead>
             <tr style={{ backgroundColor: '#032952', color: 'white' }}>
-              <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>
+              <th style={{ 
+                padding: '12px', 
+                textAlign: 'left', 
+                borderBottom: '1px solid #ddd',
+                position: 'sticky',
+                top: 0,
+                backgroundColor: '#032952',
+                zIndex: 1,
+                width: '30%'
+              }}>
                 Nome progetto
               </th>
-              <th style={{ padding: '12px', textAlign: 'left', borderBottom: '1px solid #ddd' }}>
+              <th style={{ 
+                padding: '12px', 
+                textAlign: 'left', 
+                borderBottom: '1px solid #ddd',
+                position: 'sticky',
+                top: 0,
+                backgroundColor: '#032952',
+                zIndex: 1,
+                width: '50%'
+              }}>
                 Descrizione
               </th>
-              <th style={{ padding: '12px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>
+              <th style={{ 
+                padding: '12px', 
+                textAlign: 'center', 
+                borderBottom: '1px solid #ddd',
+                position: 'sticky',
+                top: 0,
+                backgroundColor: '#032952',
+                zIndex: 1,
+                width: '20%'
+              }}>
                 Azioni
               </th>
             </tr>
@@ -189,6 +237,7 @@ const ProjectManagement: React.FC = () => {
             )}
           </tbody>
         </table>
+      </div>
       </div>
 
       {/* Modal for creating new project */}

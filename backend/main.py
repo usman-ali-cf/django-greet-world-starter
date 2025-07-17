@@ -9,7 +9,7 @@ from fastapi.responses import JSONResponse
 import uvicorn
 import logging
 from core.config import settings
-from routers.legacy import legacy_router
+from routers.legacy import router as legacy_router
 from core.database import init_database
 from routers import auth_router, projects_router, nodes_router, hardware_router, io_router
 
@@ -88,5 +88,6 @@ if __name__ == "__main__":
         "main:app",
         host="0.0.0.0",
         port=8000,
-        reload=settings.debug
+        reload=True,
+        log_level="info"
     )

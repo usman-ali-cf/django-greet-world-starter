@@ -1,0 +1,433 @@
+/* ConfigureUtilitiesPage Custom Styles */
+.configure-utilities-page {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.configure-utilities-header {
+  margin-bottom: 20px;
+  position: sticky;
+  top: 0;
+  background-color: #f5f5f5;
+  z-index: 20;
+  padding: 10px 0;
+}
+
+.configure-utilities-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 15px;
+}
+
+.pre-process-button {
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.pre-process-button:hover {
+  background-color: #b91c1c;
+}
+
+.pre-process-icon {
+  font-size: 16px;
+}
+
+/* Main Layout */
+.configure-utilities-layout {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  min-height: calc(100vh - 200px);
+}
+
+/* Left Panels */
+.configure-panels {
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 10px;
+}
+
+.configure-panels::-webkit-scrollbar {
+  width: 6px;
+}
+
+.configure-panels::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.configure-panels::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.configure-panels::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.configure-panel {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.configure-panel-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 8px;
+}
+
+.configure-panel-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.configure-panel-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.configure-panel-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 2px;
+}
+
+.configure-panel-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 2px;
+}
+
+.configure-panel-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.configure-panel-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  font-size: 14px;
+  color: #374151;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.configure-panel-item:hover {
+  background-color: #f3f4f6;
+}
+
+.configure-panel-item.selected {
+  background-color: #dbeafe;
+  color: #1e40af;
+  font-weight: 500;
+}
+
+.configure-panel-placeholder {
+  color: #9ca3af;
+  font-size: 14px;
+  font-style: italic;
+}
+
+/* Confirm Button */
+.configure-confirm-button {
+  width: 100%;
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.configure-confirm-button:hover {
+  background-color: #b91c1c;
+}
+
+.configure-confirm-button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Right Table */
+.configure-table-container {
+  flex: 1;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  max-height: calc(100vh - 200px);
+  display: flex;
+  flex-direction: column;
+}
+
+.configure-table-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: auto;
+  min-height: 0;
+}
+
+.configure-table-wrapper::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.configure-table-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.configure-table-wrapper::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.configure-table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.configure-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  min-width: 1200px;
+}
+
+.configure-table thead {
+  background-color: #f9fafb;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.configure-table th {
+  padding: 12px 8px;
+  text-align: left;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: #f9fafb;
+}
+
+.configure-table tbody tr {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.configure-table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+.configure-table tbody tr.selected {
+  background-color: #eff6ff;
+}
+
+.configure-table td {
+  padding: 12px 8px;
+  text-align: left;
+  color: #374151;
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+.configure-table td.utility-name {
+  font-weight: 500;
+  color: #111827;
+}
+
+/* Checkbox styling */
+.configure-checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #d1d5db;
+  background-color: transparent;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.configure-checkbox.checked {
+  background-color: #000;
+  border-color: #000;
+}
+
+.configure-checkbox.unchecked {
+  background-color: transparent;
+  border-color: #9ca3af;
+}
+
+/* Processing Status */
+.configure-processing-status {
+  background-color: #dbeafe;
+  border: 1px solid #93c5fd;
+  color: #1e40af;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  position: sticky;
+  top: 80px;
+  z-index: 15;
+  background-color: #dbeafe;
+}
+
+/* Details Panel */
+.configure-details-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.configure-details-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.configure-details-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 2px;
+}
+
+.configure-details-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 2px;
+}
+
+.configure-details-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.configure-detail-item {
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 12px;
+}
+
+.configure-detail-type {
+  font-weight: 600;
+  font-size: 14px;
+  color: #374151;
+  margin-bottom: 4px;
+}
+
+.configure-detail-description {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.configure-detail-symbols {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.configure-detail-symbol {
+  width: 48px;
+  height: 48px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  object-fit: contain;
+  background-color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .configure-utilities-layout {
+    flex-direction: column;
+    min-height: auto;
+  }
+  
+  .configure-panels {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-height: none;
+    padding-right: 0;
+    padding-bottom: 10px;
+  }
+  
+  .configure-panel {
+    min-width: 280px;
+    flex-shrink: 0;
+  }
+  
+  .configure-table-container {
+    max-height: 500px;
+  }
+}
+
+@media (max-width: 768px) {
+  .configure-utilities-page {
+    padding: 10px;
+  }
+  
+  .configure-panels {
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  
+  .configure-panel {
+    min-width: auto;
+  }
+  
+  .configure-table-container {
+    max-height: 400px;
+  }
+  
+  .configure-utilities-header {
+    position: relative;
+    top: auto;
+  }
+  
+  .configure-processing-status {
+    position: relative;
+    top: auto;
+  }
+} 
