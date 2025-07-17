@@ -33,7 +33,7 @@ export async function apiFetch(url: string, options: RequestInit = {}): Promise<
       ...options,
       headers,
     })
-
+    
     // Handle different response types
     let data
     const contentType = response.headers.get('content-type')

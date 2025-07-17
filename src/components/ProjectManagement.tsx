@@ -200,13 +200,13 @@ const ProjectManagement: React.FC = () => {
                     e.currentTarget.style.backgroundColor = 'transparent'
                   }}
                 >
-                  <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+                  <td style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>
                     {project.nome_progetto}
                   </td>
-                  <td style={{ padding: '12px', borderBottom: '1px solid #ddd' }}>
+                  <td style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>
                     {project.descrizione}
                   </td>
-                  <td style={{ padding: '12px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>
+                  <td style={{ padding: '10px', borderBottom: '1px solid #ddd', textAlign: 'center' }}>
                     <button
                       onClick={() => handleOpenProject(project.id_prg)}
                       className="btn"

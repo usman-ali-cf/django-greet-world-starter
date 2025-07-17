@@ -1,8 +1,6 @@
-// Importa i moduli dalla cartella "standard"
 import { renderDataTable } from '../standard/tables.js';
 import { apiFetch } from '../standard/api.js';
 
-// Definisci le colonne per la tabella delle utenze di potenza
 const columnsPotenza = [
   { header: "Elaborato",  field: "elaborato",  type: "elaborato" },
   { header: "Nome",       field: "nome" },
@@ -10,7 +8,8 @@ const columnsPotenza = [
   { header: "Descrizione",field: "descrizione" },
   { header: "Potenza",    field: "potenza" }
 ];
-// Variabili globali per tenere traccia dello stato
+
+
 let currentData = [];
 let selectedRowIndex = -1; // Memorizza l'indice della riga attualmente selezionata
 /**

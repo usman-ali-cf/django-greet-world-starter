@@ -91,27 +91,27 @@ const ProjectDetail: React.FC = () => {
 
       <div className="bg-white rounded-lg shadow p-6">
         <h2 className="text-xl font-semibold mb-4">Opzioni di Configurazione</h2>
-        <div className="" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem', overflowY: 'auto'}}>
+        <div className="" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', gap: '1rem', overflowY: 'auto'}}>
           {menuItems.map((item) => (
             <button
               key={item.path}
               onClick={() => window.location.href = item.path}
               style={{
-                padding: '0.5rem',
+                padding: '8px',
                 border: '1px solid #032952',
                 borderRadius: '8px',
                 cursor: 'pointer',
                 transition: 'background-color 0.3s ease',
                 width: '100%',
-                maxWidth: '450px',
+                maxWidth: '500px',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '0.2rem'
+                gap: '0.1rem'
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.2rem', justifyContent: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.1rem', justifyContent: 'center' }}>
                 <span style={{ fontSize: '1rem', marginRight: '0.5rem' }}>{item.icon}</span>
                 <h3 style={{ fontSize: '1rem', fontWeight: 'bold', marginBottom: '0' }}>{item.title}</h3>
               </div>

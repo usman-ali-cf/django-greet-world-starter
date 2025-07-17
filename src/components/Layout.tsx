@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { Outlet, useParams, Link, useLocation } from 'react-router-dom'
 import logoImage from '@/img/Logo.png'
 
 interface LayoutProps {
@@ -11,6 +11,8 @@ interface LayoutProps {
 export default function Layout({ title = "Progetto", children }: LayoutProps) {
   const [sidebarHidden, setSidebarHidden] = useState(false)
   const { id } = useParams()
+  const location = useLocation()
+  const isHomePage = location.pathname === '/'
 
   const toggleSidebar = () => {
     setSidebarHidden(!sidebarHidden)
@@ -44,37 +46,39 @@ export default function Layout({ title = "Progetto", children }: LayoutProps) {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="header">
-        <div className="header-left">
-          <button 
-            className="sidebar-toggle"
-            onClick={toggleSidebar}
-          >
-            ☰
-          </button>
-          <h1>{title}</h1>
-        </div>
-        
-        <nav className="header-nav">
-          <Link to="/">🏠 Home</Link>
-          {id && (
-            <Link to={`/project/${id}`}>🔙 Torna al Progetto</Link>
-          )}
-          <button 
-            onClick={handleLogout} 
-            style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer' }}
-          >
-            🚪 Logout
-          </button>
-        </nav>
-        
-        <img 
-          src={logoImage} 
-          alt="Logo"
-          className="logo-app"
-        />
-      </header>
+      {/* Header - only show for non-home pages */}
+      {!isHomePage && (
+        <header className="header">
+          <div className="header-left">
+            <button 
+              className="sidebar-toggle"
+              onClick={toggleSidebar}
+            >
+              ☰
+            </button>
+            <h1>{title}</h1>
+          </div>
+          
+          <nav className="header-nav">
+            <Link to="/">🏠 Home</Link>
+            {id && (
+              <Link to={`/project/${id}`}>🔙 Torna al Progetto</Link>
+            )}
+            <button 
+              onClick={handleLogout} 
+              style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer' }}
+            >
+              🚪 Logout
+            </button>
+          </nav>
+          
+          <img 
+            src={logoImage} 
+            alt="Logo"
+            className="logo-app"
+          />
+        </header>
+      )}
 
       <div className="flex flex-1">
         {/* Sidebar */}
