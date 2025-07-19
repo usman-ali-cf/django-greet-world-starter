@@ -636,7 +636,7 @@ async def remove_io_assignment(
         conn.close()
 
 # Export and Schema Generation endpoints
-@router.get("/export_io")
+@router.get("/api/export_io")
 async def export_io_data(
     request: ExportRequest,
     current_user: User = Depends(get_current_active_user)

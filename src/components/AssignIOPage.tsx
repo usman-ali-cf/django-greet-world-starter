@@ -195,14 +195,15 @@ const AssignIOPage: React.FC = () => {
 
   const exportaIO = async (format = 'xml') => {
     try {
-      const response = await apiFetch(`/api/export_io?format=${format}`, {
+      const response = await apiFetch(`/api/export_io?format=${format}&id_prg=${id}`, {
         method: 'POST'
       })
 
-      if (response.file) {
-        window.location.href = '/download/' + response.file
+      if (response.status === 200) {
+        // Directly navigate to the download endpoint
+        window.location.href = `http://localhost:8000/api/download/export_io.${format}`
       } else {
-        alert("Export completato, ma senza file restituito.")
+        alert("Errore durante l'esportazione: " + (response.message || 'Errore sconosciuto'))
       }
     } catch (err) {
       console.error("Errore durante l'esportazione IO:", err)

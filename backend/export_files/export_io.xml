@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<IOExport progetto="33">
-    <Signal name="DI_1" type="DigitalInput"/>
-    <Signal name="DI_2" type="DigitalInput"/>
-    <Signal name="DO_1" type="DigitalOutput"/>
-    <Signal name="DO_2" type="DigitalOutput"/>
+<IOExport progetto="29" nome_progetto="Demo01">
+    <ProjectInfo>
+        <ID>29</ID>
+        <Name>Demo01</Name>
+        <Description>Demo Fiera SPS</Description>
+        <CreatedAt>2025-05-13 07:59:07</CreatedAt>
+    </ProjectInfo>
+    <IOData>
+    </IOData>
 </IOExport>

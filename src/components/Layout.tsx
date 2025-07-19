@@ -155,7 +155,6 @@ export default function Layout({ title = "Progetto", children }: LayoutProps) {
                   borderRadius: 1,
                   color: '#ffffff',
                   '&:hover': {
-<<<<<<< Updated upstream
                     bgcolor: 'rgba(255, 255, 255, 0.1)',
                     color: '#ffffff',
                     '& .MuiListItemIcon-root': {
@@ -172,18 +171,6 @@ export default function Layout({ title = "Progetto", children }: LayoutProps) {
                     },
                     '& .MuiListItemText-primary': {
                       color: '#ffffff',
-=======
-                    bgcolor: '#032952',
-                    color: '#fff'
-                  },
-                  ...(location.pathname === item.path && {
-                    bgcolor: '#032952',
-                    '& .MuiListItemIcon-root': {
-                      color: '#fff'
-                    },
-                    '& .MuiListItemText-primary': {
-                      color: '#fff',
->>>>>>> Stashed changes
                       fontWeight: 600
                     }
                   })
@@ -192,7 +179,6 @@ export default function Layout({ title = "Progetto", children }: LayoutProps) {
                 <ListItemIcon sx={{ minWidth: 40, color: '#ffffff' }}>
                   {item.icon}
                 </ListItemIcon>
-<<<<<<< Updated upstream
                 <ListItemText 
                   primary={item.text} 
                   sx={{ 
@@ -201,9 +187,6 @@ export default function Layout({ title = "Progetto", children }: LayoutProps) {
                     }
                   }}
                 />
-=======
-                <ListItemText primary={item.text} style={{ color: '#000' }} />
->>>>>>> Stashed changes
               </ListItem>
             ))}
           </List>

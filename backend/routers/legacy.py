@@ -19,6 +19,7 @@ from sqlalchemy import select, text, func, update
 from models import Hardware, HardwareNode
 from models.legacy import NodiPrg
 from scripts.crea_nodo_alchemy import crea_nodo_plc_automatico
+from models import IO
 
 router = APIRouter(tags=["legacy"])
 
@@ -911,3 +912,458 @@ async def hw_nodo_delete(
     except Exception as e:
         logger.error(f"Errore in hw_nodo_delete: {e}")
         return {"error": str(e)}
+
+@router.post("/export_io")
+async def export_io_get(
+    format: str = "xml",
+    id_prg: Optional[int] = None,
+    current_user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Export I/O data for a project in specified format (GET method).
+    
+    Query Parameters:
+        - format: Export format (default: "xml", options: "xml", "json")
+        - id_prg: Project ID (required)
+        
+    Returns:
+        dict: Export result with file information
+    """
+    try:
+        if not id_prg:
+            return {"error": "ID progetto (id_prg) è obbligatorio"}
+        
+        format_type = format.lower()
+        
+        # Verify project exists
+        result = await db.execute(
+            select(Project).where(Project.id_prg == id_prg)
+        )
+        project = result.scalars().first()
+        
+        if not project:
+            return {"error": "Progetto non trovato"}
+        
+        # Create export directory
+        import os
+        base_path = os.getcwd()
+        export_dir = os.path.join(base_path, "export_files")
+        os.makedirs(export_dir, exist_ok=True)
+        
+        if format_type == "xml":
+            # Get I/O data using SQLAlchemy ORM
+            result = await db.execute(
+                select(IO).where(IO.id_prg == id_prg).order_by(IO.id_io)
+            )
+            io_data = result.scalars().all()
+            
+            # Generate XML content
+            xml_content = f"""<?xml version="1.0" encoding="UTF-8"?>
+<IOExport progetto="{id_prg}" nome_progetto="{project.nome_progetto}">
+    <ProjectInfo>
+        <ID>{project.id_prg}</ID>
+        <Name>{project.nome_progetto}</Name>
+        <Description>{project.descrizione or ''}</Description>
+        <CreatedAt>{project.data_creazione}</CreatedAt>
+    </ProjectInfo>
+    <IOData>"""
+            
+            # Add I/O signals
+            for io in io_data:
+                xml_content += f"""
+        <Signal name="{io.codice}" type="{io.tipo}" description="{io.descrizione or ''}"/>"""
+            
+            xml_content += """
+    </IOData>
+</IOExport>"""
+            
+            # Write to file
+            file_path = os.path.join(export_dir, "export_io.xml")
+            with open(file_path, "w", encoding="utf-8") as f:
+                f.write(xml_content)
+            
+            return {
+                "message": "Export XML generato con successo",
+                "file": "export_io.xml",
+                "project_id": id_prg,
+                "io_count": len(io_data)
+            }
+            
+        elif format_type == "json":
+            # Get comprehensive data for JSON export
+            result = await db.execute(
+                select(IO).where(IO.id_prg == id_prg).order_by(IO.id_io)
+            )
+            io_data = result.scalars().all()
+            
+            result = await db.execute(
+                select(Node).where(Node.id_prg == id_prg).order_by(Node.id_nodo)
+            )
+            nodes_data = result.scalars().all()
+            
+            # Convert to dictionaries
+            export_data = {
+                "project": {
+                    "id_prg": project.id_prg,
+                    "nome_progetto": project.nome_progetto,
+                    "descrizione": project.descrizione,
+                    "data_creazione": str(project.data_creazione)
+                },
+                "io_data": [
+                    {
+                        "id_io": io.id_io,
+                        "codice": io.codice,
+                        "descrizione": io.descrizione,
+                        "tipo": io.tipo,
+                        "id_prg": io.id_prg
+                    } for io in io_data
+                ],
+                "nodes": [
+                    {
+                        "id_nodo": node.id_nodo,
+                        "nome_nodo": node.nome_nodo,
+                        "tipo_nodo": node.tipo_nodo,
+                        "descrizione": node.descrizione,
+                        "id_prg": node.id_prg
+                    } for node in nodes_data
+                ],
+                "exported_at": str(datetime.utcnow()),
+                "exported_by": current_user.get("username", "unknown")
+            }
+            
+            import json
+            file_path = os.path.join(export_dir, "export_io.json")
+            with open(file_path, "w", encoding="utf-8") as f:
+                json.dump(export_data, f, indent=2, ensure_ascii=False)
+            
+            return {
+                "message": "Export JSON generato con successo",
+                "file": "export_io.json",
+                "project_id": id_prg,
+                "io_count": len(io_data),
+                "nodes_count": len(nodes_data)
+            }
+            
+        else:
+            return {"error": f"Formato non supportato: {format_type}"}
+            
+    except Exception as e:
+        logger.error(f"Errore in export_io: {e}")
+        return {"error": str(e)}
+
+
+@router.post("/export_io")
+async def export_io_post(
+    data: dict = Body(...),
+    current_user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Export I/O data for a project in specified format (POST method).
+    
+    Request Body:
+        - id_prg: Project ID (required)
+        - format: Export format (optional, default: "xml", options: "xml", "json")
+        
+    Returns:
+        dict: Export result with file information
+    """
+    try:
+        id_prg = data.get("id_prg")
+        format_type = data.get("format", "xml").lower()
+        
+        if not id_prg:
+            return {"error": "ID progetto (id_prg) è obbligatorio"}
+        
+        # Verify project exists
+        result = await db.execute(
+            select(Project).where(Project.id_prg == id_prg)
+        )
+        project = result.scalars().first()
+        
+        if not project:
+            return {"error": "Progetto non trovato"}
+        
+        # Create export directory
+        import os
+        base_path = os.getcwd()
+        export_dir = os.path.join(base_path, "export_files")
+        os.makedirs(export_dir, exist_ok=True)
+        
+        if format_type == "xml":
+            # Get I/O data using SQLAlchemy ORM
+            result = await db.execute(
+                select(IO).where(IO.id_prg == id_prg).order_by(IO.id_io)
+            )
+            io_data = result.scalars().all()
+            
+            # Generate XML content
+            xml_content = f"""<?xml version="1.0" encoding="UTF-8"?>
+<IOExport progetto="{id_prg}" nome_progetto="{project.nome_progetto}">
+    <ProjectInfo>
+        <ID>{project.id_prg}</ID>
+        <Name>{project.nome_progetto}</Name>
+        <Description>{project.descrizione or ''}</Description>
+        <CreatedAt>{project.data_creazione}</CreatedAt>
+    </ProjectInfo>
+    <IOData>"""
+            
+            # Add I/O signals
+            for io in io_data:
+                xml_content += f"""
+        <Signal name="{io.codice}" type="{io.tipo}" description="{io.descrizione or ''}"/>"""
+            
+            xml_content += """
+    </IOData>
+</IOExport>"""
+            
+            # Write to file
+            file_path = os.path.join(export_dir, "export_io.xml")
+            with open(file_path, "w", encoding="utf-8") as f:
+                f.write(xml_content)
+            
+            return {
+                "message": "Export XML generato con successo",
+                "file": "export_io.xml",
+                "project_id": id_prg,
+                "io_count": len(io_data)
+            }
+            
+        elif format_type == "json":
+            # Get comprehensive data for JSON export
+            result = await db.execute(
+                select(IO).where(IO.id_prg == id_prg).order_by(IO.id_io)
+            )
+            io_data = result.scalars().all()
+            
+            result = await db.execute(
+                select(Node).where(Node.id_prg == id_prg).order_by(Node.id_nodo)
+            )
+            nodes_data = result.scalars().all()
+            
+            # Convert to dictionaries
+            export_data = {
+                "project": {
+                    "id_prg": project.id_prg,
+                    "nome_progetto": project.nome_progetto,
+                    "descrizione": project.descrizione,
+                    "data_creazione": str(project.data_creazione)
+                },
+                "io_data": [
+                    {
+                        "id_io": io.id_io,
+                        "codice": io.codice,
+                        "descrizione": io.descrizione,
+                        "tipo": io.tipo,
+                        "id_prg": io.id_prg
+                    } for io in io_data
+                ],
+                "nodes": [
+                    {
+                        "id_nodo": node.id_nodo,
+                        "nome_nodo": node.nome_nodo,
+                        "tipo_nodo": node.tipo_nodo,
+                        "descrizione": node.descrizione,
+                        "id_prg": node.id_prg
+                    } for node in nodes_data
+                ],
+                "exported_at": str(datetime.utcnow()),
+                "exported_by": current_user.get("username", "unknown")
+            }
+            
+            import json
+            file_path = os.path.join(export_dir, "export_io.json")
+            with open(file_path, "w", encoding="utf-8") as f:
+                json.dump(export_data, f, indent=2, ensure_ascii=False)
+            
+            return {
+                "message": "Export JSON generato con successo",
+                "file": "export_io.json",
+                "project_id": id_prg,
+                "io_count": len(io_data),
+                "nodes_count": len(nodes_data)
+            }
+            
+        else:
+            return {"error": f"Formato non supportato: {format_type}"}
+            
+    except Exception as e:
+        logger.error(f"Errore in export_io: {e}")
+        return {"error": str(e)}
+
+
+@router.get("/download/export_io.xml")
+async def download_export_io():
+    """
+    Download the generated export_io.xml file.
+    """
+    import os
+    from fastapi.responses import FileResponse
+    
+    base_path = os.getcwd()
+    export_dir = os.path.join(base_path, "export_files")
+    xml_path = os.path.join(export_dir, "export_io.xml")
+    
+    if not os.path.exists(xml_path):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="File export_io.xml non generato: esegui prima /export_io"
+        )
+    
+    return FileResponse(
+        xml_path,
+        media_type="application/xml",
+        filename="export_io.xml",
+        headers={"Content-Disposition": "attachment; filename=export_io.xml"}
+    )
+
+
+@router.get("/download/export_io.json")
+async def download_export_io_json():
+    """
+    Download the generated export_io.json file.
+    """
+    import os
+    from fastapi.responses import FileResponse
+    
+    base_path = os.getcwd()
+    export_dir = os.path.join(base_path, "export_files")
+    json_path = os.path.join(export_dir, "export_io.json")
+    
+    if not os.path.exists(json_path):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="File export_io.json non generato: esegui prima /export_io"
+        )
+    
+    return FileResponse(
+        json_path,
+        media_type="application/json",
+        filename="export_io.json",
+        headers={"Content-Disposition": "attachment; filename=export_io.json"}
+    )
+
+@router.post("/genera_schema")
+async def genera_schema(
+    data: dict = Body(...),
+    current_user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Generate electrical schema CSV file for a project.
+    
+    Request Body:
+        - id_prg: Project ID (required)
+        
+    Returns:
+        dict: Schema generation result with file information
+    """
+    try:
+        id_prg = data.get("id_prg")
+        
+        if not id_prg:
+            return {"error": "ID progetto (id_prg) è obbligatorio"}
+        
+        # Verify project exists
+        result = await db.execute(
+            select(Project).where(Project.id_prg == id_prg)
+        )
+        project = result.scalars().first()
+        
+        if not project:
+            return {"error": "Progetto non trovato"}
+        
+        # Create export directory
+        import os
+        base_path = os.getcwd()
+        export_dir = os.path.join(base_path, "export_files")
+        os.makedirs(export_dir, exist_ok=True)
+        
+        csv_name = "Schema_elettrico.csv"
+        csv_path = os.path.join(export_dir, csv_name)
+        
+        # Get project data for CSV generation
+        result = await db.execute(
+            select(IO).where(IO.id_prg == id_prg).order_by(IO.id_io)
+        )
+        io_data = result.scalars().all()
+        
+        result = await db.execute(
+            select(Node).where(Node.id_prg == id_prg).order_by(Node.id_nodo)
+        )
+        nodes_data = result.scalars().all()
+        
+        # Generate CSV content
+        import csv
+        rows = [
+            ["Foglio", "Tipo", "Descrizione", "Dettagli"],
+            ["F1", "Legenda", "Legenda simboli", f"Progetto: {project.nome_progetto}"],
+            ["F2", "Potenza", "Motori e carichi", f"ID Progetto: {project.id_prg}"],
+            ["F3", "IO", "Ingressi / Uscite", f"Totale IO: {len(io_data)}"],
+            ["F4", "Nodi", "Nodi di controllo", f"Totale Nodi: {len(nodes_data)}"],
+            ["F5", "Schema", "Schema elettrico completo", f"Generato il: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"]
+        ]
+        
+        # Add IO details
+        for i, io in enumerate(io_data, 1):
+            rows.append([
+                f"IO_{i:03d}",
+                io.tipo,
+                io.descrizione or "",
+                f"Codice: {io.codice}"
+            ])
+        
+        # Add node details
+        for i, node in enumerate(nodes_data, 1):
+            rows.append([
+                f"NODO_{i:03d}",
+                node.tipo_nodo,
+                node.descrizione or "",
+                f"Nome: {node.nome_nodo}"
+            ])
+        
+        # Write CSV file
+        with open(csv_path, "w", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f, delimiter=";")
+            for row in rows:
+                writer.writerow(row)
+        
+        return {
+            "message": "Schema CSV generato con successo",
+            "file": csv_name,
+            "project_id": id_prg,
+            "io_count": len(io_data),
+            "nodes_count": len(nodes_data),
+            "total_sheets": len(rows)
+        }
+        
+    except Exception as e:
+        logger.error(f"Errore in genera_schema: {e}")
+        return {"error": str(e)}
+
+
+@router.get("/download/Schema_elettrico.csv")
+async def download_schema_csv():
+    """
+    Download the generated Schema_elettrico.csv file.
+    """
+    import os
+    from fastapi.responses import FileResponse
+    
+    base_path = os.getcwd()
+    export_dir = os.path.join(base_path, "export_files")
+    csv_path = os.path.join(export_dir, "Schema_elettrico.csv")
+    
+    if not os.path.exists(csv_path):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="File Schema_elettrico.csv non generato: esegui prima /genera_schema"
+        )
+    
+    return FileResponse(
+        csv_path,
+        media_type="text/csv",
+        filename="Schema_elettrico.csv",
+        headers={"Content-Disposition": "attachment; filename=Schema_elettrico.csv"}
+    )
