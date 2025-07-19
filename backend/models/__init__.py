@@ -6,6 +6,9 @@ from .project import Project, Node, HardwareNode
 from .hardware import Hardware, IO
 from .user import User
 from .utility import Utenza, Potenza
+from .legacy import (
+    CoordCaviAuxSez, CoordCaviDaQuadro, CoordCaviInQuadro, CoordCavoSezMot, CoordContattori, CoordMotore, CoordSalvamotore, CoordSezionatori, CoordTerminals, Coordinamento, NodiPrg, FogliMemorizzati, LibreriaSimb, TagBlocchi, Blocchi, BlocchiPotenza, Componenti, OpzioniAvviamento, UtenzeCat, UtenzeSottocat, UtenzeOpzioni, SimboliDefault
+)
 
 __all__ = [
     "Base",
@@ -16,5 +19,6 @@ __all__ = [
     "IO",
     "User",
     "Utenza",
-    "Potenza"
+    "Potenza",
+    "CoordCaviAuxSez", "CoordCaviDaQuadro", "CoordCaviInQuadro", "CoordCavoSezMot", "CoordContattori", "CoordMotore", "CoordSalvamotore", "CoordSezionatori", "CoordTerminals", "Coordinamento", "NodiPrg", "FogliMemorizzati", "LibreriaSimb", "TagBlocchi", "Blocchi", "BlocchiPotenza", "Componenti", "OpzioniAvviamento", "UtenzeCat", "UtenzeSottocat", "UtenzeOpzioni", "SimboliDefault"
 ]

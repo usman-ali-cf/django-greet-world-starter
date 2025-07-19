@@ -1,7 +1,7 @@
 """
 Legacy routes for backward compatibility
 """
-from fastapi import APIRouter, Depends, HTTPException, status, Request, UploadFile, File, Form
+from fastapi import APIRouter, Depends, HTTPException, status, Request, UploadFile, File, Form, Body
 from fastapi.responses import FileResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional, Dict, Any
@@ -12,6 +12,13 @@ from datetime import datetime
 import logging
 from core.database import get_db
 from core.security import get_current_user
+from scripts.carica_file_utenze_mock_alchemy import process_excel_file, validate_uploaded_file
+from models.utility import Utenza, Potenza
+from models.project import Project, Node
+from sqlalchemy import select, text, func, update
+from models import Hardware, HardwareNode
+from models.legacy import NodiPrg
+from scripts.crea_nodo_alchemy import crea_nodo_plc_automatico
 
 router = APIRouter(tags=["legacy"])
 
@@ -22,11 +29,19 @@ logger = logging.getLogger(__name__)
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+def check_existing_utilities(db: AsyncSession, project_id: int) -> bool:
+    """Check if utilities exist for the given project"""
+    result = db.execute(
+        db.query(Utenza).filter(Utenza.id_prg == project_id)
+    )
+    return result.scalar() is not None
+
 @router.post("/progetti/{id_prg}/carica_file_utenze")
 async def route_carica_file_utenze(
     id_prg: int,
     file: UploadFile = File(...),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
 ):
     """
     Endpoint per il caricamento del file delle utenze.
@@ -49,6 +64,17 @@ async def route_carica_file_utenze(
                 }
             )
         
+        # Validate uploaded file
+        is_valid, message = validate_uploaded_file(file)
+        if not is_valid:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail={
+                    "status": "error",
+                    "message": message
+                }
+            )
+        
         # Generate unique filename
         file_ext = os.path.splitext(file.filename)[1]
         unique_filename = f"{uuid.uuid4().hex}{file_ext}"
@@ -58,15 +84,31 @@ async def route_carica_file_utenze(
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
         
-        # For now, return a success response
-        # In a real implementation, you would process the Excel file here
+        # Process the Excel file using SQLAlchemy ORM
+        result = await process_excel_file(db, id_prg, file_path)
+        
+        # Clean up the temporary file
+        try:
+            os.remove(file_path)
+        except OSError:
+            logger.warning(f"Could not remove temporary file: {file_path}")
+        
+        if not result["success"]:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail={
+                    "status": "error",
+                    "message": result["message"]
+                }
+            )
+        
         return {
             "status": "success",
-            "message": f"File {file.filename} caricato con successo per il progetto {id_prg}",
+            "message": result["message"],
             "data": {
                 "projectId": id_prg,
                 "fileName": file.filename,
-                "storedPath": file_path,
+                "utilitiesImported": result.get("count", 0),
                 "uploadedAt": datetime.now().isoformat()
             }
         }
@@ -113,26 +155,25 @@ async def download_template():
         )
 
 @router.get("/progetti")
-async def get_progetti(current_user: dict = Depends(get_current_user)):
+async def get_progetti(
+    current_user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
     """Get all projects"""
     try:
-        # Mock data for now - replace with actual database query
-        projects = [
-            {
-                "id_prg": 1,
-                "nome": "Progetto Test 1",
-                "descrizione": "Descrizione progetto test 1",
-                "data_creazione": "2024-01-01",
-                "url_dettaglio": "/project/1"
-            },
-            {
-                "id_prg": 2,
-                "nome": "Progetto Test 2", 
-                "descrizione": "Descrizione progetto test 2",
-                "data_creazione": "2024-01-02",
-                "url_dettaglio": "/project/2"
-            }
-        ]
+        # Fetch projects from database using SQLAlchemy ORM
+        result = await db.execute(select(Project))
+        projects_db = result.scalars().all()
+        
+        projects = []
+        for project in projects_db:
+            projects.append({
+                "id_prg": project.id_prg,
+                "nome": project.nome,
+                "descrizione": project.descrizione,
+                "data_creazione": project.data_creazione.isoformat() if project.data_creazione else None,
+                "url_dettaglio": f"/project/{project.id_prg}"
+            })
         
         return projects
         
@@ -144,27 +185,35 @@ async def get_progetti(current_user: dict = Depends(get_current_user)):
         )
 
 @router.get("/lista_nodi")
-async def get_lista_nodi(current_user: dict = Depends(get_current_user)):
-    """Get all nodes"""
+async def get_lista_nodi(
+    id_prg: int,
+    current_user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Get all nodes for a specific project"""
     try:
-        # Mock data for now - replace with actual database query
-        nodes = [
-            {
-                "id_nodo": 1,
-                "nome_nodo": "Nodo 1",
-                "descrizione": "Descrizione nodo 1"
-            },
-            {
-                "id_nodo": 2,
-                "nome_nodo": "Nodo 2",
-                "descrizione": "Descrizione nodo 2"
-            }
-        ]
+        # Fetch nodes from database using SQLAlchemy ORM
+        result = await db.execute(
+            select(NodiPrg)
+            .where(NodiPrg.id_prg == id_prg)
+        )
+        nodes_db = result.scalars().all()
+        
+        nodes = []
+        for node in nodes_db:
+            nodes.append({
+                "id_nodo": node.id_nodo,
+                "nome_nodo": node.nome_nodo,
+                "descrizione": node.descrizione,
+                "note": node.note,
+                "tipo": node.tipo,
+                "id_prg": node.id_prg
+            })
         
         return nodes
         
     except Exception as e:
-        logger.error(f"Error fetching nodes: {str(e)}")
+        logger.error(f"Error fetching nodes for project {id_prg}: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Error fetching nodes"
@@ -173,33 +222,46 @@ async def get_lista_nodi(current_user: dict = Depends(get_current_user)):
 @router.get("/hw_nodo_list")
 async def get_hw_nodo_list(
     id_nodo: int,
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
 ):
     """Get hardware for a specific node"""
     try:
-        # Mock data for now - replace with actual database query
-        hardware = [
-            {
-                "id_nodo_hw": 1,
-                "slot": 1,
-                "nome_hw": "Modulo DI",
-                "tipo": "DI",
-                "DI": 8,
-                "DO": 0,
-                "AI": 0,
-                "AO": 0
-            },
-            {
-                "id_nodo_hw": 2,
-                "slot": 2,
-                "nome_hw": "Modulo DO",
-                "tipo": "DO",
-                "DI": 0,
-                "DO": 8,
-                "AI": 0,
-                "AO": 0
-            }
-        ]
+        # Fetch hardware nodes from database using SQLAlchemy ORM
+        result = await db.execute(
+            select(
+                HardwareNode.id_nodo_hw,
+                HardwareNode.slot,
+                HardwareNode.quantita,
+                Hardware.nome_hw,
+                Hardware.DI,
+                Hardware.DO,
+                Hardware.AI,
+                Hardware.AO
+            )
+            .join(Hardware, HardwareNode.id_hw == Hardware.id_hw)
+            .where(HardwareNode.id_nodo == id_nodo)
+            .order_by(HardwareNode.slot)
+        )
+        
+        hw_rows = result.all()
+        hardware = []
+        
+        for row in hw_rows:
+            # Determine hardware type based on I/O configuration
+            tipo = "DI" if row.DI > 0 else "DO" if row.DO > 0 else "AI" if row.AI > 0 else "AO" if row.AO > 0 else "MIXED"
+            
+            hardware.append({
+                "id_nodo_hw": row.id_nodo_hw,
+                "slot": row.slot,
+                "nome_hw": row.nome_hw,
+                "tipo": tipo,
+                "DI": row.DI or 0,
+                "DO": row.DO or 0,
+                "AI": row.AI or 0,
+                "AO": row.AO or 0,
+                "quantita": row.quantita
+            })
         
         return hardware
         
@@ -211,41 +273,43 @@ async def get_hw_nodo_list(
         )
 
 @router.get("/catalogo_hw")
-async def get_catalogo_hw(current_user: dict = Depends(get_current_user)):
-    """Get hardware catalog"""
+async def get_catalogo_hw(
+    current_user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
     try:
-        # Mock data for now - replace with actual database query
-        catalog = [
-            {
-                "id_hw": 1,
-                "nome_hw": "Modulo DI 8 canali",
-                "descrizione_hw": "Modulo input digitali 8 canali",
-                "tipo": "DI",
-                "DI": 8,
-                "DO": 0,
-                "AI": 0,
-                "AO": 0
-            },
-            {
-                "id_hw": 2,
-                "nome_hw": "Modulo DO 8 canali",
-                "descrizione_hw": "Modulo output digitali 8 canali",
-                "tipo": "DO",
-                "DI": 0,
-                "DO": 8,
-                "AI": 0,
-                "AO": 0
-            }
-        ]
-        
-        return catalog
-        
+        # Use SQLAlchemy ORM for all columns except F-DI and F-DO
+        result = await db.execute(select(
+            Hardware.id_hw,
+            Hardware.nome_hw,
+            Hardware.descrizione_hw,
+            Hardware.DI,
+            Hardware.DO,
+            Hardware.AI,
+            Hardware.AO,
+            Hardware.F_DI,
+            Hardware.F_DO
+        ))
+        hw_rows = result.all()
+        hw_list = []
+        for row in hw_rows:
+            # get these values from the result: id_hw, nome_hw, descrizione_hw, DI, DO, AI, AO, "F-DI", "F-DO"
+
+            hw_list.append({
+                "id_hw": row.id_hw,
+                "nome_hw": row.nome_hw,
+                "descrizione_hw": row.descrizione_hw,
+                "DI": row.DI,
+                "DO": row.DO,
+                "AI": row.AI,
+                "AO": row.AO,
+                "F_DI": row.F_DI,  # F-DI
+                "F_DO": row.F_DO   # F-DO
+            })
+        return hw_list
     except Exception as e:
-        logger.error(f"Error fetching hardware catalog: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Error fetching hardware catalog"
-        )
+        logger.error(f"Errore nell'API catalogo_hw: {e}")
+        return []
 
 @router.get("/io_unassigned")
 async def get_io_unassigned(
@@ -311,54 +375,43 @@ async def get_io_assigned(
 @router.get("/aggiorna_tabella")
 async def aggiorna_tabella_utenze(
     id_prg: int,
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
 ):
-    """Get utilities for a project"""
+    """
+    API per aggiornare la tabella delle utenze.
+    """
+    if not id_prg:
+        return {"error": "ID progetto mancante"}
     try:
-        # Mock data for now - replace with actual database query
-        utilities = [
-            {
-                "id_utenza": 1,
-                "nome_utenza": "Sensore Temperatura 1",
-                "descrizione": "Sensore di temperatura per ambiente",
-                "categoria": "Sensore",
-                "tipo_comando": "Automatico",
-                "tensione": "24V",
-                "zona": "Zona A",
-                "DI": 1,
-                "DO": 0,
-                "AI": 1,
-                "AO": 0,
-                "FDI": 0,
-                "FDO": 0,
-                "elaborata": 0
-            },
-            {
-                "id_utenza": 2,
-                "nome_utenza": "Motore Pompa 1",
-                "descrizione": "Motore per pompa di circolazione",
-                "categoria": "Attuatore",
-                "tipo_comando": "Manuale",
-                "tensione": "400V",
-                "zona": "Zona B",
-                "DI": 0,
-                "DO": 1,
-                "AI": 0,
-                "AO": 0,
-                "FDI": 0,
-                "FDO": 0,
-                "elaborata": 1
-            }
-        ]
-        
-        return {"utenze": utilities}
-        
-    except Exception as e:
-        logger.error(f"Error fetching utilities: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Error fetching utilities"
+        result = await db.execute(
+            select(Utenza).where(Utenza.id_prg == id_prg, Utenza.categoria == 'utenza')
         )
+        utenze = result.scalars().all()
+        # Convert to dicts for JSON serialization
+        utenze_list = [
+            {
+                "id_utenza": u.id_utenza,
+                "nome_utenza": u.nome_utenza,
+                "descrizione": u.descrizione,
+                "categoria": u.categoria,
+                "tipo_comando": u.tipo_comando, 
+                "tensione": u.tensione,
+                "zona": u.zona,
+                "DI": u.DI,
+                "DO": u.DO,
+                "AI": u.AI,
+                "AO": u.AO,
+                "FDI": u.FDI,
+                "FDO": u.FDO,
+                "elaborata": u.elaborata,
+            }
+            for u in utenze
+        ]
+        return {"utenze": utenze_list}
+    except Exception as e:
+        logger.error(f"Errore nell'API aggiorna_tabella_utenze: {e}")
+        return {"error": "Errore interno del server"}
 
 @router.get("/selezione_utenza")
 async def selezione_utenza(
@@ -562,54 +615,38 @@ async def reset_opzione(
 @router.get("/potenza")
 async def api_potenza(
     id_prg: int,
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
 ):
-    """
-    Get power utilities for a project.
-    
-    Args:
-        id_prg: Project ID
-        
-    Returns:
-        dict: Power utilities data
-    """
+    if not id_prg:
+        return {"error": "ID progetto mancante"}
     try:
-        # Mock data for power utilities
+        result = await db.execute(
+            select(
+                Potenza.id_potenza,
+                Potenza.nome,
+                Potenza.potenza,
+                Potenza.tensione,
+                Potenza.descrizione,
+                Potenza.elaborato
+            ).where(Potenza.id_prg == id_prg)
+        )
+        rows = result.all()
         utenze = [
             {
-                "id_potenza": 1,
-                "nome": "Motore Pompa 1",
-                "potenza": 5.5,
-                "tensione": 400,
-                "descrizione": "Motore pompa di circolazione",
-                "elaborato": 0
-            },
-            {
-                "id_potenza": 2,
-                "nome": "Ventilatore Condizionamento",
-                "potenza": 2.2,
-                "tensione": 230,
-                "descrizione": "Ventilatore sistema condizionamento",
-                "elaborato": 1
-            },
-            {
-                "id_potenza": 3,
-                "nome": "Compressore Aria",
-                "potenza": 7.5,
-                "tensione": 400,
-                "descrizione": "Compressore aria compressa",
-                "elaborato": 0
+                "id_potenza": r.id_potenza,
+                "nome": r.nome,
+                "potenza": r.potenza,
+                "tensione": r.tensione,
+                "descrizione": r.descrizione,
+                "elaborato": r.elaborato
             }
+            for r in rows
         ]
-        
         return {"utenze": utenze}
-        
     except Exception as e:
-        logger.error(f"Error fetching power utilities: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Error fetching power utilities"
-        )
+        logger.error(f"Errore nell'API potenza: {e}")
+        return {"error": "Errore interno del server"}
 
 @router.get("/opzioni_avviamento")
 async def get_opzioni_avviamento(
@@ -650,7 +687,8 @@ async def get_opzioni_avviamento(
 @router.get("/get_opzione_potenza")
 async def get_opzione_potenza(
     id_potenza: int,
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
 ):
     """
     Get current startup option for a power utility.
@@ -662,14 +700,17 @@ async def get_opzione_potenza(
         dict: Current startup option
     """
     try:
-        # Mock data - in real implementation, query the database
-        # For now, return a random option or none
-        import random
-        opzioni = [1, 2, 3, None]
-        selected_option = random.choice(opzioni)
+        from models.utility import Potenza
+        
+        result = await db.execute(
+            select(Potenza.id_opzione_avviamento)
+            .where(Potenza.id_potenza == id_potenza)
+        )
+        
+        option = result.scalar()
         
         return {
-            "id_opzione_avviamento": selected_option
+            "id_opzione_avviamento": option
         }
         
     except Exception as e:
@@ -682,7 +723,8 @@ async def get_opzione_potenza(
 @router.post("/assegna_avviamento")
 async def assegna_avviamento(
     request: Request,
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
 ):
     """
     Assign startup option to a power utility.
@@ -711,8 +753,31 @@ async def assegna_avviamento(
                 }
             )
         
-        # Mock implementation - in real app, update database
-        logger.info(f"Assigning startup option {opzione_avviamento} to power utility {id_potenza} in project {id_prg}")
+        # Update the Potenza record in the database
+        from models.utility import Potenza
+        
+        result = await db.execute(
+            update(Potenza)
+            .where(Potenza.id_potenza == id_potenza, Potenza.id_prg == id_prg)
+            .values(
+                id_opzione_avviamento=opzione_avviamento,
+                elaborato='1'  # Mark as processed
+            )
+        )
+        
+        await db.commit()
+        
+        # Check if any rows were updated
+        if result.rowcount == 0:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail={
+                    "status": "error",
+                    "message": f"Potenza con ID {id_potenza} non trovata nel progetto {id_prg}"
+                }
+            )
+        
+        logger.info(f"Successfully assigned startup option {opzione_avviamento} to power utility {id_potenza} in project {id_prg}")
         
         return {
             "status": "success",
@@ -721,7 +786,8 @@ async def assegna_avviamento(
                 "id_prg": id_prg,
                 "id_potenza": id_potenza,
                 "opzione_avviamento": opzione_avviamento,
-                "updated_rows": 1
+                "elaborato": "1",
+                "updated_rows": result.rowcount
             }
         }
         
@@ -729,6 +795,7 @@ async def assegna_avviamento(
         raise
     except Exception as e:
         logger.error(f"Error assigning startup option: {str(e)}")
+        await db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail={
@@ -736,3 +803,104 @@ async def assegna_avviamento(
                 "message": f"Errore durante l'assegnazione dell'opzione di avviamento: {str(e)}"
             }
         )
+
+@router.post("/crea_plc_automatico")
+async def crea_plc_automatico(
+    data: dict = Body(...),
+    current_user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    id_prg = data.get("id_prg")
+    if not id_prg:
+        return {"error": "ID progetto non trovato"}
+    try:
+        result = await crea_nodo_plc_automatico(id_prg, db)
+        if not result.get("success"):
+            return result, 500
+        return result
+    except Exception as e:
+        logger.error(f"Errore in crea_plc_automatico: {e}")
+        return {"error": str(e)}
+
+@router.post("/hw_nodo_add")
+async def hw_nodo_add(
+    data: dict = Body(...),
+    current_user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    try:
+        id_nodo = data.get('id_nodo')
+        id_hw = data.get('id_hw')
+        id_prg = data.get('id_prg')
+        quantita = data.get('quantita', 1)
+        
+        if not id_nodo or not id_hw or not id_prg:
+            return {"error": "I campi id_nodo, id_hw e id_prg sono obbligatori"}
+        
+        # Verify that the node exists and belongs to the specified project
+        result = await db.execute(select(Node).where(Node.id_nodo == id_nodo))
+        node = result.scalars().first()
+        if not node:
+            return {"error": "Nodo non trovato o non appartiene al progetto specificato"}
+        
+        # Calculate next slot for this node
+        result = await db.execute(
+            select(func.max(HardwareNode.slot)).where(HardwareNode.id_nodo == id_nodo)
+        )
+        max_slot = result.scalar()
+        slot = (max_slot or 0) + 1
+        
+        # Convert quantita to integer
+        try:
+            quantita = int(quantita)
+        except ValueError:
+            return {"error": "Il campo quantita deve essere un numero"}
+        
+        # Insert hardware node
+        hw_node = HardwareNode(
+            id_nodo=id_nodo,
+            id_prg=id_prg,
+            id_hw=id_hw,
+            slot=slot,
+            quantita=quantita
+        )
+        db.add(hw_node)
+        await db.commit()
+        await db.refresh(hw_node)
+        
+        return {"message": "Hardware aggiunto al nodo", "id_nodo_hw": hw_node.id_nodo_hw}
+    except Exception as e:
+        logger.error(f"Errore in hw_nodo_add: {e}")
+        return {"error": str(e)}
+
+@router.delete("/hw_nodo_list/{id_nodo_hw}")
+async def hw_nodo_delete(
+    id_nodo_hw: int,
+    current_user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    try:
+        # Get the record to delete
+        result = await db.execute(select(HardwareNode).where(HardwareNode.id_nodo_hw == id_nodo_hw))
+        record = result.scalars().first()
+        if not record:
+            return {"error": "Record non trovato"}
+        
+        id_nodo = record.id_nodo
+        deleted_slot = record.slot
+        
+        # Delete the record
+        await db.delete(record)
+        
+        # Update slots for remaining records
+        await db.execute(
+            update(HardwareNode)
+            .where(HardwareNode.id_nodo == id_nodo, HardwareNode.slot > deleted_slot)
+            .values(slot=HardwareNode.slot - 1)
+        )
+        
+        await db.commit()
+        return {"message": "Hardware rimosso dal nodo", "id_nodo_hw": id_nodo_hw}
+    except Exception as e:
+        logger.error(f"Errore in hw_nodo_delete: {e}")
+        return {"error": str(e)}

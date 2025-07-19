@@ -49,25 +49,24 @@
 /* Main Layout */
 .configure-utilities-layout {
   display: flex;
-  gap: 30px;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 20px;
   min-height: calc(100vh - 200px);
 }
 
 /* Left Panels */
 .configure-panels {
-  width: 320px;
+  width: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 20px;
-  max-height: calc(100vh - 200px);
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 10px;
 }
 
 .configure-panels::-webkit-scrollbar {
-  width: 6px;
+  height: 6px;
 }
 
 .configure-panels::-webkit-scrollbar-track {
@@ -88,9 +87,11 @@
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  padding: 20px;
+  padding: 15px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   flex-shrink: 0;
+  min-width: 220px;
+  max-width: 260px;
 }
 
 .configure-panel-title {
@@ -182,13 +183,13 @@
 
 /* Right Table */
 .configure-table-container {
-  flex: 1;
+  width: 100%;
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  max-height: calc(100vh - 200px);
+  max-height: calc(100vh - 400px);
   display: flex;
   flex-direction: column;
 }
@@ -220,10 +221,10 @@
 }
 
 .configure-table {
-  width: 100%;
+  width: 90%;
   border-collapse: collapse;
   font-size: 14px;
-  min-width: 1200px;
+  min-width: 300px;
 }
 
 .configure-table thead {
@@ -367,38 +368,39 @@
 }
 
 .configure-detail-symbol {
-  width: 48px;
-  height: 48px;
+  width: 60px;
+  height: 60px;
   border: 1px solid #d1d5db;
   border-radius: 4px;
   object-fit: contain;
   background-color: white;
+  border: 2px solid #343333;
+  box-shadow: 0 1px 4px #343333;
+}
+
+.configure-table-th {
+  background-color: #1e3a8a;
+  color: #fff;
+  padding: 6px 10px;
 }
 
 /* Responsive Design */
 @media (max-width: 1200px) {
   .configure-utilities-layout {
-    flex-direction: column;
-    min-height: auto;
+    gap: 15px;
   }
-  
+
   .configure-panels {
-    width: 100%;
-    flex-direction: row;
-    overflow-x: auto;
-    overflow-y: hidden;
-    max-height: none;
-    padding-right: 0;
-    padding-bottom: 10px;
+    gap: 15px;
   }
-  
+
   .configure-panel {
-    min-width: 280px;
-    flex-shrink: 0;
+    min-width: 250px;
+    max-width: 280px;
   }
-  
+
   .configure-table-container {
-    max-height: 500px;
+    max-height: calc(100vh - 350px);
   }
 }
 
@@ -406,28 +408,29 @@
   .configure-utilities-page {
     padding: 10px;
   }
-  
+
   .configure-panels {
     flex-direction: column;
+    gap: 15px;
     overflow-x: hidden;
     overflow-y: auto;
   }
-  
+
   .configure-panel {
     min-width: auto;
+    max-width: none;
   }
-  
+
   .configure-table-container {
-    max-height: 400px;
+    max-height: calc(100vh - 500px);
   }
-  
+
   .configure-utilities-header {
-    position: relative;
-    top: auto;
+    padding: 5px 0;
   }
-  
+
   .configure-processing-status {
-    position: relative;
-    top: auto;
+    font-size: 12px;
+    padding: 8px 12px;
   }
 } 

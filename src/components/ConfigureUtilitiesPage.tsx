@@ -54,7 +54,7 @@ const ConfigureUtilitiesPage: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
   const [loading, setLoading] = useState(true);
   const [processingStatus, setProcessingStatus] = useState<string>('');
-  const cellWidth = 75;
+  const cellWidth = 35;
 
   // Load utilities on component mount
   useEffect(() => {
@@ -326,7 +326,7 @@ const ConfigureUtilitiesPage: React.FC = () => {
             </div>
 
             {/* Details Panel */}
-            <div className="configure-panel">
+            <div className="configure-panel" style={{ minWidth: 260, maxWidth: 300 }}>
               <h4 className="configure-panel-title">Dettagli</h4>
               <div className="configure-details-content">
                 {details.length === 0 ? (
@@ -341,7 +341,7 @@ const ConfigureUtilitiesPage: React.FC = () => {
                           {detail.simboli.map((symbol, symbolIndex) => (
                             <img
                               key={symbolIndex}
-                              src={`/static/img/${symbol}.png`}
+                              src={`/img/${symbol}.png`}
                               alt={symbol}
                               className="configure-detail-symbol"
                             />
@@ -356,31 +356,30 @@ const ConfigureUtilitiesPage: React.FC = () => {
           </div>
 
           {/* Right Side - Table */}
-          <div style={{ flex: 1, overflowX: 'auto' }}>
-            <div className="configure-table-container">
-              <div className="configure-table-wrapper">
-                <table className="configure-utilities-table" style={{ borderSpacing: 0, width: '100%' }}>
+          <div className="configure-table-container">
+            <div className="configure-table-wrapper">
+              <table className="configure-utilities-table" style={{ borderSpacing: 0 }}>
                   <thead>
                     <tr>
-                      <th style={{ padding: '4px 8px', width: cellWidth }}>Elaborata</th>
-                      <th style={{ padding: '4px 8px', width: cellWidth }}>Nome Utenza</th>
-                      <th style={{ padding: '4px 8px', width: cellWidth }}>Descrizione</th>
-                      <th style={{ padding: '4px 8px', width: cellWidth }}>Categoria</th>
-                      <th style={{ padding: '4px 8px', width: cellWidth }}>Tipo Comando</th>
-                      <th style={{ padding: '4px 8px', width: cellWidth }}>Tensione</th>
-                      <th style={{ padding: '4px 8px', width: cellWidth }}>Zona</th>
-                      <th style={{ padding: '4px 8px', width: cellWidth }}>DI</th>
-                      <th style={{ padding: '4px 8px', width: cellWidth }}>DO</th>
-                      <th style={{ padding: '4px 8px', width: cellWidth }}>AI</th>
-                      <th style={{ padding: '4px 8px', width: cellWidth }}>AO</th>
-                      <th style={{ padding: '4px 8px', width: cellWidth }}>FDI</th>
-                      <th style={{ padding: '4px 8px', width: cellWidth }}>FDO</th>
+                      <th className='configure-table-th'>Elaborata</th>
+                      <th className='configure-table-th'>Nome Utenza</th>
+                      <th className='configure-table-th'>Descrizione</th>
+                      <th className='configure-table-th'>Categoria</th>
+                      <th className='configure-table-th'>Tipo Comando</th>
+                      <th className='configure-table-th'>Tensione</th>
+                      <th className='configure-table-th'>Zona</th>
+                      <th className='configure-table-th'>DI</th>
+                      <th className='configure-table-th'>DO</th>
+                      <th className='configure-table-th'>AI</th>
+                      <th className='configure-table-th'>AO</th>
+                      <th className='configure-table-th'>FDI</th>
+                      <th className='configure-table-th'>FDO</th>
                     </tr>
                   </thead>
                   <tbody>
                     {utilities.length === 0 ? (
                       <tr>
-                        <td colSpan={13} className="configure-table td" style={{ textAlign: 'center', color: '#6b7280' }}>
+                        <td colSpan={3} className="configure-table td" style={{ textAlign: 'center', color: '#6b7280' }}>
                           Nessuna utenza trovata. Carica un file utenze per iniziare.
                         </td>
                       </tr>
@@ -422,7 +421,7 @@ const ConfigureUtilitiesPage: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+    
   );
 };
 

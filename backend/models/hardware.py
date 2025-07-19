@@ -17,6 +17,8 @@ class Hardware(Base):
     DO = Column(Integer, default=0)
     AI = Column(Integer, default=0)
     AO = Column(Integer, default=0)
+    F_DI = Column(Integer, default=0)  # F-DI in DB
+    F_DO = Column(Integer, default=0)  # F-DO in DB
     Ox = Column(Float, default=0.0)
     Oy = Column(Float, default=0.0)
     L = Column(Float, default=0.0)

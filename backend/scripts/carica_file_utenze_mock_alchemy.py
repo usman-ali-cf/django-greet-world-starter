@@ -9,7 +9,8 @@ import os
 import logging
 import pandas as pd
 from typing import Dict, Any, Tuple
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 
 # Configure logging
@@ -28,16 +29,6 @@ REQUIRED_COLUMNS = [
 # Import models and database session
 from models.utility import Utenza, Potenza
 from models.project import Project
-from core.database import SessionLocal
-
-
-def get_db() -> Session:
-    """Get database session"""
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 def load_excel_file(path: str) -> pd.DataFrame:
@@ -84,7 +75,7 @@ def get_category(row: pd.Series) -> str:
     return "potenza" if (pd.notna(row["potenza"]) and row["potenza"] > 0) else "utenza"
 
 
-def check_existing_utilities(db: Session, project_id: int) -> bool:
+async def check_existing_utilities(db: AsyncSession, project_id: int) -> bool:
     """
     Check if utilities exist for the given project.
     
@@ -95,10 +86,11 @@ def check_existing_utilities(db: Session, project_id: int) -> bool:
     Returns:
         True if utilities exist, False otherwise
     """
-    return db.query(Utenza).filter(Utenza.id_prg == project_id).count() > 0
+    result = await db.execute(select(Utenza).where(Utenza.id_prg == project_id))
+    return len(result.scalars().all()) > 0
 
 
-def delete_existing_utilities(db: Session, project_id: int) -> None:
+async def delete_existing_utilities(db: AsyncSession, project_id: int) -> None:
     """
     Delete all utilities and power entries for the given project.
     
@@ -110,17 +102,20 @@ def delete_existing_utilities(db: Session, project_id: int) -> None:
     """
     try:
         # Delete all utilities for the project
-        db.query(Utenza).filter(Utenza.id_prg == project_id).delete()
-        db.commit()
+        result = await db.execute(select(Utenza).where(Utenza.id_prg == project_id))
+        utilities = result.scalars().all()
+        for utility in utilities:
+            await db.delete(utility)
+        await db.commit()
         logger.info("Deleted utilities for project %s", project_id)
         
     except SQLAlchemyError as e:
-        db.rollback()
+        await db.rollback()
         logger.error("Error deleting utilities: %s", str(e), exc_info=True)
         raise
 
 
-def insert_utilities(db: Session, df: pd.DataFrame, project_id: int) -> int:
+async def insert_utilities(db: AsyncSession, df: pd.DataFrame, project_id: int) -> int:
     """
     Insert utilities and power entries into the database.
     
@@ -136,7 +131,8 @@ def insert_utilities(db: Session, df: pd.DataFrame, project_id: int) -> int:
     
     try:
         # Verify project exists
-        project = db.query(Project).filter(Project.id_prg == project_id).first()
+        result = await db.execute(select(Project).where(Project.id_prg == project_id))
+        project = result.scalars().first()
         if not project:
             logger.error("Project with ID %s not found", project_id)
             return 0
@@ -145,10 +141,10 @@ def insert_utilities(db: Session, df: pd.DataFrame, project_id: int) -> int:
             # Create new utility
             utility = Utenza(
                 id_prg=project_id,
-                nome_utenza=row["nome_utenza"],
-                descrizione=row["descrizione"],
+                nome_utenza=row["nome_utenza"] if pd.notna(row["nome_utenza"]) else None,
+                descrizione=row["descrizione"] if pd.notna(row["descrizione"]) else '',
                 categoria=row["categoria"],
-                tensione=row["tensione"],
+                tensione=row["tensione"] if pd.notna(row["tensione"]) else None,
                 zona=row["zona"],
                 DI=row["DI"],
                 DO=row["DO"],
@@ -160,7 +156,7 @@ def insert_utilities(db: Session, df: pd.DataFrame, project_id: int) -> int:
             )
             
             db.add(utility)
-            db.flush()  # Flush to get the ID
+            await db.flush()  # Flush to get the ID
             
             # If it's a power utility, create a power entry
             if row["categoria"] == "potenza" and row["potenza"] > 0:
@@ -169,36 +165,36 @@ def insert_utilities(db: Session, df: pd.DataFrame, project_id: int) -> int:
                     id_utenza=utility.id_utenza,
                     nome=row["nome_utenza"],
                     potenza=row["potenza"],
-                    tensione=row["tensione"],
-                    descrizione=row["descrizione"],
-                    zona=row["zona"]
+                    tensione=row["tensione"] if pd.notna(row["tensione"]) else None,
+                    descrizione=row["descrizione"] if pd.notna(row["descrizione"]) else '',
+                    zona=row["zona"] if pd.notna(row["zona"]) else None
                 )
                 db.add(power)
             
             inserted += 1
         
-        db.commit()
+        await db.commit()
         logger.info("Inserted %d utilities for project %s", inserted, project_id)
         return inserted
         
     except SQLAlchemyError as e:
-        db.rollback()
+        await db.rollback()
         logger.error("Error inserting utilities: %s", str(e), exc_info=True)
         return 0
 
 
-def process_excel_file(project_id: int, file_path: str) -> Dict[str, Any]:
+async def process_excel_file(db: AsyncSession, project_id: int, file_path: str) -> Dict[str, Any]:
     """
     Process the Excel file and import utilities into the database.
     
     Args:
+        db: Async database session
         project_id: Project ID to associate the utilities with
         file_path: Path to the Excel file
         
     Returns:
         Dictionary containing the result of the operation
     """
-    db = next(get_db())
     
     try:
         # Check if file exists
@@ -212,13 +208,14 @@ def process_excel_file(project_id: int, file_path: str) -> Dict[str, Any]:
         
         # Add category column
         df["categoria"] = df.apply(get_category, axis=1)
+        df = df.where(pd.notnull(df), None)
         
         # Check for existing utilities
-        if check_existing_utilities(db, project_id):
-            delete_existing_utilities(db, project_id)
+        if await check_existing_utilities(db, project_id):
+            await delete_existing_utilities(db, project_id)
         
         # Insert utilities
-        count = insert_utilities(db, df, project_id)
+        count = await insert_utilities(db, df, project_id)
         
         if count == 0:
             return {"success": False, "message": "No utilities were imported"}
@@ -232,8 +229,6 @@ def process_excel_file(project_id: int, file_path: str) -> Dict[str, Any]:
     except Exception as e:
         logger.error("Error processing Excel file: %s", str(e), exc_info=True)
         return {"success": False, "message": f"Error processing file: {str(e)}"}
-    finally:
-        db.close()
 
 
 def validate_uploaded_file(file_storage) -> Tuple[bool, str]:
@@ -248,10 +243,10 @@ def validate_uploaded_file(file_storage) -> Tuple[bool, str]:
     """
     if not file_storage or not file_storage.filename:
         return False, "No file selected"
-        
-    if not file_storage.filename.lower().endswith((".xlsx", ".xls", ".xlsm")):
-        return False, "Unsupported file format. Please upload an Excel file"
-        
+    
+    if not file_storage.filename.lower().endswith(('.xlsx', '.xls', '.xlsm')):
+        return False, "Unsupported file format. Please upload an Excel file (.xlsx, .xls, .xlsm)"
+    
     return True, "OK"
 
 

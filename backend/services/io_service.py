@@ -3,7 +3,8 @@ I/O management service
 """
 from typing import List, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import text
+from sqlalchemy import select, update
+from models.hardware import IO
 from schemas.io import IOResponse, IOAssignRequest, IORemoveRequest
 from scripts.assegna_io_alchemy import assegna_io_automaticamente
 import logging
@@ -17,28 +18,17 @@ class IOService:
     async def get_unassigned_io(self, db: AsyncSession, project_id: int, tipo: Optional[str] = None) -> List[IOResponse]:
         """Get unassigned I/O for a project"""
         try:
-            query = """
-                SELECT id_io, codice, descrizione, tipo, id_modulo, indirizzo, note, id_prg
-                FROM t_io
-                WHERE id_prg = :project_id AND id_modulo IS NULL
-            """
-            params = {"project_id": project_id}
+            query = select(IO).where(IO.id_prg == project_id, IO.id_modulo.is_(None))
             
             if tipo:
-                query += " AND tipo = :tipo"
-                params["tipo"] = tipo
+                query = query.where(IO.tipo == tipo)
                 
-            query += " ORDER BY tipo, codice"
+            query = query.order_by(IO.tipo, IO.codice)
             
-            result = await db.execute(text(query), params)
-            rows = result.fetchall()
+            result = await db.execute(query)
+            ios = result.scalars().all()
             
-            ios = []
-            for row in rows:
-                row_dict = dict(row._mapping)
-                ios.append(IOResponse(**row_dict))
-            
-            return ios
+            return [IOResponse.model_validate(io) for io in ios]
         except Exception as e:
             logger.error(f"Error getting unassigned I/O: {e}")
             raise
@@ -46,23 +36,11 @@ class IOService:
     async def get_assigned_io(self, db: AsyncSession, module_id: int, node_id: int) -> List[IOResponse]:
         """Get I/O assigned to a specific module"""
         try:
-            result = await db.execute(
-                text("""
-                    SELECT id_io, codice, descrizione, tipo, id_modulo, indirizzo, note, id_prg
-                    FROM t_io
-                    WHERE id_modulo = :module_id
-                    ORDER BY tipo, codice
-                """),
-                {"module_id": module_id}
-            )
-            rows = result.fetchall()
+            query = select(IO).where(IO.id_modulo == module_id).order_by(IO.tipo, IO.codice)
+            result = await db.execute(query)
+            ios = result.scalars().all()
             
-            ios = []
-            for row in rows:
-                row_dict = dict(row._mapping)
-                ios.append(IOResponse(**row_dict))
-            
-            return ios
+            return [IOResponse.model_validate(io) for io in ios]
         except Exception as e:
             logger.error(f"Error getting assigned I/O: {e}")
             raise
@@ -72,8 +50,7 @@ class IOService:
         try:
             # Check if I/O is already assigned
             result = await db.execute(
-                text("SELECT id_modulo FROM t_io WHERE id_io = :io_id"),
-                {"io_id": assign_data.id_io}
+                select(IO.id_modulo).where(IO.id_io == assign_data.id_io)
             )
             current_assignment = result.scalar()
             
@@ -82,17 +59,13 @@ class IOService:
             
             # Assign I/O to module
             await db.execute(
-                text("""
-                    UPDATE t_io 
-                    SET id_modulo = :module_id, indirizzo = :indirizzo, note = :note
-                    WHERE id_io = :io_id
-                """),
-                {
-                    "module_id": assign_data.id_modulo,
-                    "indirizzo": assign_data.indirizzo,
-                    "note": assign_data.note,
-                    "io_id": assign_data.id_io
-                }
+                update(IO)
+                .where(IO.id_io == assign_data.id_io)
+                .values(
+                    id_modulo=assign_data.id_modulo,
+                    indirizzo=assign_data.indirizzo,
+                    note=assign_data.note
+                )
             )
             await db.commit()
             
@@ -106,12 +79,9 @@ class IOService:
         """Remove I/O assignment"""
         try:
             await db.execute(
-                text("""
-                    UPDATE t_io 
-                    SET id_modulo = NULL, indirizzo = NULL
-                    WHERE id_io = :io_id
-                """),
-                {"io_id": io_id}
+                update(IO)
+                .where(IO.id_io == io_id)
+                .values(id_modulo=None, indirizzo=None)
             )
             await db.commit()
             

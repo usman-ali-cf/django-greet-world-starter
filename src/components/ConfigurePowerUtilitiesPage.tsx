@@ -9,7 +9,7 @@ interface PowerUtility {
   potenza: number;
   tensione: number;
   descrizione: string;
-  elaborato: number;
+  elaborato: string | number;  // Can be '1'/'0' from DB or 1/0 from frontend
 }
 
 interface StartupOption {
@@ -127,7 +127,7 @@ const ConfigurePowerUtilitiesPage: React.FC = () => {
 
   return (
     <div style={{ overflowX: 'auto', width: '100%', height: 'calc(100vh - 64px)', overflowY: 'auto' }}>
-      <div className="configure-power-utilities-page" style={{ minWidth: 900 }}>
+      <div className="configure-power-utilities-page">
         {/* Processing Status */}
         {processingStatus && (
           <div className="configure-processing-status">
@@ -178,8 +178,8 @@ const ConfigurePowerUtilitiesPage: React.FC = () => {
                           }`}
                         >
                           <td className="configure-table td" style={{ padding: '4px 8px' }}>
-                            <span className={`configure-checkbox ${utility.elaborato ? 'checked' : 'unchecked'}`}>
-                              {utility.elaborato ? '✓' : ''}
+                            <span className={`configure-checkbox ${utility.elaborato === '1' || utility.elaborato === 1 ? 'checked' : 'unchecked'}`}>
+                              {utility.elaborato === '1' || utility.elaborato === 1 ? '✓' : ''}
                             </span>
                           </td>
                           <td className="configure-table td utility-name" style={{ padding: '4px 8px' }}>

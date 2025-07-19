@@ -40,6 +40,7 @@ class HardwareNode(Base):
     
     id_nodo_hw = Column(Integer, primary_key=True, index=True)
     id_nodo = Column(Integer, ForeignKey("t_nodo.id_nodo"), nullable=False)
+    id_prg = Column(Integer, ForeignKey("t_progetti.id_prg"), nullable=False)
     id_hw = Column(Integer, ForeignKey("t_cat_hw.id_hw"), nullable=False)
     slot = Column(Integer)
     quantita = Column(Integer, default=1)

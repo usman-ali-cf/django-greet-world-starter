@@ -86,7 +86,7 @@ body {
 /* Container adjustments */
 .container {
   max-width: none;
-  width: 100%;
+  width: 95%;
   padding: 20px;
 }
 
@@ -499,7 +499,7 @@ body {
 .custom-login-card {
   position: relative;
   z-index: 1;
-  background: rgba(255,255,255,0.7);
+  background: #fff;
   box-shadow: 0 8px 32px 0 rgba(255, 0, 0, 0.18);
   border-radius: 2rem;
   padding: 3rem 2.5rem 2.5rem 2.5rem;
@@ -512,11 +512,11 @@ body {
   backdrop-filter: blur(12px);
 }
 .custom-login-logo {
-  width: 90px;
-  height: 90px;
+  width: 200px;
+  height: 200px;
   object-fit: contain;
   margin-bottom: 1rem;
-  filter: drop-shadow(0 2px 8px #ff4d4d);
+  filter: drop-shadow(0 2px 8px #fff);
 }
 .custom-login-title {
   font-size: 2.1rem;
@@ -533,7 +533,6 @@ body {
   gap: 1.2rem;
 }
 .custom-login-input {
-  width: 100%;
   padding: 0.9rem 1.1rem;
   border-radius: 1rem;
   border: 1.5px solid #ff4d4d;

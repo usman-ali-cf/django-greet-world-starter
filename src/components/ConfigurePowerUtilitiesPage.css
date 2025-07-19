@@ -112,10 +112,9 @@
 }
 
 .configure-table {
-  width: 100%;
   border-collapse: collapse;
   font-size: 14px;
-  min-width: 800px;
+  min-width: 40px;
 }
 
 .configure-table thead {
@@ -228,7 +227,7 @@
   display: flex;
   align-items: center;
   cursor: pointer;
-  padding: 10px;
+  padding: 5px;
   border-radius: 6px;
   transition: background-color 0.2s ease;
   user-select: none;
