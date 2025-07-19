@@ -22,13 +22,7 @@ logger = logging.getLogger(__name__)
 # Import models and database session
 from models.project import Node, HardwareNode
 from models.hardware import Hardware, IO
-from core.database import get_db as get_async_db
-
-
-async def get_db() -> AsyncGenerator[AsyncSession, None]:
-    """Get async database session"""
-    async for session in get_async_db():
-        yield session
+from core.database import AsyncSessionLocal
 
 
 class PLCConfigurator:
@@ -213,64 +207,55 @@ class PLCConfigurator:
         return modules_configured
 
 
-async def crea_nodo_plc_automatico(project_id: int, db: Optional[AsyncSession] = None) -> Dict[str, Any]:
+async def crea_nodo_plc_automatico(project_id: int) -> Dict[str, Any]:
     """
     Automatically create a PLC node and configure hardware modules based on IO requirements.
-    
-    Args:
-        project_id: ID of the project
-        db: Optional database session (if not provided, a new one will be created)
-        
-    Returns:
-        Dictionary containing the result of the operation
     """
-    local_db = False
-    if db is None:
-        db = await anext(get_db())
-        local_db = True
-    
-    try:
-        configurator = PLCConfigurator(db)
-        
-        # Get or create the PLC node
-        node, is_new = await configurator.get_or_create_plc_node(project_id)
-        
-        # Configure hardware modules
-        modules_configured = await configurator.configure_hardware_modules(project_id, node.id_nodo)
-        
-        message = (
-            f"PLC node '{node.nome_nodo}' "
-            f"{'created' if is_new else 'updated'} with ID {node.id_nodo} "
-            f"and {modules_configured} hardware modules configured."
-        )
-        
-        return {
-            "success": True,
-            "message": message,
-            "node_id": node.id_nodo,
-            "modules_configured": modules_configured,
-            "is_new": is_new
-        }
-        
-    except SQLAlchemyError as e:
-        if local_db:
+    async with AsyncSessionLocal() as db:
+        try:
+            configurator = PLCConfigurator(db)
+
+            node, is_new = await configurator.get_or_create_plc_node(project_id)
+            modules_configured = await configurator.configure_hardware_modules(project_id, node.id_nodo)
+
+            message = (
+                f"PLC node created successfully: "
+                f"{'created' if is_new else 'updated'} "
+                f"and {modules_configured} hardware modules configured."
+            )
+
+            return {
+                "success": True,
+                "message": message,
+                "node_id": node,
+                "modules_configured": modules_configured,
+                "is_new": is_new
+            }
+
+        except SQLAlchemyError as e:
             await db.rollback()
-        # logger.error(f"Error in automatic PLC node creation: {e}", exc_info=True)
-        return {
-            "success": True,
-            "message": f"Error: {str(e)}"
-        }
-    finally:
-        if local_db and db:
-            await db.close()
+            logger.error(f"Error in automatic PLC node creation: {e}")
+            return {
+                "success": False,
+                "message": f"Error: {str(e)}"
+            }
+        except Exception as e:
+            await db.rollback()
+            logger.error(f"Unexpected error in automatic PLC node creation: {e}")
+            return {
+                "success": False,
+                "message": f"Unexpected error: {str(e)}"
+            }
 
 
 async def main():
     import sys
     if len(sys.argv) > 1:
         project_id = int(sys.argv[1])
-        result = await crea_nodo_plc_automatico(project_id)
-        print(result)
+        # Create a new database session for standalone execution
+        async with AsyncSessionLocal() as db:
+            result = await crea_nodo_plc_automatico(project_id, db)
+            print(result)
     else:
         print("Usage: python crea_nodo_alchemy.py <project_id>")
         sys.exit(1)

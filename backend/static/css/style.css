@@ -158,6 +158,10 @@ footer {
     margin-right: 250px; /* Sposta tutto più a sinistra */
 }
 
+.header-nav button:hover {
+    color: #fff;
+}
+
 .header-nav a {
     text-decoration: none;
     color: white;
@@ -168,7 +172,7 @@ footer {
 }
 
 .header-nav a:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(225, 225, 225, 0.2);
 }
 
 /* Logo in alto a destra */

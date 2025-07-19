@@ -813,11 +813,18 @@ async def crea_plc_automatico(
     id_prg = data.get("id_prg")
     if not id_prg:
         return {"error": "ID progetto non trovato"}
+    
     try:
-        result = await crea_nodo_plc_automatico(id_prg, db)
+        # Pass the database session to the function
+        result = await crea_nodo_plc_automatico(id_prg)
+        
         if not result.get("success"):
-            return result, 500
+            logger.error(f"PLC creation failed: {result.get('message')}")
+            return {"error": result.get("message", "Unknown error")}
+        
+        logger.info(f"PLC creation successful: {result.get('message')}")
         return result
+        
     except Exception as e:
         logger.error(f"Errore in crea_plc_automatico: {e}")
         return {"error": str(e)}
