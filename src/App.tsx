@@ -9,6 +9,7 @@ import PlaceholderPage from './components/PlaceholderPage'
 import CreateNodesPage from './components/CreateNodesPage'
 import AssignIOPage from './components/AssignIOPage'
 import LoginPage from './components/LoginPage'
+import SignupPage from './components/SignupPage'
 import ProtectedRoute from './components/ProtectedRoute'
 import UploadUtilitiesPage from './components/UploadUtilitiesPage'
 import ConfigureUtilitiesPage from './components/ConfigureUtilitiesPage'
@@ -19,8 +20,9 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
-          {/* Login page */}
+          {/* Authentication pages */}
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
           
           {/* Protected routes */}
           <Route path="/" element={

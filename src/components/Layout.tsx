@@ -63,31 +63,31 @@ export default function Layout({ title = "Progetto", children }: LayoutProps) {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: '#ffffff' }}>
-      {/* Header - only show for non-home pages */}
-      {!isHomePage && (
-        <AppBar 
-          position="static" 
-          elevation={0}
-          sx={{ 
-            bgcolor: '#ffffff', 
-            borderBottom: '1px solid #e0e0e0',
-            color: '#1a1a1a'
-          }}
-        >
-          <Toolbar>
-            <IconButton
-              edge="start"
-              onClick={toggleSidebar}
-              sx={{ mr: 2, color: '#1a1a1a' }}
-            >
-              <Menu />
-            </IconButton>
-            
-            <Typography variant="h6" component="h1" sx={{ flexGrow: 1, fontWeight: 600 }}>
-              {title}
-            </Typography>
-            
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+      {/* Header - now shows for all pages including homepage */}
+      <AppBar 
+        position="static" 
+        elevation={0}
+        sx={{ 
+          bgcolor: '#ffffff', 
+          borderBottom: '1px solid #e0e0e0',
+          color: '#1a1a1a'
+        }}
+      >
+        <Toolbar>
+          <IconButton
+            edge="start"
+            onClick={toggleSidebar}
+            sx={{ mr: 2, color: '#1a1a1a' }}
+          >
+            <Menu />
+          </IconButton>
+          
+          <Typography variant="h6" component="h1" sx={{ flexGrow: 1, fontWeight: 600 }}>
+            {title}
+          </Typography>
+          
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            {!isHomePage && (
               <Button
                 component={Link}
                 to="/"
@@ -96,29 +96,29 @@ export default function Layout({ title = "Progetto", children }: LayoutProps) {
               >
                 Home
               </Button>
-              {id && (
-                <Button
-                  component={Link}
-                  to={`/project/${id}`}
-                  startIcon={<ArrowBack />}
-                  sx={{ color: '#1a1a1a' }}
-                >
-                  Torna al Progetto
-                </Button>
-              )}
+            )}
+            {id && (
               <Button
-                onClick={handleLogout}
-                startIcon={<Logout />}
+                component={Link}
+                to={`/project/${id}`}
+                startIcon={<ArrowBack />}
                 sx={{ color: '#1a1a1a' }}
               >
-                Logout
+                Torna al Progetto
               </Button>
-            </Box>
-            
-            <Box component="img" src={logoImage} alt="Logo" sx={{ height: 40, ml: 2 }} />
-          </Toolbar>
-        </AppBar>
-      )}
+            )}
+            <Button
+              onClick={handleLogout}
+              startIcon={<Logout />}
+              sx={{ color: '#1a1a1a' }}
+            >
+              Logout
+            </Button>
+          </Box>
+          
+          <Box component="img" src={logoImage} alt="Logo" sx={{ height: 40, ml: 2 }} />
+        </Toolbar>
+      </AppBar>
 
       <Box sx={{ display: 'flex', flex: 1 }}>
         {/* Sidebar */}
@@ -176,7 +176,7 @@ export default function Layout({ title = "Progetto", children }: LayoutProps) {
           sx={{ 
             flexGrow: 1, 
             bgcolor: '#ffffff',
-            minHeight: isHomePage ? '100vh' : 'auto'
+            minHeight: isHomePage ? 'auto' : 'auto'
           }}
         >
           {children}

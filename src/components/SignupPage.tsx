@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react'
-import { useAuth } from '../contexts/AuthContext'
-import { useNavigate, useLocation, Link } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import {
   Box,
   Card,
@@ -13,18 +12,28 @@ import {
   Alert,
   Avatar
 } from '@mui/material'
-import { Login, Person } from '@mui/icons-material'
+import { PersonAdd, Person, Email, Lock } from '@mui/icons-material'
 import Logo from '../img/Logo.png'
+import { apiFetch } from '../utils/api'
 
-const LoginPage: React.FC = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+const SignupPage: React.FC = () => {
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+    full_name: ''
+  })
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   
-  const { login } = useAuth()
   const navigate = useNavigate()
-  const location = useLocation()
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -32,11 +41,18 @@ const LoginPage: React.FC = () => {
     setIsLoading(true)
 
     try {
-      await login(username, password)
-      const redirectTo = (location.state as any)?.from?.pathname || '/'
-      navigate(redirectTo, { replace: true })
+      const response = await apiFetch('/auth/signup', {
+        method: 'POST',
+        body: JSON.stringify(formData)
+      })
+
+      // Store the token
+      if (response.access_token) {
+        localStorage.setItem('access_token', response.access_token)
+        navigate('/', { replace: true })
+      }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed')
+      setError(err instanceof Error ? err.message : 'Registrazione fallita')
     } finally {
       setIsLoading(false)
     }
@@ -86,10 +102,10 @@ const LoginPage: React.FC = () => {
               />
             </Avatar>
             <Typography variant="h4" component="h1" sx={{ color: 'white', fontWeight: 600 }}>
-              Benvenuto
+              Registrati
             </Typography>
             <Typography variant="body1" sx={{ color: 'rgba(255,255,255,0.8)', mt: 1 }}>
-              Accedi al tuo account per continuare
+              Crea il tuo account per iniziare
             </Typography>
           </Box>
 
@@ -103,10 +119,25 @@ const LoginPage: React.FC = () => {
 
               <TextField
                 fullWidth
-                label="Username"
+                label="Nome Completo"
+                name="full_name"
                 variant="outlined"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={formData.full_name}
+                onChange={handleChange}
+                required
+                sx={{ mb: 3 }}
+                InputProps={{
+                  startAdornment: <Person sx={{ color: '#9e9e9e', mr: 1 }} />
+                }}
+              />
+
+              <TextField
+                fullWidth
+                label="Username"
+                name="username"
+                variant="outlined"
+                value={formData.username}
+                onChange={handleChange}
                 required
                 autoComplete="username"
                 sx={{ mb: 3 }}
@@ -117,14 +148,34 @@ const LoginPage: React.FC = () => {
 
               <TextField
                 fullWidth
+                label="Email"
+                name="email"
+                type="email"
+                variant="outlined"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                autoComplete="email"
+                sx={{ mb: 3 }}
+                InputProps={{
+                  startAdornment: <Email sx={{ color: '#9e9e9e', mr: 1 }} />
+                }}
+              />
+
+              <TextField
+                fullWidth
                 label="Password"
+                name="password"
                 type="password"
                 variant="outlined"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={formData.password}
+                onChange={handleChange}
                 required
-                autoComplete="current-password"
+                autoComplete="new-password"
                 sx={{ mb: 4 }}
+                InputProps={{
+                  startAdornment: <Lock sx={{ color: '#9e9e9e', mr: 1 }} />
+                }}
               />
 
               <Button
@@ -133,7 +184,7 @@ const LoginPage: React.FC = () => {
                 variant="contained"
                 size="large"
                 disabled={isLoading}
-                startIcon={<Login />}
+                startIcon={<PersonAdd />}
                 sx={{
                   py: 1.5,
                   fontSize: '1.1rem',
@@ -144,21 +195,21 @@ const LoginPage: React.FC = () => {
                   mb: 3
                 }}
               >
-                {isLoading ? 'Accesso in corso...' : 'Accedi'}
+                {isLoading ? 'Registrazione in corso...' : 'Registrati'}
               </Button>
 
               <Box sx={{ textAlign: 'center' }}>
                 <Typography variant="body2" sx={{ color: '#666' }}>
-                  Non hai un account?{' '}
+                  Hai già un account?{' '}
                   <Link 
-                    to="/signup" 
+                    to="/login" 
                     style={{ 
                       color: '#032952', 
                       textDecoration: 'none',
                       fontWeight: 600
                     }}
                   >
-                    Registrati qui
+                    Accedi qui
                   </Link>
                 </Typography>
               </Box>
@@ -170,4 +221,4 @@ const LoginPage: React.FC = () => {
   )
 }
 
-export default LoginPage
+export default SignupPage
