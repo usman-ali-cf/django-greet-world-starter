@@ -181,7 +181,7 @@ const UploadUtilitiesPage: React.FC = () => {
                 disabled={!selectedFile || isUploading}
                 startIcon={<CloudUpload />}
                 sx={{ 
-                  bgcolor: '#1976d2',
+                  bgcolor: '#032952',
                   '&:hover': { bgcolor: '#1565c0' }
                 }}
               >
@@ -202,8 +202,8 @@ const UploadUtilitiesPage: React.FC = () => {
                 startIcon={<Download />}
                 size="large"
                 sx={{ 
-                  borderColor: '#1976d2',
-                  color: '#1976d2',
+                  borderColor: '#032952',
+                  color: '#032952',
                   '&:hover': { borderColor: '#1565c0', bgcolor: '#f3f7ff' }
                 }}
               >

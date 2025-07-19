@@ -115,19 +115,19 @@ const ProjectDetail: React.FC = () => {
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Card elevation={0} sx={{ mb: 4, border: '1px solid #e0e0e0' }}>
+      <Card elevation={0} sx={{ mb: 4, border: '1px solid #e0e0e0', backgroundColor: '#032952' }}>
         <CardContent sx={{ p: 4 }}>
-          <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 600, color: '#1a1a1a' }}>
+          <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 600, color: '#fff' }}>
             {project.nome_progetto}
           </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 3, fontSize: '1.1rem' }}>
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 3, fontSize: '1.1rem', color: '#fff' }}>
             {project.descrizione}
           </Typography>
           <Chip 
             label={`Creato il: ${new Date(project.data_creazione).toLocaleDateString('it-IT')}`}
             variant="outlined"
             size="small"
-            sx={{ bgcolor: '#f5f5f5' }}
+            sx={{ bgcolor: '#f5f5f5', color: '#000', border: '1px solid #000', padding: '4px 8px' }}
           />
         </CardContent>
       </Card>

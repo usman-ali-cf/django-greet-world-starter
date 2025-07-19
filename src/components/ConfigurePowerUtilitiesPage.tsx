@@ -154,11 +154,11 @@ const ConfigurePowerUtilitiesPage: React.FC = () => {
                 <table className="configure-table" style={{ borderSpacing: 0, width: '100%' }}>
                   <thead>
                     <tr>
-                      <th style={{ padding: '4px 8px' }}>Elaborato</th>
-                      <th style={{ padding: '4px 8px' }}>Nome</th>
-                      <th style={{ padding: '4px 8px' }}>Tensione</th>
-                      <th style={{ padding: '4px 8px' }}>Descrizione</th>
-                      <th style={{ padding: '4px 8px' }}>Potenza</th>
+                      <th style={{ padding: '6px 10px' }}>Elaborato</th>
+                      <th style={{ padding: '6px 10px' }}>Nome</th>
+                      <th style={{ padding: '6px 10px' }}>Tensione</th>
+                      <th style={{ padding: '6px 10px' }}>Descrizione</th>
+                      <th style={{ padding: '6px 10px' }}>Potenza</th>
                     </tr>
                   </thead>
                   <tbody>

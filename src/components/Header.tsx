@@ -30,7 +30,7 @@ const Header: React.FC<HeaderProps> = ({ title, projectId, onToggleSidebar }) =>
         {projectId && (
           <a href={`/project/${projectId}`}>🔙 Torna al Progetto</a>
         )}
-        <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer' }}>
+        <button onClick={handleLogout} style={{ background: '#032952', border: 'none', color: 'white', cursor: 'pointer', padding: '8px 12px' }}>
           🚪 Logout
         </button>
       </nav>
