@@ -2,6 +2,26 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { apiFetch } from '../utils/api'
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Grid,
+  Button,
+  Container,
+  Chip,
+  CircularProgress,
+  Alert
+} from '@mui/material'
+import {
+  Upload,
+  Settings,
+  Power,
+  Hub,
+  Cable,
+  Dashboard
+} from '@mui/icons-material'
 
 interface Project {
   id_prg: number
@@ -33,94 +53,126 @@ const ProjectDetail: React.FC = () => {
   }, [id])
 
   if (loading) {
-    return <div className="text-center p-8">Caricamento...</div>
+    return (
+      <Container maxWidth="lg" sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+        <CircularProgress />
+      </Container>
+    )
   }
 
   if (!project) {
-    return <div className="text-center p-8">Progetto non trovato</div>
+    return (
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Alert severity="error">Progetto non trovato</Alert>
+      </Container>
+    )
   }
 
   const menuItems = [
     {
       title: 'Carica File Utenze',
       path: `/project/${id}/upload-utilities`,
-      icon: '📁',
-      description: 'Carica un file Excel con le utenze del progetto'
+      icon: <Upload />,
+      description: 'Carica un file Excel con le utenze del progetto',
+      color: '#1976d2'
     },
     {
       title: 'Configura Utenze',
       path: `/project/${id}/configure-utilities`,
-      icon: '🛠️',
-      description: 'Configura le utenze caricate'
+      icon: <Settings />,
+      description: 'Configura le utenze caricate',
+      color: '#388e3c'
     },
     {
       title: 'Configura Utenze di Potenza',
       path: `/project/${id}/configure-power`,
-      icon: '⚡',
-      description: 'Configura le utenze di potenza'
+      icon: <Power />,
+      description: 'Configura le utenze di potenza',
+      color: '#f57c00'
     },
     {
       title: 'Crea Nodi e PLC',
       path: `/project/${id}/create-nodes`,
-      icon: '🖧',
-      description: 'Crea e gestisci nodi e PLC'
+      icon: <Hub />,
+      description: 'Crea e gestisci nodi e PLC',
+      color: '#7b1fa2'
     },
     {
       title: 'Assegna I/O ai Nodi',
       path: `/project/${id}/assign-io`,
-      icon: '🔗',
-      description: 'Assegna I/O ai moduli dei nodi'
+      icon: <Cable />,
+      description: 'Assegna I/O ai moduli dei nodi',
+      color: '#d32f2f'
     },
     {
       title: 'Configura Quadro Elettrico',
       path: `/project/${id}/configure-panel`,
-      icon: '🗄️',
-      description: 'Configura il quadro elettrico'
+      icon: <Dashboard />,
+      description: 'Configura il quadro elettrico',
+      color: '#303f9f'
     }
   ]
 
   return (
-    <div className="space-y-6">
-      <div className="bg-white rounded-lg shadow p-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">{project.nome_progetto}</h1>
-        <p className="text-gray-600 mb-4">{project.descrizione}</p>
-        <p className="text-sm text-gray-500">
-          <strong>Data di Creazione:</strong> {new Date(project.data_creazione).toLocaleDateString('it-IT')}
-        </p>
-      </div>
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Card elevation={0} sx={{ mb: 4, border: '1px solid #e0e0e0' }}>
+        <CardContent sx={{ p: 4 }}>
+          <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 600, color: '#1a1a1a' }}>
+            {project.nome_progetto}
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 3, fontSize: '1.1rem' }}>
+            {project.descrizione}
+          </Typography>
+          <Chip 
+            label={`Creato il: ${new Date(project.data_creazione).toLocaleDateString('it-IT')}`}
+            variant="outlined"
+            size="small"
+            sx={{ bgcolor: '#f5f5f5' }}
+          />
+        </CardContent>
+      </Card>
 
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">Opzioni di Configurazione</h2>
-        <div className="" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', gap: '1rem', overflowY: 'auto'}}>
-          {menuItems.map((item) => (
-            <button
-              key={item.path}
-              onClick={() => window.location.href = item.path}
-              style={{
-                padding: '8px',
-                border: '1px solid #032952',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                transition: 'background-color 0.3s ease',
-                width: '100%',
-                maxWidth: '500px',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.1rem'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.1rem', justifyContent: 'center' }}>
-                <span style={{ fontSize: '1rem', marginRight: '0.5rem' }}>{item.icon}</span>
-                <h3 style={{ fontSize: '1rem', fontWeight: 'bold', marginBottom: '0' }}>{item.title}</h3>
-              </div>
-              <p style={{ fontSize: '0.875rem', color: '#fff', textAlign: 'center' }}>{item.description}</p>
-            </button>
-          ))}
-        </div>
-      </div>
-    </div>
+      <Card elevation={0} sx={{ border: '1px solid #e0e0e0' }}>
+        <CardContent sx={{ p: 4 }}>
+          <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
+            Opzioni di Configurazione
+          </Typography>
+          <Grid container spacing={3}>
+            {menuItems.map((item) => (
+              <Grid item xs={12} sm={6} md={4} key={item.path}>
+                <Card 
+                  elevation={0}
+                  sx={{ 
+                    height: '100%',
+                    cursor: 'pointer',
+                    border: '1px solid #e0e0e0',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      transform: 'translateY(-4px)',
+                      boxShadow: '0 8px 25px rgba(0,0,0,0.1)',
+                      borderColor: item.color
+                    }
+                  }}
+                  onClick={() => window.location.href = item.path}
+                >
+                  <CardContent sx={{ p: 3, textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                    <Box sx={{ color: item.color, mb: 2 }}>
+                      {React.cloneElement(item.icon, { sx: { fontSize: 40 } })}
+                    </Box>
+                    <Typography variant="h6" component="h3" gutterBottom sx={{ fontWeight: 600, mb: 1 }}>
+                      {item.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ flexGrow: 1 }}>
+                      {item.description}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </CardContent>
+      </Card>
+    </Container>
   )
 }
 

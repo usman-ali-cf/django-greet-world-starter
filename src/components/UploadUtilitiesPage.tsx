@@ -1,6 +1,25 @@
+
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { apiFetch } from '../utils/api';
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Container,
+  Alert,
+  LinearProgress,
+  Paper,
+  Divider,
+  Stack
+} from '@mui/material';
+import {
+  CloudUpload,
+  Download,
+  Description
+} from '@mui/icons-material';
 
 const UploadUtilitiesPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -11,7 +30,6 @@ const UploadUtilitiesPage: React.FC = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      // Validate file type
       if (!file.name.toLowerCase().endsWith('.xlsx') && !file.name.toLowerCase().endsWith('.xls')) {
         setMessage({ text: 'Please select an Excel file (.xlsx or .xls)', type: 'error' });
         return;
@@ -37,13 +55,10 @@ const UploadUtilitiesPage: React.FC = () => {
       const response = await apiFetch(`/api/progetti/${id}/carica_file_utenze`, {
         method: 'POST',
         body: formData,
-        headers: {
-          // Don't set Content-Type for FormData, let the browser set it
-        },
+        headers: {},
       });
 
       if (response.status === 'confirmation_required') {
-        // Handle confirmation case
         const confirmed = window.confirm(
           'Sono già presenti utenze per questo progetto. Vuoi sovrascriverle?'
         );
@@ -56,7 +71,6 @@ const UploadUtilitiesPage: React.FC = () => {
       } else {
         setMessage({ text: response.message || 'File uploaded successfully!', type: 'success' });
         setSelectedFile(null);
-        // Reset file input
         const fileInput = document.getElementById('file-input') as HTMLInputElement;
         if (fileInput) fileInput.value = '';
       }
@@ -86,7 +100,6 @@ const UploadUtilitiesPage: React.FC = () => {
 
       setMessage({ text: response.message || 'File uploaded successfully!', type: 'success' });
       setSelectedFile(null);
-      // Reset file input
       const fileInput = document.getElementById('file-input') as HTMLInputElement;
       if (fileInput) fileInput.value = '';
     } catch (error: any) {
@@ -112,79 +125,111 @@ const UploadUtilitiesPage: React.FC = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-8 max-w-2xl mx-auto">
-      {/* Title */}
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">
-        Carica File Utenze
-      </h1>
+    <Container maxWidth="md" sx={{ py: 4 }}>
+      <Card elevation={0} sx={{ border: '1px solid #e0e0e0' }}>
+        <CardContent sx={{ p: 4 }}>
+          <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 600, mb: 2 }}>
+            Carica File Utenze
+          </Typography>
+          
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 4, fontSize: '1.1rem' }}>
+            Seleziona un file Excel (.xlsx) per caricare le utenze relative al progetto ID: <strong>{id}</strong>
+          </Typography>
 
-      {/* Description */}
-      <p className="text-gray-600 mb-6">
-        Seleziona un file Excel (.xlsx) per caricare le utenze relative al progetto ID: <strong>{id}</strong>
-      </p>
+          <Divider sx={{ mb: 4 }} />
 
-      {/* File Input Section */}
-      <div className="mb-6">
-        <label htmlFor="file-input" className="flex items-center text-gray-700 font-medium mb-2">
-          <span className="text-gray-400 mr-2">📂</span>
-          Seleziona File Utenze (.xlsx):
-        </label>
-        <div className="flex items-center space-x-4">
-          <input
-            id="file-input"
-            type="file"
-            accept=".xlsx,.xls"
-            onChange={handleFileChange}
-            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-          <button
-            onClick={handleUpload}
-            disabled={!selectedFile || isUploading}
-            className="bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white px-6 py-2 rounded-md font-medium flex items-center transition-colors"
-          >
-            <span className="mr-2">📤</span>
-            {isUploading ? 'Caricamento...' : 'Carica File'}
-          </button>
-        </div>
-      </div>
+          <Stack spacing={3}>
+            <Paper 
+              elevation={0} 
+              sx={{ 
+                p: 3, 
+                border: '2px dashed #e0e0e0',
+                borderRadius: 2,
+                textAlign: 'center',
+                bgcolor: '#fafafa'
+              }}
+            >
+              <CloudUpload sx={{ fontSize: 48, color: '#9e9e9e', mb: 2 }} />
+              <Typography variant="h6" gutterBottom>
+                Seleziona File Utenze
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                Formati supportati: .xlsx, .xls
+              </Typography>
+              
+              <input
+                id="file-input"
+                type="file"
+                accept=".xlsx,.xls"
+                onChange={handleFileChange}
+                style={{ display: 'none' }}
+              />
+              <label htmlFor="file-input">
+                <Button
+                  variant="outlined"
+                  component="span"
+                  startIcon={<Description />}
+                  sx={{ mr: 2 }}
+                >
+                  Scegli File
+                </Button>
+              </label>
+              
+              <Button
+                variant="contained"
+                onClick={handleUpload}
+                disabled={!selectedFile || isUploading}
+                startIcon={<CloudUpload />}
+                sx={{ 
+                  bgcolor: '#1976d2',
+                  '&:hover': { bgcolor: '#1565c0' }
+                }}
+              >
+                {isUploading ? 'Caricamento...' : 'Carica File'}
+              </Button>
+              
+              {selectedFile && (
+                <Typography variant="body2" sx={{ mt: 2, color: '#2e7d32' }}>
+                  File selezionato: {selectedFile.name}
+                </Typography>
+              )}
+            </Paper>
 
-      {/* Download Template Button */}
-      <div className="mb-6">
-        <button
-          onClick={handleDownloadTemplate}
-          className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md font-medium flex items-center transition-colors"
-        >
-          <span className="mr-2">📥</span>
-          Scarica Template
-        </button>
-      </div>
+            <Box sx={{ textAlign: 'center' }}>
+              <Button
+                variant="outlined"
+                onClick={handleDownloadTemplate}
+                startIcon={<Download />}
+                size="large"
+                sx={{ 
+                  borderColor: '#1976d2',
+                  color: '#1976d2',
+                  '&:hover': { borderColor: '#1565c0', bgcolor: '#f3f7ff' }
+                }}
+              >
+                Scarica Template
+              </Button>
+            </Box>
 
-      {/* Message Display */}
-      {message && (
-        <div className={`p-4 rounded-md ${
-          message.type === 'success' 
-            ? 'bg-green-100 border border-green-400 text-green-700' 
-            : message.type === 'error'
-            ? 'bg-red-100 border border-red-400 text-red-700'
-            : 'bg-blue-100 border border-blue-400 text-blue-700'
-        }`}>
-          {message.text}
-        </div>
-      )}
+            {message && (
+              <Alert severity={message.type} sx={{ mt: 2 }}>
+                {message.text}
+              </Alert>
+            )}
 
-      {/* Loading Overlay */}
-      {isUploading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 text-center">
-            <h4 className="text-lg font-medium mb-4">Elaborazione file…</h4>
-            <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-              <div className="h-full bg-blue-600 animate-pulse" style={{ width: '100%' }}></div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+            {isUploading && (
+              <Box sx={{ mt: 2 }}>
+                <Typography variant="body2" color="text.secondary" gutterBottom>
+                  Elaborazione file in corso...
+                </Typography>
+                <LinearProgress />
+              </Box>
+            )}
+          </Stack>
+        </CardContent>
+      </Card>
+    </Container>
   );
 };
 
-export default UploadUtilitiesPage; 
+export default UploadUtilitiesPage;
