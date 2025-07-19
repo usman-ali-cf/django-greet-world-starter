@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   Box,
   Card,
@@ -12,9 +12,8 @@ import {
   Alert,
   Avatar
 } from '@mui/material'
-import { PersonAdd, Person, Email, Lock } from '@mui/icons-material'
+import { PersonAdd, Person, Email, Lock, AccountBox } from '@mui/icons-material'
 import Logo from '../img/Logo.png'
-import { apiFetch } from '../utils/api'
 
 const SignupPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -25,14 +24,13 @@ const SignupPage: React.FC = () => {
   })
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  
   const navigate = useNavigate()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
+    setFormData(prev => ({
+      ...prev,
       [e.target.name]: e.target.value
-    })
+    }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -41,18 +39,24 @@ const SignupPage: React.FC = () => {
     setIsLoading(true)
 
     try {
-      const response = await apiFetch('/auth/signup', {
+      const response = await fetch('/api/auth/signup', {
         method: 'POST',
-        body: JSON.stringify(formData)
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       })
 
-      // Store the token
-      if (response.access_token) {
-        localStorage.setItem('access_token', response.access_token)
-        navigate('/', { replace: true })
+      if (response.ok) {
+        navigate('/login', { 
+          state: { message: 'Account creato con successo! Effettua il login.' }
+        })
+      } else {
+        const errorData = await response.json()
+        setError(errorData.message || 'Errore durante la registrazione')
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Registrazione fallita')
+      setError('Errore di connessione. Riprova più tardi.')
     } finally {
       setIsLoading(false)
     }
@@ -127,7 +131,7 @@ const SignupPage: React.FC = () => {
                 required
                 sx={{ mb: 3 }}
                 InputProps={{
-                  startAdornment: <Person sx={{ color: '#9e9e9e', mr: 1 }} />
+                  startAdornment: <AccountBox sx={{ color: '#9e9e9e', mr: 1 }} />
                 }}
               />
 

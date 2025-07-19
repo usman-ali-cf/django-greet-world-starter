@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import {
@@ -20,15 +20,23 @@ const LoginPage: React.FC = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   
   const { login } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
 
+  useEffect(() => {
+    if (location.state?.message) {
+      setSuccessMessage(location.state.message)
+    }
+  }, [location.state])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    setSuccessMessage('')
     setIsLoading(true)
 
     try {
@@ -95,6 +103,12 @@ const LoginPage: React.FC = () => {
 
           <CardContent sx={{ p: 4 }}>
             <form onSubmit={handleSubmit}>
+              {successMessage && (
+                <Alert severity="success" sx={{ mb: 3 }}>
+                  {successMessage}
+                </Alert>
+              )}
+
               {error && (
                 <Alert severity="error" sx={{ mb: 3 }}>
                   {error}
