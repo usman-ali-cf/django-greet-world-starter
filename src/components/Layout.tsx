@@ -1,6 +1,7 @@
 
-import { useState, useEffect } from 'react'
-import { Outlet, useParams, Link, useLocation } from 'react-router-dom'
+import { useState } from 'react'
+import { useParams, Link, useLocation } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 import { 
   AppBar, 
   Toolbar, 
@@ -37,6 +38,7 @@ export default function Layout({ title = "Progetto", children }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const { id } = useParams()
   const location = useLocation()
+  const { logout } = useAuth()
   const isHomePage = location.pathname === '/'
 
   const toggleSidebar = () => {
@@ -44,8 +46,7 @@ export default function Layout({ title = "Progetto", children }: LayoutProps) {
   }
 
   const handleLogout = () => {
-    localStorage.removeItem('access_token')
-    window.location.href = '/login'
+    logout()
   }
 
   const menuItems = [
@@ -63,7 +64,6 @@ export default function Layout({ title = "Progetto", children }: LayoutProps) {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: '#ffffff' }}>
-      {/* Header - now shows for all pages including homepage */}
       <AppBar 
         position="static" 
         elevation={0}
@@ -112,8 +112,8 @@ export default function Layout({ title = "Progetto", children }: LayoutProps) {
               startIcon={<Logout />}
               sx={{ 
                 color: '#1a1a1a',
-                px: 2,
-                py: 1,
+                px: 3,
+                py: 1.5,
                 '&:hover': {
                   color: '#ffffff',
                   bgcolor: '#032952'
@@ -129,7 +129,6 @@ export default function Layout({ title = "Progetto", children }: LayoutProps) {
       </AppBar>
 
       <Box sx={{ display: 'flex', flex: 1 }}>
-        {/* Sidebar */}
         <Drawer
           variant="temporary"
           anchor="left"
@@ -193,7 +192,6 @@ export default function Layout({ title = "Progetto", children }: LayoutProps) {
           </List>
         </Drawer>
 
-        {/* Main Content */}
         <Box 
           component="main" 
           sx={{ 
