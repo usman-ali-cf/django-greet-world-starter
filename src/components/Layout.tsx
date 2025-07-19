@@ -110,7 +110,15 @@ export default function Layout({ title = "Progetto", children }: LayoutProps) {
             <Button
               onClick={handleLogout}
               startIcon={<Logout />}
-              sx={{ color: '#1a1a1a' }}
+              sx={{ 
+                color: '#1a1a1a',
+                px: 2,
+                py: 1,
+                '&:hover': {
+                  color: '#ffffff',
+                  bgcolor: '#032952'
+                }
+              }}
             >
               Logout
             </Button>
@@ -130,7 +138,7 @@ export default function Layout({ title = "Progetto", children }: LayoutProps) {
           sx={{
             '& .MuiDrawer-paper': {
               width: 280,
-              bgcolor: '#fafafa',
+              bgcolor: '#032952',
               borderRight: '1px solid #e0e0e0'
             }
           }}
@@ -146,25 +154,40 @@ export default function Layout({ title = "Progetto", children }: LayoutProps) {
                   mx: 1,
                   mb: 0.5,
                   borderRadius: 1,
+                  color: '#ffffff',
                   '&:hover': {
-                    bgcolor: '#e3f2fd'
-                  },
-                  ...(location.pathname === item.path && {
-                    bgcolor: '#e3f2fd',
+                    bgcolor: 'rgba(255, 255, 255, 0.1)',
+                    color: '#ffffff',
                     '& .MuiListItemIcon-root': {
-                      color: '#1976d2'
+                      color: '#ffffff'
                     },
                     '& .MuiListItemText-primary': {
-                      color: '#1976d2',
+                      color: '#ffffff'
+                    }
+                  },
+                  ...(location.pathname === item.path && {
+                    bgcolor: 'rgba(255, 255, 255, 0.15)',
+                    '& .MuiListItemIcon-root': {
+                      color: '#ffffff'
+                    },
+                    '& .MuiListItemText-primary': {
+                      color: '#ffffff',
                       fontWeight: 600
                     }
                   })
                 }}
               >
-                <ListItemIcon sx={{ minWidth: 40 }}>
+                <ListItemIcon sx={{ minWidth: 40, color: '#ffffff' }}>
                   {item.icon}
                 </ListItemIcon>
-                <ListItemText primary={item.text} />
+                <ListItemText 
+                  primary={item.text} 
+                  sx={{ 
+                    '& .MuiListItemText-primary': {
+                      color: '#ffffff'
+                    }
+                  }}
+                />
               </ListItem>
             ))}
           </List>
