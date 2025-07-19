@@ -1047,11 +1047,12 @@ async def export_io_get(
             
         else:
             return {"error": f"Formato non supportato: {format_type}"}
-            
+    
     except Exception as e:
-        logger.error(f"Errore in export_io: {e}")
+        logger.error(f"Errore nell'export I/O: {e}")
         return {"error": str(e)}
 
+from fastapi.responses import JSONResponse
 
 @router.post("/export_io")
 async def export_io_post(
@@ -1067,14 +1068,17 @@ async def export_io_post(
         - format: Export format (optional, default: "xml", options: "xml", "json")
         
     Returns:
-        dict: Export result with file information
+        JSONResponse: Export result with file information and status code
     """
     try:
         id_prg = data.get("id_prg")
         format_type = data.get("format", "xml").lower()
         
         if not id_prg:
-            return {"error": "ID progetto (id_prg) è obbligatorio"}
+            return JSONResponse(
+                status_code=400,
+                content={"status": 400, "error": "ID progetto (id_prg) è obbligatorio"}
+            )
         
         # Verify project exists
         result = await db.execute(
@@ -1083,7 +1087,10 @@ async def export_io_post(
         project = result.scalars().first()
         
         if not project:
-            return {"error": "Progetto non trovato"}
+            return JSONResponse(
+                status_code=404,
+                content={"status": 404, "error": "Progetto non trovato"}
+            )
         
         # Create export directory
         import os
@@ -1123,26 +1130,31 @@ async def export_io_post(
             with open(file_path, "w", encoding="utf-8") as f:
                 f.write(xml_content)
             
-            return {
-                "message": "Export XML generato con successo",
-                "file": "export_io.xml",
-                "project_id": id_prg,
-                "io_count": len(io_data)
-            }
+            return JSONResponse(
+                status_code=200,
+                content={
+                    "status": 200,
+                    "message": "Export XML generato con successo",
+                    "file": "export_io.xml",
+                    "project_id": id_prg,
+                    "io_count": len(io_data)
+                }
+            )
             
         elif format_type == "json":
-            # Get comprehensive data for JSON export
+            # Get I/O data
             result = await db.execute(
                 select(IO).where(IO.id_prg == id_prg).order_by(IO.id_io)
             )
             io_data = result.scalars().all()
             
+            # Get nodes data
             result = await db.execute(
                 select(Node).where(Node.id_prg == id_prg).order_by(Node.id_nodo)
             )
             nodes_data = result.scalars().all()
             
-            # Convert to dictionaries
+            # Prepare export data
             export_data = {
                 "project": {
                     "id_prg": project.id_prg,
@@ -1172,25 +1184,36 @@ async def export_io_post(
                 "exported_by": current_user.get("username", "unknown")
             }
             
-            import json
+            # Write to file
             file_path = os.path.join(export_dir, "export_io.json")
             with open(file_path, "w", encoding="utf-8") as f:
+                import json
                 json.dump(export_data, f, indent=2, ensure_ascii=False)
             
-            return {
-                "message": "Export JSON generato con successo",
-                "file": "export_io.json",
-                "project_id": id_prg,
-                "io_count": len(io_data),
-                "nodes_count": len(nodes_data)
-            }
+            return JSONResponse(
+                status_code=200,
+                content={
+                    "status": 200,
+                    "message": "Export JSON generato con successo",
+                    "file": "export_io.json",
+                    "project_id": id_prg,
+                    "io_count": len(io_data),
+                    "nodes_count": len(nodes_data)
+                }
+            )
             
         else:
-            return {"error": f"Formato non supportato: {format_type}"}
+            return JSONResponse(
+                status_code=400,
+                content={"status": 400, "error": f"Formato non supportato: {format_type}"}
+            )
             
     except Exception as e:
         logger.error(f"Errore in export_io: {e}")
-        return {"error": str(e)}
+        return JSONResponse(
+            status_code=500,
+            content={"status": 500, "error": str(e)}
+        )
 
 
 @router.get("/download/export_io.xml")

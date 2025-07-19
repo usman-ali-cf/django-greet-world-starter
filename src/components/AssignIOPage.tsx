@@ -6,6 +6,8 @@ import DataTable from './DataTable'
 import DataTableMulti from './DataTableMulti'
 import './AssignIOPage.css'
 
+const BACKEND_URL = "http://localhost:8000";
+
 interface Node {
   id_nodo: number
   nome_nodo: string
@@ -198,13 +200,9 @@ const AssignIOPage: React.FC = () => {
       const response = await apiFetch(`/api/export_io?format=${format}&id_prg=${id}`, {
         method: 'POST'
       })
-
-      if (response.status === 200) {
-        // Directly navigate to the download endpoint
-        window.location.href = `http://localhost:8000/api/download/export_io.${format}`
-      } else {
-        alert("Errore durante l'esportazione: " + (response.message || 'Errore sconosciuto'))
-      }
+      console.log(response)
+      // Directly navigate to the download endpoint
+      window.location.href = `${BACKEND_URL}/api/download/export_io.${format}`
     } catch (err) {
       console.error("Errore durante l'esportazione IO:", err)
       alert("❌ Errore durante l'esportazione IO.")
@@ -214,14 +212,10 @@ const AssignIOPage: React.FC = () => {
   const esportaSchemainExcel = async () => {
     try {
       const response = await apiFetch('/api/genera_schema', {
-        method: 'POST'
+        method: 'POST',
+        body: JSON.stringify({ id_prg: id })
       })
-
-      if (response.message && response.file) {
-        window.location.href = '/download/' + response.file
-      } else {
-        alert("⚠️ Export completato, ma senza messaggio di conferma.")
-      }
+      window.location.href = `${BACKEND_URL}/api/download/Schema_elettrico.csv`
     } catch (err) {
       console.error("Errore durante esportazione Excel:", err)
       alert("❌ Errore durante l'esportazione del file.")
